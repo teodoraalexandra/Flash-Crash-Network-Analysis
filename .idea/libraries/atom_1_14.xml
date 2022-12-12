@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="atom-1.14">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../atom/dist/atom-1.14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

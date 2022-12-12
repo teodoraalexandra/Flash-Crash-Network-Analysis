@@ -1,9 +1,10 @@
+package atomSimulation;
+
 import fr.cristal.smac.atom.*;
 import fr.cristal.smac.atom.orders.*;
 
 class MyAgent extends Agent
 {
-
     private final int start;
 
     public MyAgent(String name, long cash, int start) {

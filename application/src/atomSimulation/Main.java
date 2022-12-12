@@ -1,3 +1,6 @@
+package atomSimulation;
+
+import atomSimulation.MyAgent;
 import fr.cristal.smac.atom.*;
 import fr.cristal.smac.atom.agents.*;
 
