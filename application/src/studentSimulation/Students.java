@@ -11,30 +11,10 @@ public class Students extends SimState {
     public double TEMPERING_CUT_DOWN = 0.99;
     public double TEMPERING_INITIAL_RANDOM_MULTIPLIER = 10.0;
     public boolean tempering = true;
-    public boolean isTempering() { return tempering; }
-    public void setTempering(boolean val) { tempering = val; }
 
     public int numStudents = 50;
     double forceToSchoolMultiplier = 0.01;
     double randomMultiplier = 0.1;
-
-    public int getNumStudents() { return numStudents; }
-    public void setNumStudents(int val) { if (val > 0) numStudents = val; }
-    public double getForceToSchoolMultiplier() { return forceToSchoolMultiplier; }
-    public void setForceToSchoolMultiplier(double val)
-    { if (forceToSchoolMultiplier >= 0.0) forceToSchoolMultiplier = val; }
-    public double getRandomMultiplier() { return randomMultiplier; }
-    public void setRandomMultiplier(double val) { if (randomMultiplier >= 0.0) randomMultiplier = val; }
-    public Object domRandomMultiplier() { return new sim.util.Interval(0.0, 100.0); }
-
-    public double[] getAgitationDistribution()
-    {
-        Bag students = buddies.getAllNodes();
-        double[] distro = new double[students.numObjs];
-        for(int i = 0; i < students.numObjs; i++)
-            distro[i] = ((Student)(students.objs[i])).getAgitation();
-        return distro;
-    }
 
     public Network buddies = new Network(false);
 
@@ -49,10 +29,7 @@ public class Students extends SimState {
         if (tempering)
         {
             randomMultiplier = TEMPERING_INITIAL_RANDOM_MULTIPLIER;
-            schedule.scheduleRepeating(schedule.EPOCH, 1, new Steppable()
-            {
-                public void step(SimState state) { if (tempering) randomMultiplier *= TEMPERING_CUT_DOWN; }
-            });
+            schedule.scheduleRepeating(Schedule.EPOCH, 1, (Steppable) state -> { if (tempering) randomMultiplier *= TEMPERING_CUT_DOWN; });
         }
 
         // clear the yard
@@ -76,19 +53,19 @@ public class Students extends SimState {
         for(int i = 0; i < students.size(); i++) {
             Object student = students.get(i);
             // who does he like?
-            Object studentB = null;
+            Object studentB;
             do
                 studentB = students.get(random.nextInt(students.numObjs));
             while (student == studentB);
             double buddiness = random.nextDouble();
-            buddies.addEdge(student, studentB, new Double(buddiness));
+            buddies.addEdge(student, studentB, buddiness);
 
             // who does he dislike?
             do
                 studentB = students.get(random.nextInt(students.numObjs));
             while (student == studentB);
             buddiness = random.nextDouble();
-            buddies.addEdge(student, studentB, new Double( -buddiness));
+            buddies.addEdge(student, studentB, -buddiness);
         }
     }
 

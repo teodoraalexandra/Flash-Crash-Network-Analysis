@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="atom-1.14" level="project" />
     <orderEntry type="library" name="mason.21" level="project" />
+    <orderEntry type="library" name="atom-1.141" level="project" />
   </component>
 </module>

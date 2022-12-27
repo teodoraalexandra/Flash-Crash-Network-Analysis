@@ -10,7 +10,7 @@ public class Main {
         Simulation sim = new MonothreadedSimulation();
         //sim.market.logType = MarketPlace.LONG; // or SHORT
 
-        sim.setLogger(new Logger(System.out));
+        sim.setLogger(new Logger("data.csv"));
 
         String obName = "lvmh";
         sim.addNewOrderBook(obName);
@@ -25,6 +25,6 @@ public class Main {
         sim.run(Day.createEuroNEXT(0, 1000, 0), 1);
         // sim.run(Day.createSinglePeriod(MarketPlace.FIX, 1000));
 
-        sim.market.printState();
+        // sim.market.printState();
     }
 }

@@ -27,7 +27,7 @@ public class Student implements Steppable {
         int len = out.size();
         for(int buddy = 0 ; buddy < len; buddy++) {
             Edge e = (Edge)(out.get(buddy));
-            double buddiness = ((Double)(e.info)).doubleValue();
+            double buddiness = (Double) (e.info);
             // I could be in the to() end or the from() end. getOtherNode is a cute function
             // which grabs the guy at the opposite end from me.
             Double2D him = students.yard.getObjectLocation(e.getOtherNode(this));
@@ -53,8 +53,8 @@ public class Student implements Steppable {
                 (yard.height * 0.5 - me.y) * students.forceToSchoolMultiplier));
 
         // add a bit of randomness
-        sumForces.addIn(new Double2D(students.randomMultiplier * (students.random.nextDouble() * 1.0 - 0.5),
-                students.randomMultiplier * (students.random.nextDouble() * 1.0 - 0.5)));
+        sumForces.addIn(new Double2D(students.randomMultiplier * (students.random.nextDouble() - 0.5),
+                students.randomMultiplier * (students.random.nextDouble() - 0.5)));
         sumForces.addIn(me);
         students.yard.setObjectLocation(this, new Double2D(sumForces));
     }
