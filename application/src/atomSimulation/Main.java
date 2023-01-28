@@ -66,12 +66,5 @@ public class Main {
             sim.run(Day.createEuroNEXT(1, 1, 1), 1);
         }
         sim.market.printState();
-
-        // For project:
-        // Bipartivity,
-        // Assortativity,
-        // Spectral bipartivity,
-        // Clustering,
-        // Community detection
     }
 }

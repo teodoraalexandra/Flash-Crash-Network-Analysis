@@ -13,9 +13,10 @@ for _, row in df.iterrows():
     # Get the values from the row
     first_agent = row["AgTrigger"]
     second_agent = row["ag2"]
+    direction = row["dirTrigger"]
 
     if first_agent != 'noname':
-        G.add_edge(first_agent, second_agent)
+        G.add_edge(first_agent, second_agent, relation=direction)
 
 # Draw the graph
 nx.draw(G, with_labels=True)
