@@ -12,11 +12,12 @@ index = 0
 for _, row in df.iterrows():
     # Get the values from the row
     price = row["price"]
+    first_agent = row["AgTrigger"]
 
-    x_axis.append(index)
-    y_price_axis.append(price)
-
-    index += 1
+    if first_agent != 'noname':
+        x_axis.append(index)
+        y_price_axis.append(price)
+        index += 1
 
 plt.plot(x_axis, y_price_axis)
 plt.title('Price evolution')

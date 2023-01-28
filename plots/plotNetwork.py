@@ -14,7 +14,8 @@ for _, row in df.iterrows():
     first_agent = row["AgTrigger"]
     second_agent = row["ag2"]
 
-    G.add_edge(first_agent, second_agent)
+    if first_agent != 'noname':
+        G.add_edge(first_agent, second_agent)
 
 # Draw the graph
 nx.draw(G, with_labels=True)
