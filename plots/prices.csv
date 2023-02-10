@@ -1,13 +1,15 @@
 Price;obname;price;quty;dirTrigger;AgTrigger;Oid;ag2;Oid2;bestask;bestbid
+Day;numday;obName;firstPrice;lastPrice;lowestPrice;highestPrice;nbPricesFixed
 Price;lvmh;14996;83;p;noname;noname;-1;9223372036854775807
 Price;lvmh;14386;63;A;ZIT1;2;Noise4;Noise4;14386;9223372036854775807
 Price;lvmh;14548;25;A;ZIT2;2;Noise4;Noise4;14548;9223372036854775807
 Price;lvmh;14889;87;A;ZIT5;2;Noise4;Noise4;14889;9223372036854775807
 Price;lvmh;14916;34;A;ZIT6;2;Noise4;Noise4;14916;9223372036854775807
 Price;lvmh;14096;74;A;ZIT4;2;Noise4;Noise4;14096;9223372036854775807
-Price;lvmh;14823;26;A;ZIT7;2;Noise4;Noise4;14823;9223372036854775807
+Price;lvmh;14823;26;A;ZIT7;2;Noise4;Noise4;14823;9223372036854775807T
 Price;lvmh;14982;12;A;ZIT8;2;Noise4;Noise4;14982;9223372036854775807
 Price;lvmh;14836;240;p;noname;noname;14812;9223372036854775807
+Day;1;lvmh;14996;14096;14996;14836;9;
 Price;lvmh;14068;1285;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;53;A;Overvalued_10_3;Overvalued_10_3;Noise5;Noise5;13497;9223372036854775807
 Price;lvmh;13497;162;A;Overvalued_10_7;Overvalued_10_7;Noise5;Noise5;13497;9223372036854775807
@@ -52,6 +54,7 @@ Price;lvmh;14008;98;A;ZIT2;5;Noise5;Noise5;14008;9223372036854775807
 Price;lvmh;14696;80;A;ZIT9;5;Noise5;Noise5;14696;9223372036854775807
 Price;lvmh;13497;179;A;Overvalued_10_7;Overvalued_10_7;Noise5;Noise5;13497;9223372036854775807
 Price;lvmh;14068;1726;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14996;14068;53;
 Price;lvmh;13497;1938;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;85;A;Overvalued_10_3;Overvalued_10_3;Noise4;Noise4;13497;9223372036854775807
 Price;lvmh;13497;709;A;Overvalued_10_7;Overvalued_10_7;Noise4;Noise4;13497;9223372036854775807
@@ -120,6 +123,7 @@ Price;lvmh;14617;73;A;ZIT8;8;Noise6;Noise6;14617;9223372036854775807
 Price;lvmh;13497;128;A;Overvalued_10_7;Overvalued_10_7;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;14853;45;A;ZIT1;8;Noise6;Noise6;14853;9223372036854775807
 Price;lvmh;14039;2750;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14999;14039;121;
 Price;lvmh;14031;3028;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;402;A;Overvalued_10_4;Overvalued_10_4;Noise3;Noise3;13497;9223372036854775807
 Price;lvmh;13497;74;B;Overvalued_10_4;Overvalued_10_4;Noise1;Noise1;13497;9223372036854775807
@@ -214,6 +218,7 @@ Price;lvmh;13497;387;B;Overvalued_10_1;Overvalued_10_1;Noise4;Noise4;13497;92233
 Price;lvmh;13497;121;B;Overvalued_10_1;Overvalued_10_1;Noise2;Noise2;13497;9223372036854775807
 Price;lvmh;13497;89;B;Overvalued_10_5;Overvalued_10_5;Noise2;Noise2;13497;9223372036854775807
 Price;lvmh;13497;254;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14999;13497;215;
 Price;lvmh;13497;489;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;40;B;Overvalued_10_5;Overvalued_10_5;Noise1;Noise1;13497;9223372036854775807
 Price;lvmh;13497;310;B;Overvalued_10_7;Overvalued_10_7;Noise1;Noise1;13497;9223372036854775807
@@ -273,6 +278,7 @@ Price;lvmh;13497;55;B;Overvalued_10_8;Overvalued_10_8;Noise2;Noise2;13497;922337
 Price;lvmh;13497;307;B;Overvalued_10_8;Overvalued_10_8;Noise4;Noise4;13497;9223372036854775807
 Price;lvmh;13497;49;B;Overvalued_10_8;Overvalued_10_8;Noise1;Noise1;13497;9223372036854775807
 Price;lvmh;13497;327;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14999;13497;274;
 Price;lvmh;13497;698;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;101;B;Overvalued_10_3;Overvalued_10_3;Noise3;Noise3;13497;9223372036854775807
 Price;lvmh;13497;91;B;Overvalued_10_2;Overvalued_10_2;Noise3;Noise3;13497;9223372036854775807
@@ -326,6 +332,7 @@ Price;lvmh;13497;95;B;Overvalued_10_2;Overvalued_10_2;Noise4;Noise4;13497;922337
 Price;lvmh;13497;612;B;Overvalued_10_9;Overvalued_10_9;Noise4;Noise4;13497;9223372036854775807
 Price;lvmh;13497;130;B;Overvalued_10_9;Overvalued_10_9;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;394;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14999;13497;327;
 Price;lvmh;13497;755;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;377;B;Overvalued_10_3;Overvalued_10_3;Noise0;Noise0;13497;9223372036854775807
 Price;lvmh;13497;44;B;Overvalued_10_3;Overvalued_10_3;Noise4;Noise4;13497;9223372036854775807
@@ -385,6 +392,7 @@ Price;lvmh;13497;172;B;Overvalued_10_4;Overvalued_10_4;Noise3;Noise3;13497;92233
 Price;lvmh;13497;403;B;Overvalued_10_4;Overvalued_10_4;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;184;B;Overvalued_10_6;Overvalued_10_6;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;237;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14999;13497;386;
 Price;lvmh;13497;470;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;43;B;Overvalued_10_2;Overvalued_10_2;Noise3;Noise3;13497;9223372036854775807
 Price;lvmh;13497;74;B;Overvalued_10_2;Overvalued_10_2;Noise2;Noise2;13497;9223372036854775807
@@ -441,6 +449,7 @@ Price;lvmh;13497;61;B;Overvalued_10_4;Overvalued_10_4;ZIT2;23;13497;14688
 Price;lvmh;13497;125;B;Overvalued_10_4;Overvalued_10_4;Noise4;Noise4;13497;9223372036854775807
 Price;lvmh;13497;854;B;Overvalued_10_8;Overvalued_10_8;Noise4;Noise4;13497;9223372036854775807
 Price;lvmh;13497;186;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14999;13497;442;
 Price;lvmh;13497;405;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;245;B;Overvalued_10_8;Overvalued_10_8;Noise4;Noise4;13497;9223372036854775807
 Price;lvmh;13497;45;B;Overvalued_10_2;Overvalued_10_2;Noise4;Noise4;13497;9223372036854775807
@@ -500,6 +509,7 @@ Price;lvmh;13497;174;B;Overvalued_10_2;Overvalued_10_2;Noise2;Noise2;13497;92233
 Price;lvmh;13497;787;B;Overvalued_10_2;Overvalued_10_2;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;84;B;Overvalued_10_5;Overvalued_10_5;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;391;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14999;13497;501;
 Price;lvmh;13497;584;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;76;B;Overvalued_10_7;Overvalued_10_7;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;488;B;Overvalued_10_4;Overvalued_10_4;Noise6;Noise6;13497;9223372036854775807
@@ -555,6 +565,7 @@ Price;lvmh;13497;28;B;Overvalued_10_6;Overvalued_10_6;Noise5;Noise5;13497;922337
 Price;lvmh;13497;74;B;Overvalued_10_6;Overvalued_10_6;ZIT6;29;13497;14987
 Price;lvmh;13497;202;B;Overvalued_10_6;Overvalued_10_6;Noise3;Noise3;13497;9223372036854775807
 Price;lvmh;13497;268;p;noname;noname;13497;9223372036854775807
+Day;1;lvmh;14996;13497;14999;13497;556;
 Price;lvmh;13497;7072;p;noname;noname;13497;9223372036854775807
 Price;lvmh;13497;583;B;Overvalued_10_3;Overvalued_10_3;Noise2;Noise2;13497;9223372036854775807
 Price;lvmh;13497;212;B;Overvalued_10_3;Overvalued_10_3;Noise4;Noise4;13497;9223372036854775807
@@ -637,6 +648,7 @@ Price;lvmh;13497;115;B;Overvalued_10_8;Overvalued_10_8;Noise0;Noise0;13497;92233
 Price;lvmh;13497;133;B;Overvalued_10_8;Overvalued_10_8;Undervalued_15_6;Undervalued_15_6;13497;17248
 Price;lvmh;13497;10;B;Overvalued_10_1;Overvalued_10_1;Undervalued_15_6;Undervalued_15_6;13497;17248
 Price;lvmh;13497;5522;p;noname;noname;13497;17248
+Day;1;lvmh;14996;13497;14999;13497;638;
 Price;lvmh;13497;6909;p;noname;noname;13497;17248
 Price;lvmh;13497;130;B;Overvalued_10_5;Overvalued_10_5;Undervalued_15_3;Undervalued_15_3;13497;17248
 Price;lvmh;13497;153;B;Overvalued_10_7;Overvalued_10_7;Undervalued_15_3;Undervalued_15_3;13497;17248
@@ -701,6 +713,7 @@ Price;lvmh;13497;65;B;Overvalued_10_8;Overvalued_10_8;Undervalued_15_3;Undervalu
 Price;lvmh;13497;698;B;Overvalued_10_8;Overvalued_10_8;Noise0;Noise0;13497;9223372036854775807
 Price;lvmh;13497;280;B;Overvalued_10_1;Overvalued_10_1;Noise0;Noise0;13497;9223372036854775807
 Price;lvmh;13497;3186;p;noname;noname;13497;17248
+Day;1;lvmh;14996;13497;14999;13497;702;
 Price;lvmh;13497;7542;p;noname;noname;13497;17248
 Price;lvmh;13497;330;B;Overvalued_10_1;Overvalued_10_1;Undervalued_15_8;Undervalued_15_8;13497;17248
 Price;lvmh;13497;74;B;Overvalued_10_5;Overvalued_10_5;Undervalued_15_8;Undervalued_15_8;13497;17248
@@ -761,6 +774,7 @@ Price;lvmh;14010;17;B;ZIT8;17;ZIT1;38;14010;14481
 Price;lvmh;13497;235;B;Overvalued_10_2;Overvalued_10_2;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;470;B;Overvalued_10_2;Overvalued_10_2;Undervalued_15_5;Undervalued_15_5;13497;17248
 Price;lvmh;13497;3838;p;noname;noname;13497;17248
+Day;1;lvmh;14996;13497;14999;13497;762;
 Price;lvmh;14352;9184;p;noname;noname;14352;17248
 Price;lvmh;14352;5;B;ZIT1;22;Undervalued_15_5;Undervalued_15_5;14352;17248
 Price;lvmh;14362;87;B;ZIT1;24;Undervalued_15_5;Undervalued_15_5;14362;17248
@@ -909,6 +923,7 @@ Price;lvmh;17248;160;A;Overvalued_10_2;Overvalued_10_2;Undervalued_15_1;Underval
 Price;lvmh;17248;85;A;ZIT0;41;Undervalued_15_1;Undervalued_15_1;14308;17248
 Price;lvmh;13497;754;A;Overvalued_10_5;Overvalued_10_5;Noise4;Noise4;13497;9223372036854775807
 Price;lvmh;17248;3543;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;910;
 Price;lvmh;17248;6731;p;noname;noname;-1;17248
 Price;lvmh;17248;523;A;Overvalued_10_3;Overvalued_10_3;Undervalued_15_9;Undervalued_15_9;13497;17248
 Price;lvmh;17248;277;A;Overvalued_10_6;Overvalued_10_6;Undervalued_15_9;Undervalued_15_9;13497;17248
@@ -933,6 +948,7 @@ Price;lvmh;13497;600;A;Overvalued_10_9;Overvalued_10_9;Noise5;Noise5;13497;92233
 Price;lvmh;13497;189;A;Overvalued_10_9;Overvalued_10_9;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;17248;36;A;Overvalued_10_9;Overvalued_10_9;Undervalued_15_4;Undervalued_15_4;13497;17248
 Price;lvmh;17248;5397;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;934;
 Price;lvmh;17248;5851;p;noname;noname;-1;17248
 Price;lvmh;17248;328;A;Overvalued_10_9;Overvalued_10_9;Undervalued_15_7;Undervalued_15_7;13497;17248
 Price;lvmh;17248;23;A;Overvalued_10_9;Overvalued_10_9;Undervalued_15_8;Undervalued_15_8;13497;17248
@@ -962,6 +978,7 @@ Price;lvmh;13497;260;A;Overvalued_10_7;Overvalued_10_7;New_Noise0;New_Noise0;134
 Price;lvmh;13497;266;A;Overvalued_10_7;Overvalued_10_7;Noise1;Noise1;13497;9223372036854775807
 Price;lvmh;17248;32;A;Overvalued_10_7;Overvalued_10_7;Undervalued_15_0;Undervalued_15_0;13497;17248
 Price;lvmh;17248;4706;p;noname;noname;-1;9223372036854775807
+Day;1;lvmh;14996;13497;17248;17248;963;
 Price;lvmh;17248;4753;p;noname;noname;-1;17248
 Price;lvmh;17248;823;A;Overvalued_10_1;Overvalued_10_1;Undervalued_15_9;Undervalued_15_9;13497;17248
 Price;lvmh;17248;19;A;Overvalued_10_8;Overvalued_10_8;Undervalued_15_9;Undervalued_15_9;13497;17248
@@ -990,6 +1007,7 @@ Price;lvmh;13497;146;A;Overvalued_10_7;Overvalued_10_7;Noise6;Noise6;13497;92233
 Price;lvmh;13497;197;A;Overvalued_10_7;Overvalued_10_7;Noise2;Noise2;13497;9223372036854775807
 Price;lvmh;14686;29;A;ZIT1;50;Noise2;Noise2;14686;9223372036854775807
 Price;lvmh;17248;5336;p;noname;noname;-1;9223372036854775807
+Day;1;lvmh;14996;13497;17248;17248;991;
 Price;lvmh;17248;5874;p;noname;noname;-1;9223372036854775807
 Price;lvmh;14100;12;A;New_ZIT2;8;New_Noise2;New_Noise2;14100;9223372036854775807
 Price;lvmh;14938;78;A;ZIT8;53;New_Noise2;New_Noise2;14938;9223372036854775807
@@ -1027,6 +1045,7 @@ Price;lvmh;13497;122;A;Overvalued_10_1;Overvalued_10_1;Noise2;Noise2;13497;92233
 Price;lvmh;17248;193;A;Overvalued_10_1;Overvalued_10_1;Undervalued_15_4;Undervalued_15_4;13497;17248
 Price;lvmh;17248;75;A;Overvalued_10_1;Overvalued_10_1;Undervalued_15_2;Undervalued_15_2;13497;17248
 Price;lvmh;17248;7106;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;1028;
 Price;lvmh;17248;6394;p;noname;noname;-1;17248
 Price;lvmh;17248;209;A;Overvalued_10_0;Overvalued_10_0;Undervalued_15_9;Undervalued_15_9;13497;17248
 Price;lvmh;17248;63;A;Overvalued_10_5;Overvalued_10_5;Undervalued_15_9;Undervalued_15_9;13497;17248
@@ -1056,6 +1075,7 @@ Price;lvmh;14320;51;A;ZIT7;56;Noise0;Noise0;14320;9223372036854775807
 Price;lvmh;14420;45;A;ZIT4;56;Noise0;Noise0;14420;9223372036854775807
 Price;lvmh;14740;11;A;ZIT3;56;Noise0;Noise0;14740;9223372036854775807
 Price;lvmh;17248;6510;p;noname;noname;-1;9223372036854775807
+Day;1;lvmh;14996;13497;17248;17248;1057;
 Price;lvmh;17248;5038;p;noname;noname;-1;9223372036854775807
 Price;lvmh;14108;42;A;ZIT9;59;New_Noise2;New_Noise2;14108;9223372036854775807
 Price;lvmh;14610;58;A;ZIT2;59;New_Noise2;New_Noise2;14610;9223372036854775807
@@ -1082,6 +1102,7 @@ Price;lvmh;13497;240;A;Overvalued_10_4;Overvalued_10_4;New_Noise1;New_Noise1;134
 Price;lvmh;13497;180;A;Overvalued_10_4;Overvalued_10_4;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;313;A;Overvalued_10_3;Overvalued_10_3;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;17248;3884;p;noname;noname;-1;9223372036854775807
+Day;1;lvmh;14996;13497;17248;17248;1083;
 Price;lvmh;17248;5574;p;noname;noname;-1;9223372036854775807
 Price;lvmh;13497;524;A;Overvalued_10_7;Overvalued_10_7;Noise0;Noise0;13497;9223372036854775807
 Price;lvmh;13497;417;A;Overvalued_10_7;Overvalued_10_7;Noise4;Noise4;13497;9223372036854775807
@@ -1112,6 +1133,7 @@ Price;lvmh;17248;101;A;Overvalued_10_3;Overvalued_10_3;Undervalued_15_3;Underval
 Price;lvmh;17248;169;A;Overvalued_10_3;Overvalued_10_3;Undervalued_15_3;Undervalued_15_3;13497;17248
 Price;lvmh;14736;75;A;ZIT9;62;Noise3;Noise3;14736;9223372036854775807
 Price;lvmh;17248;5893;p;noname;noname;-1;9223372036854775807
+Day;1;lvmh;14996;13497;17248;17248;1113;
 Price;lvmh;17248;5449;p;noname;noname;-1;17248
 Price;lvmh;13497;33;A;Overvalued_10_7;Overvalued_10_7;Noise2;Noise2;13497;9223372036854775807
 Price;lvmh;13497;770;A;Overvalued_10_7;Overvalued_10_7;New_Noise0;New_Noise0;13497;9223372036854775807
@@ -1145,6 +1167,7 @@ Price;lvmh;13497;303;A;Overvalued_10_5;Overvalued_10_5;Noise6;Noise6;13497;92233
 Price;lvmh;17248;290;A;Overvalued_10_5;Overvalued_10_5;Undervalued_15_6;Undervalued_15_6;13497;17248
 Price;lvmh;17248;14;A;Overvalued_10_5;Overvalued_10_5;Undervalued_15_0;Undervalued_15_0;13497;17248
 Price;lvmh;17248;6773;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;1146;
 Price;lvmh;17248;6345;p;noname;noname;-1;17248
 Price;lvmh;13497;452;A;Overvalued_10_3;Overvalued_10_3;Noise2;Noise2;13497;9223372036854775807
 Price;lvmh;14871;47;A;ZIT9;68;Noise2;Noise2;14871;9223372036854775807
@@ -1174,6 +1197,7 @@ Price;lvmh;13497;50;A;Overvalued_10_2;Overvalued_10_2;Noise4;Noise4;13497;922337
 Price;lvmh;13497;230;A;Overvalued_10_2;Overvalued_10_2;Noise6;Noise6;13497;9223372036854775807
 Price;lvmh;13497;27;A;Overvalued_10_2;Overvalued_10_2;Noise5;Noise5;13497;9223372036854775807
 Price;lvmh;17248;5475;p;noname;noname;-1;9223372036854775807
+Day;1;lvmh;14996;13497;17248;17248;1175;
 Price;lvmh;17248;6377;p;noname;noname;-1;17248
 Price;lvmh;13497;603;A;Overvalued_10_6;Overvalued_10_6;Noise1;Noise1;13497;9223372036854775807
 Price;lvmh;17248;206;A;Overvalued_10_6;Overvalued_10_6;Undervalued_15_7;Undervalued_15_7;13497;17248
@@ -1203,6 +1227,7 @@ Price;lvmh;14712;46;A;New_ZIT1;26;New_Noise1;New_Noise1;14712;922337203685477580
 Price;lvmh;13497;145;A;Overvalued_10_9;Overvalued_10_9;New_Noise1;New_Noise1;13497;9223372036854775807
 Price;lvmh;13497;554;A;Overvalued_10_9;Overvalued_10_9;Noise3;Noise3;13497;9223372036854775807
 Price;lvmh;17248;4577;p;noname;noname;-1;9223372036854775807
+Day;1;lvmh;14996;13497;17248;17248;1204;
 Price;lvmh;17248;5702;p;noname;noname;-1;9223372036854775807
 Price;lvmh;13497;259;A;Overvalued_10_2;Overvalued_10_2;New_Noise1;New_Noise1;13497;9223372036854775807
 Price;lvmh;13497;387;A;Overvalued_10_2;Overvalued_10_2;New_Noise0;New_Noise0;13497;9223372036854775807
@@ -1231,6 +1256,7 @@ Price;lvmh;13497;280;A;Overvalued_10_5;Overvalued_10_5;New_Noise0;New_Noise0;134
 Price;lvmh;13497;194;A;Overvalued_10_5;Overvalued_10_5;New_Noise2;New_Noise2;13497;9223372036854775807
 Price;lvmh;14573;44;A;New_ZIT2;29;New_Noise2;New_Noise2;14573;9223372036854775807
 Price;lvmh;17248;4568;p;noname;noname;-1;9223372036854775807
+Day;1;lvmh;14996;13497;17248;17248;1232;
 Price;lvmh;17248;10061;p;noname;noname;-1;9223372036854775807
 Price;lvmh;13799;387;A;Overvalued_20_3;Overvalued_20_3;New_Noise0;New_Noise0;13799;9223372036854775807
 Price;lvmh;14889;44;A;ZIT6;77;New_Noise0;New_Noise0;14889;9223372036854775807
@@ -1281,6 +1307,7 @@ Price;lvmh;17248;454;A;Overvalued_10_6;Overvalued_10_6;Undervalued_15_8;Underval
 Price;lvmh;17248;100;A;Overvalued_10_2;Overvalued_10_2;Undervalued_15_8;Undervalued_15_8;13497;17248
 Price;lvmh;17248;276;A;Overvalued_10_2;Overvalued_10_2;Undervalued_15_0;Undervalued_15_0;13497;17248
 Price;lvmh;17248;11060;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;1282;
 Price;lvmh;17248;12752;p;noname;noname;-1;17248
 Price;lvmh;13497;132;A;Overvalued_10_4;Overvalued_10_4;Noise1;Noise1;13497;9223372036854775807
 Price;lvmh;13497;444;A;Overvalued_10_4;Overvalued_10_4;New_Noise0;New_Noise0;13497;9223372036854775807
@@ -1334,6 +1361,7 @@ Price;lvmh;13497;80;A;Overvalued_10_0;Overvalued_10_0;Noise6;Noise6;13497;922337
 Price;lvmh;13799;787;A;Overvalued_20_2;Overvalued_20_2;Noise6;Noise6;13799;9223372036854775807
 Price;lvmh;17248;4;A;Overvalued_20_2;Overvalued_20_2;Undervalued_15_4;Undervalued_15_4;13799;17248
 Price;lvmh;17248;11622;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;1335;
 Price;lvmh;17248;8793;p;noname;noname;-1;17248
 Price;lvmh;17248;10;A;New_ZIT2;38;Undervalued_15_5;Undervalued_15_5;14232;17248
 Price;lvmh;17248;77;A;Overvalued_20_9;Overvalued_20_9;Undervalued_15_5;Undervalued_15_5;13799;17248
@@ -1376,6 +1404,7 @@ Price;lvmh;17248;43;A;Overvalued_10_2;Overvalued_10_2;Undervalued_15_9;Undervalu
 Price;lvmh;17248;357;A;Overvalued_20_0;Overvalued_20_0;Undervalued_15_9;Undervalued_15_9;13799;17248
 Price;lvmh;17248;422;A;Overvalued_20_0;Overvalued_20_0;Undervalued_15_4;Undervalued_15_4;13799;17248
 Price;lvmh;17248;10117;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;1377;
 Price;lvmh;17248;10640;p;noname;noname;-1;17248
 Price;lvmh;17248;91;A;Overvalued_20_5;Overvalued_20_5;Undervalued_15_1;Undervalued_15_1;13799;17248
 Price;lvmh;17248;27;A;ZIT4;86;Undervalued_15_1;Undervalued_15_1;14772;17248
@@ -1424,6 +1453,7 @@ Price;lvmh;13497;480;A;Overvalued_10_2;Overvalued_10_2;New_Noise1;New_Noise1;134
 Price;lvmh;17248;40;A;Overvalued_10_2;Overvalued_10_2;Undervalued_15_6;Undervalued_15_6;13497;17248
 Price;lvmh;17248;159;A;Overvalued_10_2;Overvalued_10_2;Undervalued_15_4;Undervalued_15_4;13497;17248
 Price;lvmh;17248;8455;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;1425;
 Price;lvmh;17248;11877;p;noname;noname;-1;17248
 Price;lvmh;17248;221;A;Overvalued_20_9;Overvalued_20_9;Undervalued_15_9;Undervalued_15_9;13799;17248
 Price;lvmh;17248;481;A;Overvalued_20_9;Overvalued_20_9;Undervalued_15_5;Undervalued_15_5;13799;17248
@@ -1473,6 +1503,7 @@ Price;lvmh;17248;26;A;Overvalued_10_4;Overvalued_10_4;Undervalued_15_2;Undervalu
 Price;lvmh;17248;123;A;Overvalued_10_4;Overvalued_10_4;Undervalued_15_8;Undervalued_15_8;13497;17248
 Price;lvmh;17248;231;A;Overvalued_10_4;Overvalued_10_4;Undervalued_15_5;Undervalued_15_5;13497;17248
 Price;lvmh;17248;10135;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;1474;
 Price;lvmh;17248;13223;p;noname;noname;-1;17248
 Price;lvmh;17248;152;A;Overvalued_10_7;Overvalued_10_7;Undervalued_15_8;Undervalued_15_8;13497;17248
 Price;lvmh;17248;127;A;Overvalued_10_7;Overvalued_10_7;Undervalued_15_4;Undervalued_15_4;13497;17248
@@ -1520,3 +1551,4 @@ Price;lvmh;13497;42;A;Overvalued_10_1;Overvalued_10_1;Noise1;Noise1;13497;922337
 Price;lvmh;14887;59;A;ZIT1;92;Noise1;Noise1;14887;9223372036854775807
 Price;lvmh;13799;221;A;Overvalued_20_6;Overvalued_20_6;Noise1;Noise1;13799;9223372036854775807
 Price;lvmh;17248;12965;p;noname;noname;-1;17248
+Day;1;lvmh;14996;13497;17248;17248;1521;
