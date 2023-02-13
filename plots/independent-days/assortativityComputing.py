@@ -13,8 +13,14 @@ def compute_assortativity(prices):
     for price in prices:
         if price.first_agent.startswith("Overvalued") or price.first_agent.startswith("Undervalued"):
             informed.append(price.first_agent)
-        else:
+        elif price.first_agent.startswith("ZIT") or price.first_agent.startswith("Noise"):
             uninformed.append(price.first_agent)
+
+        if price.second_agent.startswith("Overvalued") or price.second_agent.startswith("Undervalued"):
+            informed.append(price.second_agent)
+        elif price.second_agent.startswith("ZIT") or price.second_agent.startswith("Noise"):
+            uninformed.append(price.second_agent)
+
         edges.append((price.first_agent, price.second_agent))
 
     G.add_nodes_from(informed, bipartite=0)
