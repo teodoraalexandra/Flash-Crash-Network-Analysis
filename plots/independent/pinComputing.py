@@ -1,4 +1,4 @@
-from processFile import *
+from plots.independent.processFile import *
 
 
 def compute_pin(prices):
@@ -14,10 +14,10 @@ def compute_pin(prices):
     return informed_transactions / total_transactions
 
 
-index = 1
-result = process()
-
-for day, price_array in result.items():
-    PIN = compute_pin(price_array)
-    print("Day: ", index, " PIN: ", PIN)
-    index += 1
+# index = 1
+# result = process()
+#
+# for day, price_array in result.items():
+#     PIN = compute_pin(price_array)
+#     print("Day: ", index, " PIN: ", PIN)
+#     index += 1

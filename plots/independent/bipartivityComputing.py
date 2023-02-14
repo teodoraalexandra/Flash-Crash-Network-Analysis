@@ -1,8 +1,8 @@
-from processFile import *
+from plots.independent.processFile import *
 import networkx as nx
 
 
-def compute_assortativity(prices):
+def compute_bipartivity(prices):
     # Create an empty graph
     G = nx.Graph()
 
@@ -27,21 +27,14 @@ def compute_assortativity(prices):
     G.add_nodes_from(uninformed, bipartite=1)
     G.add_edges_from(edges)
 
-    # Compute the assortativity of the graph
-    # This function calculates Pearson's correlation coefficient between
-    # the degrees of all pairs of connected nodes in the graph.
-    return nx.degree_assortativity_coefficient(G)
+    # Boolean alternative: nx.is_bipartite(G)
+    return nx.density(G)
 
 
-index = 1
-result = process()
-
-for day, price_array in result.items():
-    assortativity = compute_assortativity(price_array)
-    print("Day: ", index, "Assortativity: ", assortativity)
-    index += 1
-
-# The degree_assortativity_coefficient function returns a value between -1 and 1,
-# where a value of -1 means that nodes tend to connect to nodes with a different degree,
-# a value of 0 means that the degree of connected nodes is uncorrelated,
-# and a value of 1 means that nodes tend to connect to nodes with the same degree.
+# index = 1
+# result = process()
+#
+# for day, price_array in result.items():
+#     bipartivity = compute_bipartivity(price_array)
+#     print("Day: ", index, "Bipartivity: ", bipartivity)
+#     index += 1
