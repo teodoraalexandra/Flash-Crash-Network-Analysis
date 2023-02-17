@@ -26,7 +26,7 @@ python3 -m compileall "$program_dir"
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=5
+n=1
 
 for i in $(seq 1 $n); do
     echo "Start simulation $i..."
@@ -42,7 +42,5 @@ for i in $(seq 1 $n); do
     python3 "$program_dir/bipartivity_mean_creation.py"
 done
 
-# Run the Python programs for computation
-python3 "$program_dir/PIN_mean_computation.py"
-python3 "$program_dir/assortativity_mean_computation.py"
-python3 "$program_dir/bipartivity_mean_computation.py"
+# Run the Python program for computation & plot correlations
+python3 "$program_dir/correlation_plots.py"
