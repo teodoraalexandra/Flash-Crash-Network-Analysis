@@ -29,7 +29,7 @@ class Day:
 
 
 def process():
-    with open("../prices.csv", "r") as csvfile:
+    with open("plots/prices.csv", "r") as csvfile:
         reader_variable = csv.reader(csvfile, delimiter=";")
 
         # Skip the first two headers
