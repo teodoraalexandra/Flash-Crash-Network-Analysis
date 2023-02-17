@@ -70,10 +70,10 @@ def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_a
                     y_informed.append(round(mean(value)))
 
         # Plotting the points
-        if len(y_noise) > 0 and agent.startswith('Noise'):
+        if agent.startswith('Noise'):
             with list_lock:
                 y_noise_all.append(y_noise)
-        if len(y_informed) > 0 and agent.startswith('Overvalued'):
+        if agent.startswith('Overvalued'):
             with list_lock:
                 y_informed_all.append(y_informed)
 
