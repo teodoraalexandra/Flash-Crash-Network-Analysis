@@ -26,7 +26,7 @@ python3 -m compileall "$program_dir"
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=1
+n=50
 
 for i in $(seq 1 $n); do
     echo "Start simulation $i..."

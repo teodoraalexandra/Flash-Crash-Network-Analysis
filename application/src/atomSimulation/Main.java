@@ -18,44 +18,41 @@ public class Main {
 
         // Step 4. Create agents that will be used and add them to the simulation.
         // Default for ZIT: cash=0, minPrice=14k, maxPrice=15k, minQty=10, maxQty=100
+        // Informed agents -> We will try to simulate a crash by adding them -> Disequilibrium in market
 
-        for (int day = 0; day <= 30; day++) {
-            // ZIT agents: 10 - initialized in day 0
+        for (int day = 0; day <= 100; day++) {
             if (day == 0) {
-                for (int index = 0; index < 10; index++) {
-                    sim.addNewAgent(new ZIT("ZIT" + index));
-                }
-            }
-
-            // Noise agents: 7 - initialized in day 0
-            if (day == 0) {
-                for (int index = 0; index < 7; index++) {
-                    sim.addNewAgent(new NoiseAgent("Noise" + index));
-                }
-            }
-
-            // Informed agents: 10 -> We will try to simulate a crash by adding them -> Disequilibrium in market
-            if (day == 1) {
-                for (int index = 0; index < 10; index++) {
-                    sim.addNewAgent(new InformedAgent("Overvalued_10_" + index, sim.market.orderBooks.get("lvmh").highestPriceOfDay, true, 10));
+                for (int index = 0; index < 30; index++) {
+                    sim.addNewAgent(new ZIT("ZIT1" + index));
                 }
             }
 
             if (day == 10) {
-                for (int index = 0; index < 10; index++) {
-                    sim.addNewAgent(new InformedAgent("Undervalued_15_" + index, sim.market.orderBooks.get("lvmh").highestPriceOfDay, false, 15));
+                for (int index = 0; index < 40; index++) {
+                    sim.addNewAgent(new InformedAgent("Overvalued_10_" + index, sim.market.orderBooks.get("lvmh").highestPriceOfDay, true, 10));
                 }
             }
 
             if (day == 15) {
-                for (int index = 0; index < 3; index++) {
-                    sim.addNewAgent(new ZIT("New_ZIT" + index));
-                    sim.addNewAgent(new NoiseAgent("New_Noise" + index));
+                for (int index = 0; index < 25; index++) {
+                    sim.addNewAgent(new ZIT("ZIT2" + index));
                 }
             }
 
-            if (day == 25) {
-                for (int index = 0; index < 10; index++) {
+            if (day == 30) {
+                for (int index = 0; index < 20; index++) {
+                    sim.addNewAgent(new InformedAgent("Undervalued_15_" + index, sim.market.orderBooks.get("lvmh").highestPriceOfDay, false, 15));
+                }
+            }
+
+            if (day == 50) {
+                for (int index = 0; index < 25; index++) {
+                    sim.addNewAgent(new ZIT("ZIT3" + index));
+                }
+            }
+
+            if (day == 60) {
+                for (int index = 0; index < 40; index++) {
                     sim.addNewAgent(new InformedAgent("Overvalued_20_" + index, sim.market.orderBooks.get("lvmh").highestPriceOfDay, true, 20));
                 }
             }
