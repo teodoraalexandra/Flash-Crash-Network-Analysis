@@ -26,13 +26,14 @@ python3 -m compileall "$program_dir"
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=50
+n=1
 
 for i in $(seq 1 $n); do
     echo "Start simulation $i..."
 
     # Run the program and print the output to prices.csv
-    java -cp "$classpath" atomSimulation.Main
+    # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
+    java -cp "$classpath" atomSimulation.Main 50 1 10 1
 
     cat data.csv | grep "^\(Price\|Day\).*" > plots/prices.csv
 

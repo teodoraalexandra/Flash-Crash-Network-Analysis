@@ -1,11 +1,19 @@
 package atomSimulation;
 
 import fr.cristal.smac.atom.*;
-import fr.cristal.smac.atom.agents.*;
 
 public class Main {
     public static void main(String[] args)
     {
+        // Pre-requisite: Initialize the parameters
+        int NUMBER_OF_PERSONS = Integer.parseInt(args[0]);
+        double PERCENTAGE_OF_INFORMED = Double.parseDouble(args[1]);
+        int AGGRESSIVITY = Integer.parseInt(args[2]);
+        int DAYS_OF_SIMULATION = Integer.parseInt(args[3]);
+
+        int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
+        int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS;
+
         // Step 1. Create a simulation object by choosing a mono or multithreaded implementation.
         Simulation sim = new MonothreadedSimulation();
 
@@ -20,48 +28,17 @@ public class Main {
         // Default for ZIT: cash=0, minPrice=14k, maxPrice=15k, minQty=10, maxQty=100
         // Informed agents -> We will try to simulate a crash by adding them -> Disequilibrium in market
 
-        for (int day = 0; day <= 100; day++) {
-            if (day == 0) {
-                for (int index = 0; index < 30; index++) {
-                    sim.addNewAgent(new ZIT("ZIT1" + index));
-                }
-            }
-
-            if (day == 10) {
-                for (int index = 0; index < 40; index++) {
-                    sim.addNewAgent(new InformedAgent("Overvalued_10_" + index, sim.market.orderBooks.get("lvmh").highestPriceOfDay, true, 10));
-                }
-            }
-
-            if (day == 15) {
-                for (int index = 0; index < 25; index++) {
-                    sim.addNewAgent(new ZIT("ZIT2" + index));
-                }
-            }
-
-            if (day == 30) {
-                for (int index = 0; index < 20; index++) {
-                    sim.addNewAgent(new InformedAgent("Undervalued_15_" + index, sim.market.orderBooks.get("lvmh").highestPriceOfDay, false, 15));
-                }
-            }
-
-            if (day == 50) {
-                for (int index = 0; index < 25; index++) {
-                    sim.addNewAgent(new ZIT("ZIT3" + index));
-                }
-            }
-
-            if (day == 60) {
-                for (int index = 0; index < 40; index++) {
-                    sim.addNewAgent(new InformedAgent("Overvalued_20_" + index, sim.market.orderBooks.get("lvmh").highestPriceOfDay, true, 20));
-                }
-            }
-
-            // Step 5. Launch the simulation with a specification of the structure of trading day
-            // (defaults are provided for EuroNEXT) and the number of days to simulate.
-            // Simulation on min 30 days
-            sim.run(Day.createEuroNEXT(1, 1, 1), 1);
+        for (int index = 1; index <= UNINFORMED_TRADERS; index++) {
+            sim.addNewAgent(new NoiseAgent("Noise" + index));
         }
+
+        for (int index = 1; index <= INFORMED_TRADERS; index++) {
+            sim.addNewAgent(new InformedAgent("Overvalued" + index, AGGRESSIVITY));
+        }
+
+        // Step 5. Launch the simulation with a specification of the structure of trading day
+        // (defaults are provided for EuroNEXT) and the number of days to simulate.
+        sim.run(Day.createEuroNEXT(10, 200, 5), DAYS_OF_SIMULATION);
         sim.market.printState();
     }
 }

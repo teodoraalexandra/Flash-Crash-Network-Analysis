@@ -1,49 +1,43 @@
 package atomSimulation;
 
-import java.util.Random;
-
 import fr.cristal.smac.atom.*;
 import fr.cristal.smac.atom.orders.*;
 
 // Informed agents have private information about the true value of the security
 class InformedAgent extends Agent {
-    long lastPriceOfDay;
-    boolean isOvervalued;
+    protected long minPrice;
+    protected long maxPrice;
+    protected int minQuty;
+    protected int maxQuty;
     int percentage;
-    public InformedAgent(String name, long lastPriceOfDay, boolean isOvervalued, int percentage) {
-        super(name);
-        this.lastPriceOfDay = lastPriceOfDay;
-        this.isOvervalued = isOvervalued;
+
+    public InformedAgent(String name, int percentage) {
+        super(name, 0L);
+        this.minPrice = 14000L;
+        this.maxPrice = 15000L;
+        this.minQuty = 10;
+        this.maxQuty = 100;
         this.percentage = percentage;
     }
 
-    // a. Generate private information about the true value of the security
-    // b. Based on the private information and the current market price, decide whether to submit a buy or sell order
-    // c. Submit the order with a random size
     public Order decide(String obName, Day day) {
-        Random random = new Random();
-        int randomQuantity = random.nextInt(1000 + 1 - 10) + 10;
-        if (this.isOvervalued) {
-            market.log.info("Sending an ASK order [tick="+day.currentTick()+"]");
-            // Price lower than the current market price
+        if (day.dayNumber > 30) {
+            double n = Math.random();
+
+            char dir = (char) (n > 0.5 ? 66 : 65);
+            int quty = this.minQuty + (int) (Math.random() * (double) (this.maxQuty - this.minQuty));
+
+            // Price lower than the min market price
             // They believe that the security is overvalued
-            // They want to sell it at a lower price than the current market price
-            long informedPrice = this.lastPriceOfDay - ((this.percentage * this.lastPriceOfDay) / 100);
-            if (informedPrice <= 0 || this.lastPriceOfDay == -1) {
-                return new MarketOrder(obName, this.name, LimitOrder.ASK, randomQuantity);
-            } else {
-                return new LimitOrder(obName, this.name, LimitOrder.ASK, randomQuantity, informedPrice);
-            }
+            // They want to sell it at a lower price than the min market price
+            long price = this.minPrice - ((this.percentage * this.minPrice) / 100);
+            return new LimitOrder(obName, "" + this.myId, dir, quty, price);
+
+            // NOT YET IMPLEMENTED. Case where the information is undervalued
+            // Price higher than the max market price
+            // They believe that the security is undervalued
+            // They want to buy it at a higher price than the max market price
         }
-        market.log.info("Sending a BID order [tick="+day.currentTick()+"]");
-        // Price higher than the current market price
-        // They believe that the security is undervalued
-        // They want to buy it at a higher price than the current market price
-        long informedPrice = this.lastPriceOfDay + ((this.percentage * this.lastPriceOfDay) / 100);
-        if (informedPrice <= 0 || this.lastPriceOfDay == -1) {
-            return new MarketOrder(obName, this.name, LimitOrder.BID, randomQuantity);
-        } else {
-            return new LimitOrder(obName, this.name, LimitOrder.BID, randomQuantity, informedPrice);
-        }
+        return null;
     }
 }
