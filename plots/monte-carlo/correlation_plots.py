@@ -49,15 +49,10 @@ print("Correlation matrix PIN-bipartivity: \n", correlation_matrix_bipartivity)
 # The blue line is the regression line
 
 plt.style.use('ggplot')
-slope, intercept, correlation_matrix_assortativity, p, stderr = scipy.stats.linregress(x_axis_PIN, y_axis_assortativity)
-slope2, intercept2, correlation_matrix_bipartivity, p2, stderr2 = scipy.stats.linregress(x_axis_PIN, y_axis_bipartivity)
-line = f'Regression line: y={intercept:.2f}+{slope:.2f}x, r={correlation_matrix_assortativity:.2f}'
-line2 = f'Regression line: y={intercept2:.2f}+{slope2:.2f}x, r={correlation_matrix_bipartivity:.2f}'
 
 # Plot first
 fig1, ax1 = plt.subplots()
 ax1.plot(x_axis_PIN, y_axis_assortativity, linewidth=0, marker='s', label='Data points')
-ax1.plot(x_axis_PIN, intercept + slope * x_axis_PIN, label=line)
 ax1.set_xlabel('PIN')
 ax1.set_ylabel('ASSORTATIVITY')
 ax1.legend(facecolor='white')
@@ -66,7 +61,6 @@ plt.savefig("plot_correlation_1.png")
 # Plot second
 fig2, ax2 = plt.subplots()
 ax2.plot(x_axis_PIN, y_axis_bipartivity, linewidth=0, marker='s', label='Data points')
-ax2.plot(x_axis_PIN, intercept2 + slope2 * x_axis_PIN, label=line2)
 ax2.set_xlabel('PIN')
 ax2.set_ylabel('BIPARTIVITY')
 ax2.legend(facecolor='white')

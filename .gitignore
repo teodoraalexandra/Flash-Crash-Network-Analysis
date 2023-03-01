@@ -1,1 +1,6 @@
 *.csv
+*.class
+*.png
+out
+venv
+.idea

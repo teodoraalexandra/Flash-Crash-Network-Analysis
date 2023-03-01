@@ -38,7 +38,12 @@ public class Main {
 
         // Step 5. Launch the simulation with a specification of the structure of trading day
         // (defaults are provided for EuroNEXT) and the number of days to simulate.
+        System.out.println("Simulation running...");
+        long start = System.currentTimeMillis();
         sim.run(Day.createEuroNEXT(10, 200, 5), DAYS_OF_SIMULATION);
+        long end = System.currentTimeMillis();
+        float sec = (end - start) / 1000F;
         sim.market.printState();
+        System.out.println("Finished in " + sec + " seconds.\n");
     }
 }
