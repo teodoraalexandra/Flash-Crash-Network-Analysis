@@ -10,6 +10,7 @@ public class Main {
         double PERCENTAGE_OF_INFORMED = Double.parseDouble(args[1]);
         int AGGRESSIVITY = Integer.parseInt(args[2]);
         int DAYS_OF_SIMULATION = Integer.parseInt(args[3]);
+        int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
         int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS;
@@ -18,7 +19,7 @@ public class Main {
         Simulation sim = new MonothreadedSimulation();
 
         // Step 2. Define what kind of logging you need.
-        sim.setLogger(new Logger("data.csv"));
+        sim.setLogger(new Logger("csvs/data" + SIMULATION_INDEX + ".csv"));
 
         // Step 3. Create orderbooks.
         String obName = "lvmh";
@@ -38,12 +39,12 @@ public class Main {
 
         // Step 5. Launch the simulation with a specification of the structure of trading day
         // (defaults are provided for EuroNEXT) and the number of days to simulate.
-        System.out.println("Simulation running...");
+        // System.out.println("Simulation running...");
         long start = System.currentTimeMillis();
         sim.run(Day.createEuroNEXT(10, 200, 5), DAYS_OF_SIMULATION);
         long end = System.currentTimeMillis();
         float sec = (end - start) / 1000F;
-        sim.market.printState();
-        System.out.println("Finished in " + sec + " seconds.\n");
+        // sim.market.printState();
+        // System.out.println("Finished in " + sec + " seconds.\n");
     }
 }
