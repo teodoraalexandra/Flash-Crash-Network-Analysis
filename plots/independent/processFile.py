@@ -28,8 +28,8 @@ class Day:
         return f"Day: {self.first_price} {self.last_price} {self.lowest_price} {self.highest_price} {self.fixed_prices}"
 
 
-def process():
-    with open("plots/prices.csv", "r") as csvfile:
+def process(i):
+    with open("plots/csvs/prices" + str(i) + ".csv", "r") as csvfile:
         reader_variable = csv.reader(csvfile, delimiter=";")
 
         # Skip the first two headers

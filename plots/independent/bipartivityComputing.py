@@ -1,17 +1,10 @@
-from plots.independent.network import *
+from plots.independent.network import create_graph
 from networkx.algorithms import bipartite
+import networkx as nx
 
 
 def compute_bipartivity(prices):
-    G = create_graph(prices)
+    g = create_graph(prices)
 
-    return bipartite.spectral_bipartivity(G)
-
-
-# index = 1
-# result = process()
-#
-# for day, price_array in result.items():
-#     bipartivity = compute_bipartivity(price_array)
-#     print("Day: ", index, "Bipartivity: ", bipartivity)
-#     index += 1
+    # return bipartite.spectral_bipartivity(g)
+    return nx.density(g)
