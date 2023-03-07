@@ -16,6 +16,10 @@ javac -cp atom-1.14.jar application/src/atomSimulation/Main.java application/src
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
 n=50
+days=100
+percentage=10
+persons=200
+informed=5
 
 javaPart() {
   local i=$1
@@ -24,7 +28,7 @@ javaPart() {
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "C:\Users\dant\Desktop\Master-Thesis\application\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" atomSimulation.Main 200 1 10 100 "$i"
+  java -classpath "C:\Users\dant\Desktop\Master-Thesis\application\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" atomSimulation.Main "$persons" "$informed" "$percentage" "$days" "$i"
   cat "csvs/data$i.csv" | grep "^\(Price\|Day\).*" > "plots/csvs/prices$i.csv"
 }
 
@@ -32,7 +36,7 @@ pythonComputationPart() {
   echo "Start Python Computation..."
 
   # Run the Python program for creation
-  python plots/monte-carlo/csv_mean_creation.py $n
+  python plots/monte-carlo/csv_mean_creation.py $n $days
   echo -e "PIN, assortativity and bipartivity csv files was generated. \n"
 }
 

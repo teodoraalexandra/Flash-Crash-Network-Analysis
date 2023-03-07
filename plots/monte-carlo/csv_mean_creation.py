@@ -8,11 +8,12 @@ import multiprocessing
 import sys
 
 
-def task(index, mean_PIN_results, mean_assortativity_results, mean_bipartivity_results, lock):
+def task(index, mean_PIN_results, mean_assortativity_results, mean_bipartivity_results, y_price_axis, lock):
     result = process(index + 1)
     PIN_results = []
     assortativity_results = []
     bipartivity_results = []
+    intermediate_y = []
 
     for day, price_array in result.items():
         PIN = compute_pin(price_array)
@@ -23,6 +24,8 @@ def task(index, mean_PIN_results, mean_assortativity_results, mean_bipartivity_r
 
         bipartivity = compute_bipartivity(price_array)
         bipartivity_results.append(bipartivity)
+
+        intermediate_y.append(int(day.last_price))
 
         # For network graph displaying
         # Informed = RED
@@ -35,6 +38,8 @@ def task(index, mean_PIN_results, mean_assortativity_results, mean_bipartivity_r
         # plt.title("Day " + str(index))
         # plt.show()
 
+    y_price_axis.append(intermediate_y)
+
     with lock:
         mean_PIN_results.append(PIN_results)
         mean_assortativity_results.append(assortativity_results)
@@ -46,12 +51,13 @@ if __name__ == '__main__':
     mean_PIN_results = multiprocessing.Manager().list()
     mean_assortativity_results = multiprocessing.Manager().list()
     mean_bipartivity_results = multiprocessing.Manager().list()
+    y_price_axis = multiprocessing.Manager().list()
     lock = multiprocessing.Lock()
 
     # Create three processes for each task using a for loop
     processes = []
     for simulationIndex in range(int(sys.argv[1])):
-        process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results, mean_assortativity_results, mean_bipartivity_results, lock))
+        process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results, mean_assortativity_results, mean_bipartivity_results, y_price_axis, lock))
         processes.append(process)
 
     # Start all processes
@@ -63,6 +69,18 @@ if __name__ == '__main__':
         process.join()
 
     print('Monte Carlo done. Start correlations!\n')
+    x_axis = []
+    plt.figure().set_figheight(5)
+    for dayIndex in range(int(sys.argv[2])):
+        x_axis.append(dayIndex + 1)
+    for simulationIndex in range(int(sys.argv[1])):
+        plt.plot(x_axis, y_price_axis[simulationIndex], label="Simulation" + str(simulationIndex + 1))
+    plt.title('Price evolution')
+    plt.xlabel('Time')
+    plt.ylabel('Price')
+    # plt.legend(bbox_to_anchor=(1, 1))
+    plt.savefig("price_evolution.png")
+
     # Convert the data to a numpy array & compute the average of each column
     mean_PIN_results = np.array(mean_PIN_results, dtype=float)
     mean_PIN_results = np.mean(mean_PIN_results, axis=0)

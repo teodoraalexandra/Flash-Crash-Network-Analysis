@@ -17,7 +17,8 @@ class Price:
 
 
 class Day:
-    def __int__(self, first_price, last_price, lowest_price, highest_price, fixed_prices):
+    def __int__(self, day_number, first_price, last_price, lowest_price, highest_price, fixed_prices):
+        self.day_number = day_number
         self.first_price = first_price
         self.last_price = last_price
         self.lowest_price = lowest_price
@@ -25,7 +26,7 @@ class Day:
         self.fixed_prices = fixed_prices
 
     def __str__(self):
-        return f"Day: {self.first_price} {self.last_price} {self.lowest_price} {self.highest_price} {self.fixed_prices}"
+        return f"Day {self.day_number}: {self.first_price} {self.last_price} {self.lowest_price} {self.highest_price} {self.fixed_prices}"
 
 
 def process(i):
@@ -63,6 +64,7 @@ def process(i):
                 day_object = Day()
 
                 # Append the properties
+                day_object.day_number = row[1]
                 day_object.first_price = row[3]
                 day_object.last_price = row[4]
                 day_object.lowest_price = row[5]
