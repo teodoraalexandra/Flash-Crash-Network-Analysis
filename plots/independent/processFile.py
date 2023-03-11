@@ -29,7 +29,7 @@ class Day:
         return f"Day {self.day_number}: {self.first_price} {self.last_price} {self.lowest_price} {self.highest_price} {self.fixed_prices}"
 
 
-def process(i):
+def read_csv_prices(i):
     with open("plots/csvs/prices" + str(i) + ".csv", "r") as csvfile:
         reader_variable = csv.reader(csvfile, delimiter=";")
 
