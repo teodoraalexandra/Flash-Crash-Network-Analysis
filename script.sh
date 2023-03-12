@@ -18,11 +18,11 @@ javac -cp atom-1.14.jar application/src/atomSimulation/Main.java application/src
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=2
+n=5
 days=100
-percentage=10
+percentage=30
 persons=200
-informed=5
+informed=11
 
 javaPart() {
   local i=$1

@@ -1,8 +1,5 @@
 from plots.independent.processFile import read_csv_prices
-from plots.independent.pinComputing import compute_pin
-from plots.independent.assortativityComputing import compute_assortativity
-from plots.independent.bipartivityComputing import compute_bipartivity
-from plots.independent.spectralBipartivityComputing import compute_spectral_bipartivity
+from plots.independent.computeMetrics import compute_metrics
 from plots.independent.plotNetwork import plot_network
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +7,7 @@ import multiprocessing
 import sys
 
 
-def task(index, mean_PIN_results, mean_assortativity_results, mean_bipartivity_results, mean_spectral_results, y_price_axis, lock):
+def task(index, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list, mean_spectral_list, y_axis, list_lock):
     result = read_csv_prices(index + 1)
     PIN_results = []
     assortativity_results = []
@@ -19,27 +16,21 @@ def task(index, mean_PIN_results, mean_assortativity_results, mean_bipartivity_r
     intermediate_y = []
 
     for day, price_array in result.items():
-        PIN = compute_pin(price_array)
+        PIN, assortativity, bipartivity, spectralBipartivity = compute_metrics(price_array)
         PIN_results.append(PIN)
-
-        assortativity = compute_assortativity(price_array)
         assortativity_results.append(assortativity)
-
-        bipartivity = compute_bipartivity(price_array)
         bipartivity_results.append(bipartivity)
-
-        spectralBipartivity = compute_spectral_bipartivity(price_array)
         spectral_results.append(spectralBipartivity)
 
         intermediate_y.append(int(day.last_price))
 
-    y_price_axis.append(intermediate_y)
+    y_axis.append(intermediate_y)
 
-    with lock:
-        mean_PIN_results.append(PIN_results)
-        mean_assortativity_results.append(assortativity_results)
-        mean_bipartivity_results.append(bipartivity_results)
-        mean_spectral_results.append(spectral_results)
+    with list_lock:
+        mean_PIN_list.append(PIN_results)
+        mean_assortativity_list.append(assortativity_results)
+        mean_bipartivity_list.append(bipartivity_results)
+        mean_spectral_list.append(spectral_results)
 
 
 if __name__ == '__main__':
@@ -54,7 +45,9 @@ if __name__ == '__main__':
     # Create three processes for each task using a for loop
     processes = []
     for simulationIndex in range(int(sys.argv[1])):
-        process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results, mean_assortativity_results, mean_bipartivity_results, mean_spectral_results, y_price_axis, lock))
+        process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results,
+                                                             mean_assortativity_results, mean_bipartivity_results,
+                                                             mean_spectral_results, y_price_axis, lock))
         processes.append(process)
 
     # Start all processes
