@@ -9,20 +9,20 @@ import sys
 import math
 
 
-def task(idx, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list, mean_spectral_list, y_axis, list_lock):
+def task(counter, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list, mean_spectral_list, y_axis, list_lock):
     PIN_results = []
     assortativity_results = []
     bipartivity_results = []
     spectral_results = []
     intermediate_y = []
 
-    df = pd.read_csv("plots/csvs/prices" + str(idx + 1) + ".csv", skiprows=[0], delimiter=";")
+    df = pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv", skiprows=[0], delimiter=";")
     num_rows = df.shape[0]
     max_number_of_transactions_in_graph = 3000
     num_chunks = math.ceil(num_rows / max_number_of_transactions_in_graph)
     chunk_size = math.ceil(num_rows / num_chunks)
 
-    with pd.read_csv("plots/csvs/prices" + str(idx + 1) + ".csv", chunksize=chunk_size, delimiter=";") as reader:
+    with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv", chunksize=chunk_size, delimiter=";") as reader:
         for chunk in reader:
             price_array = []
             for row in chunk.itertuples():
@@ -30,13 +30,13 @@ def task(idx, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list, mea
                 price_object = Price()
 
                 # Append the properties
-                price_object.price = row[row._fields.idx("price")]
-                price_object.quantity = row[row._fields.idx("quty")]
-                price_object.direction = row[row._fields.idx("dirTrigger")]
-                price_object.first_agent = row[row._fields.idx("AgTrigger")]
-                price_object.second_agent = row[row._fields.idx("ag2")]
-                price_object.best_ask = row[row._fields.idx("bestask")]
-                price_object.best_bid = row[row._fields.idx("bestbid")]
+                price_object.price = row[row._fields.index("price")]
+                price_object.quantity = row[row._fields.index("quty")]
+                price_object.direction = row[row._fields.index("dirTrigger")]
+                price_object.first_agent = row[row._fields.index("AgTrigger")]
+                price_object.second_agent = row[row._fields.index("ag2")]
+                price_object.best_ask = row[row._fields.index("bestask")]
+                price_object.best_bid = row[row._fields.index("bestbid")]
 
                 # Add the price to the intermediate array
                 price_array.append(price_object)
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     print('Monte Carlo done. Start generating plots!\n')
     x_axis = []
     plt.figure().set_figheight(5)
-    plt.figure().set_figwidth(50)
+    plt.figure().set_figwidth(20)
     for simulationIndex in range(int(sys.argv[1])):
         for priceIndex in range(len(y_price_axis[simulationIndex])):
             x_axis.append(priceIndex)
@@ -161,4 +161,4 @@ if __name__ == '__main__':
     plt.savefig("plot_PIN_spectral_bipartivity.png")
 
     plt.close()
-    plot_network()
+    # plot_network()

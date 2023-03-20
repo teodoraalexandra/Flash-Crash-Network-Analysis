@@ -15,5 +15,10 @@ def compute_metrics(prices):
             informed_transactions += 1
         total_transactions += 1
 
+    if bipartite.is_bipartite(g):
+        isGraphBipartite = bipartite.average_clustering(g)
+    else:
+        isGraphBipartite = 2
+
     return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), \
-        nx.density(g), bipartite.spectral_bipartivity(g)
+        nx.density(g), isGraphBipartite
