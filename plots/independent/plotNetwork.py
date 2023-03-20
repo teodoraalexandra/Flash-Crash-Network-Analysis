@@ -5,7 +5,7 @@ import pandas as pd
 
 def plot_network():
     # Read the CSV file
-    df = pd.read_csv("plots/csvs/prices.csv", sep=';')
+    df = pd.read_csv("plots/csvs/prices1.csv", sep=';')
 
     # Create an empty directed graph
     g = nx.DiGraph()

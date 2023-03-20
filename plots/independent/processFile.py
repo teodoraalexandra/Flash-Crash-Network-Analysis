@@ -29,52 +29,52 @@ class Day:
         return f"Day {self.day_number}: {self.first_price} {self.last_price} {self.lowest_price} {self.highest_price} {self.fixed_prices}"
 
 
-def read_csv_prices(i):
-    with open("plots/csvs/prices" + str(i) + ".csv", "r") as csvfile:
-        reader_variable = csv.reader(csvfile, delimiter=";")
-
-        # Skip the first two headers
-        next(reader_variable, None)
-        next(reader_variable, None)
-
-        # Intermediate array for adding all prices from one day
-        array = []
-
-        # Resulting array
-        result = {}
-
-        for row in reader_variable:
-            if row[0] == 'Price' and row[5] != 'noname':
-                # Create price object
-                price_object = Price()
-
-                # Append the properties
-                price_object.price = row[2]
-                price_object.quantity = row[3]
-                price_object.direction = row[4]
-                price_object.first_agent = row[5]
-                price_object.second_agent = row[7]
-                price_object.best_ask = row[9]
-                price_object.best_bid = row[10]
-
-                # Add the price to the intermediate array
-                array.append(price_object)
-            elif row[0] == 'Day':
-                # Create day object
-                day_object = Day()
-
-                # Append the properties
-                day_object.day_number = row[1]
-                day_object.first_price = row[3]
-                day_object.last_price = row[4]
-                day_object.lowest_price = row[5]
-                day_object.highest_price = row[6]
-                day_object.fixed_prices = row[7]
-
-                # Append the final aggregation to result
-                result[day_object] = array
-
-                # Clear the array
-                array = []
-
-        return result
+# def read_csv_prices(i):
+    # with open("plots/csvs/prices" + str(i) + ".csv", "r") as csvfile:
+    #     reader_variable = csv.reader(csvfile, delimiter=";")
+    #
+    #     # Skip the first two headers
+    #     next(reader_variable, None)
+    #     next(reader_variable, None)
+    #
+    #     # Intermediate array for adding all prices from one day
+    #     array = []
+    #
+    #     # Resulting array
+    #     result = {}
+    #
+    #     for row in reader_variable:
+    #         if row[0] == 'Price' and row[5] != 'noname':
+    #             # Create price object
+    #             price_object = Price()
+    #
+    #             # Append the properties
+    #             price_object.price = row[2]
+    #             price_object.quantity = row[3]
+    #             price_object.direction = row[4]
+    #             price_object.first_agent = row[5]
+    #             price_object.second_agent = row[7]
+    #             price_object.best_ask = row[9]
+    #             price_object.best_bid = row[10]
+    #
+    #             # Add the price to the intermediate array
+    #             array.append(price_object)
+    #         elif row[0] == 'Day':
+    #             # Create day object
+    #             day_object = Day()
+    #
+    #             # Append the properties
+    #             day_object.day_number = row[1]
+    #             day_object.first_price = row[3]
+    #             day_object.last_price = row[4]
+    #             day_object.lowest_price = row[5]
+    #             day_object.highest_price = row[6]
+    #             day_object.fixed_prices = row[7]
+    #
+    #             # Append the final aggregation to result
+    #             result[day_object] = array
+    #
+    #             # Clear the array
+    #             array = []
+    #
+    #     return result

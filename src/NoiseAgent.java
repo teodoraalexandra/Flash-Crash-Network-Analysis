@@ -1,5 +1,3 @@
-package atomSimulation;
-
 import fr.cristal.smac.atom.*;
 import fr.cristal.smac.atom.orders.*;
 
@@ -12,7 +10,7 @@ class NoiseAgent extends Agent {
 
     public NoiseAgent(String name) {
         super(name, 0L);
-        this.minPrice = 14000L;
+        this.minPrice = 14500L;
         this.maxPrice = 15000L;
         this.minQuty = 10;
         this.maxQuty = 100;
@@ -23,7 +21,17 @@ class NoiseAgent extends Agent {
 
         char dir = (char) (n > 0.5 ? 66 : 65);
         int quty = this.minQuty + (int) (Math.random() * (double) (this.maxQuty - this.minQuty));
-        long price = this.minPrice + (long) ((int) (Math.random() * (double) (this.maxPrice - this.minPrice)));
+
+        long lowestPrice = 14000L;
+        long highestPrice = 15000L;
+
+        if (day.dayNumber > 30) {
+            long extraDayClosePrice = this.market.orderBooks.get(obName).extradayLog.get(day.dayNumber - 2).CLOSE;
+            long extraDayLowestPrice = this.market.orderBooks.get(obName).extradayLog.get(day.dayNumber - 2).LOW;
+            long extraDayHighestPrice = this.market.orderBooks.get(obName).extradayLog.get(day.dayNumber - 2).HIGH;
+        }
+
+        long price = lowestPrice + (long) ((int) (Math.random() * (double) (highestPrice - lowestPrice)));
 
         return new LimitOrder(obName, "" + this.myId, dir, quty, price);
     }

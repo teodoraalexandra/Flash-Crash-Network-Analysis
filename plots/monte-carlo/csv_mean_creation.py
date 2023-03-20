@@ -1,30 +1,62 @@
-from plots.independent.processFile import read_csv_prices
+from plots.independent.processFile import Price
 from plots.independent.computeMetrics import compute_metrics
 from plots.independent.plotNetwork import plot_network
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import multiprocessing
 import sys
+import math
 
 
-def task(index, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list, mean_spectral_list, y_axis, list_lock):
-    result = read_csv_prices(index + 1)
+def task(idx, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list, mean_spectral_list, y_axis, list_lock):
     PIN_results = []
     assortativity_results = []
     bipartivity_results = []
     spectral_results = []
     intermediate_y = []
 
-    for day, price_array in result.items():
-        PIN, assortativity, bipartivity, spectralBipartivity = compute_metrics(price_array)
-        PIN_results.append(PIN)
-        assortativity_results.append(assortativity)
-        bipartivity_results.append(bipartivity)
-        spectral_results.append(spectralBipartivity)
+    df = pd.read_csv("plots/csvs/prices" + str(idx + 1) + ".csv", skiprows=[0], delimiter=";")
+    num_rows = df.shape[0]
+    max_number_of_transactions_in_graph = 3000
+    num_chunks = math.ceil(num_rows / max_number_of_transactions_in_graph)
+    chunk_size = math.ceil(num_rows / num_chunks)
 
-        intermediate_y.append(int(day.last_price))
+    with pd.read_csv("plots/csvs/prices" + str(idx + 1) + ".csv", chunksize=chunk_size, delimiter=";") as reader:
+        for chunk in reader:
+            price_array = []
+            for row in chunk.itertuples():
+                # Create price object
+                price_object = Price()
+
+                # Append the properties
+                price_object.price = row[row._fields.idx("price")]
+                price_object.quantity = row[row._fields.idx("quty")]
+                price_object.direction = row[row._fields.idx("dirTrigger")]
+                price_object.first_agent = row[row._fields.idx("AgTrigger")]
+                price_object.second_agent = row[row._fields.idx("ag2")]
+                price_object.best_ask = row[row._fields.idx("bestask")]
+                price_object.best_bid = row[row._fields.idx("bestbid")]
+
+                # Add the price to the intermediate array
+                price_array.append(price_object)
+
+            # Add the prices to y-axis -> average of all prices from chunk
+            average = 0
+            items = 0
+            for price_object in price_array:
+                average += price_object.price
+                items += 1
+            intermediate_y.append(average / items)
+
+            PIN, assortativity, bipartivity, spectralBipartivity = compute_metrics(price_array)
+            PIN_results.append(PIN)
+            assortativity_results.append(assortativity)
+            bipartivity_results.append(bipartivity)
+            spectral_results.append(spectralBipartivity)
 
     y_axis.append(intermediate_y)
+    print(len(PIN_results))
 
     with list_lock:
         mean_PIN_list.append(PIN_results)
@@ -61,14 +93,15 @@ if __name__ == '__main__':
     print('Monte Carlo done. Start generating plots!\n')
     x_axis = []
     plt.figure().set_figheight(5)
-    for dayIndex in range(int(sys.argv[2])):
-        x_axis.append(dayIndex + 1)
+    plt.figure().set_figwidth(50)
     for simulationIndex in range(int(sys.argv[1])):
+        for priceIndex in range(len(y_price_axis[simulationIndex])):
+            x_axis.append(priceIndex)
         plt.plot(x_axis, y_price_axis[simulationIndex], label="Simulation" + str(simulationIndex + 1))
+        x_axis = []
     plt.title('Price evolution')
     plt.xlabel('Time')
     plt.ylabel('Price')
-    # plt.legend(bbox_to_anchor=(1, 1))
     plt.savefig("price_evolution.png")
 
     # Convert the data to a numpy array & compute the average of each column
@@ -90,18 +123,17 @@ if __name__ == '__main__':
     y_axis_bipartivity = np.array(mean_bipartivity_results)
     y_axis_spectral = np.array(mean_spectral_results)
 
-    # correlation_matrix_assortativity = np.corrcoef(x_axis_PIN, y_axis_assortativity)
-    # print("Correlation matrix PIN-assortativity: \n", correlation_matrix_assortativity)
-    # correlation_matrix_bipartivity = np.corrcoef(x_axis_PIN, y_axis_bipartivity)
-    # print("Correlation matrix PIN-bipartivity: \n", correlation_matrix_bipartivity)
-
-    # The red squares represent the observations
-    # The blue line is the regression line
+    x_axis = []
+    for index in range(len(x_axis_PIN)):
+        x_axis.append(index)
 
     # Plot first
     plt.close()
     plt.title('Correlation between PIN and assortativity')
-    plt.scatter(x_axis_PIN, y_axis_assortativity)
+    # plt.scatter(x_axis_PIN, y_axis_assortativity)
+    plt.plot(x_axis, x_axis_PIN, label="PIN")
+    plt.plot(x_axis, y_axis_assortativity, label="ASSORTATIVITY")
+    plt.legend()
     plt.xlabel('PIN')
     plt.ylabel('Assortativity')
     plt.savefig("plot_PIN_assortativity.png")
@@ -109,7 +141,10 @@ if __name__ == '__main__':
     # Plot second
     plt.close()
     plt.title('Correlation between PIN and density')
-    plt.scatter(x_axis_PIN, y_axis_bipartivity)
+    # plt.scatter(x_axis_PIN, y_axis_bipartivity)
+    plt.plot(x_axis, x_axis_PIN, label="PIN")
+    plt.plot(x_axis, y_axis_bipartivity, label="DENSITY")
+    plt.legend()
     plt.xlabel('PIN')
     plt.ylabel('Density')
     plt.savefig("plot_PIN_density.png")
@@ -117,7 +152,10 @@ if __name__ == '__main__':
     # Plot third
     plt.close()
     plt.title('Correlation between PIN and spectral bipartivity')
-    plt.scatter(x_axis_PIN, y_axis_spectral)
+    # plt.scatter(x_axis_PIN, y_axis_spectral)
+    plt.plot(x_axis, x_axis_PIN, label="PIN")
+    plt.plot(x_axis, y_axis_spectral, label="BIPARTIVITY")
+    plt.legend()
     plt.xlabel('PIN')
     plt.ylabel('Bipartivity')
     plt.savefig("plot_PIN_spectral_bipartivity.png")

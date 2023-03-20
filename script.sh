@@ -14,7 +14,7 @@ rm -f csvs/*
 rm -f plots/csvs/*
 
 # Compile the Java program
-javac -cp atom-1.14.jar application/src/atomSimulation/Main.java application/src/atomSimulation/NoiseAgent.java application/src/atomSimulation/InformedAgent.java
+javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
@@ -31,8 +31,9 @@ javaPart() {
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "C:\Users\dant\Desktop\Master-Thesis\application\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" atomSimulation.Main "$persons" "$informed" "$percentage" "$days" "$i"
-  cat "csvs/data$i.csv" | grep "^\(Price\|Day\).*" > "plots/csvs/prices$i.csv"
+  java -classpath "C:\Users\dant\Desktop\Master-Thesis\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" Main "$persons" "$informed" "$percentage" "$days" "$i"
+  cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i.csv"
+  sed -i '/noname/d' "plots/csvs/prices$i.csv"
 }
 
 pythonComputationPart() {
@@ -48,8 +49,6 @@ for i in $(seq 1 $n); do
     javaPart "$i" &
 done
 wait
-
-cat "plots/csvs/prices1.csv" | grep "^Price" > "plots/csvs/prices.csv"
 
 pythonComputationPart
 
