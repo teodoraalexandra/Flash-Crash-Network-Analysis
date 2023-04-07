@@ -26,5 +26,7 @@ def compute_metrics(prices):
     else:
         isGraphBipartite = 2
 
+    num_stars = sum(1 for node in g if g.degree(node) == 1)
+
     return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), \
-        nx.density(g), isGraphBipartite, nx.number_connected_components(g), average / items
+        nx.density(g), isGraphBipartite, nx.number_connected_components(g), average / items, num_stars

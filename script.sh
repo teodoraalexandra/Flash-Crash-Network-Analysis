@@ -10,7 +10,8 @@ rm -f "random_chosen_network.png"
 rm -f "plot_PIN_assortativity.png"
 rm -f "plot_PIN_density.png"
 rm -f "plot_PIN_spectral_bipartivity.png"
-rm -f "plot_PIN_spectral_connected.png"
+rm -f "plot_PIN_connected.png"
+rm -f "plot_PIN_stars.png"
 rm -f csvs/*
 rm -f plots/csvs/*
 
