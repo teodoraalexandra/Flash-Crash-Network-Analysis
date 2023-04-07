@@ -7,52 +7,67 @@ import multiprocessing
 import sys
 
 
-def task(counter, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list,
+def read_prices_in_chunk(chunk):
+    price_array = []
+    for row in chunk.itertuples():
+        # Create price object
+        price_object = Price()
+
+        # Append the properties
+        price_object.price = row[row._fields.index("price")]
+        price_object.quantity = row[row._fields.index("quty")]
+        price_object.direction = row[row._fields.index("dirTrigger")]
+        price_object.first_agent = row[row._fields.index("AgTrigger")]
+        price_object.second_agent = row[row._fields.index("ag2")]
+        price_object.best_ask = row[row._fields.index("bestask")]
+        price_object.best_bid = row[row._fields.index("bestbid")]
+
+        # Add the price to the intermediate array
+        price_array.append(price_object)
+    return price_array
+
+
+def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_list, mean_bipartivity_list,
          mean_spectral_list, mean_connected_list, y_axis, list_lock):
-    PIN_results = []
+    PIN_results_small = []
+    PIN_results_big = []
     assortativity_results = []
     bipartivity_results = []
     spectral_results = []
     connected_results = []
     intermediate_y = []
 
-    with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv", chunksize=300, delimiter=";") as reader:
+    big_granularity = 3000
+    small_granularity = 300
+    super_small_granularity = 50  # TODO: number of stars
+
+    # Bipartivity, Spectral on big granularity
+    with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
+                     chunksize=big_granularity, delimiter=";") as reader:
         for chunk in reader:
-            price_array = []
-            for row in chunk.itertuples():
-                # Create price object
-                price_object = Price()
+            price_array = read_prices_in_chunk(chunk)
+            PIN, assortativity, bipartivity, spectralBipartivity, conn, averagePrice = compute_metrics(price_array)
 
-                # Append the properties
-                price_object.price = row[row._fields.index("price")]
-                price_object.quantity = row[row._fields.index("quty")]
-                price_object.direction = row[row._fields.index("dirTrigger")]
-                price_object.first_agent = row[row._fields.index("AgTrigger")]
-                price_object.second_agent = row[row._fields.index("ag2")]
-                price_object.best_ask = row[row._fields.index("bestask")]
-                price_object.best_bid = row[row._fields.index("bestbid")]
-
-                # Add the price to the intermediate array
-                price_array.append(price_object)
-
-            # Add the prices to y-axis -> Average of all prices from chunk
-            average = 0
-            items = 0
-            for price_object in price_array:
-                average += price_object.price
-                items += 1
-            intermediate_y.append(average / items)
-
-            PIN, assortativity, bipartivity, spectralBipartivity, conn = compute_metrics(price_array)
-            PIN_results.append(PIN)
-            assortativity_results.append(assortativity)
+            PIN_results_big.append(PIN)
             bipartivity_results.append(bipartivity)
             spectral_results.append(spectralBipartivity)
+            intermediate_y.append(averagePrice)
+
+    # Assortativity, Connected components on small granularity
+    with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
+                     chunksize=small_granularity, delimiter=";") as reader:
+        for chunk in reader:
+            price_array = read_prices_in_chunk(chunk)
+            PIN, assortativity, bipartivity, spectralBipartivity, conn, averagePrice = compute_metrics(price_array)
+
+            PIN_results_small.append(PIN)
+            assortativity_results.append(assortativity)
             connected_results.append(conn)
 
     with list_lock:
         y_axis.append(intermediate_y)
-        mean_PIN_list.append(PIN_results)
+        mean_PIN_list_small.append(PIN_results_small)
+        mean_PIN_list_big.append(PIN_results_big)
         mean_assortativity_list.append(assortativity_results)
         mean_bipartivity_list.append(bipartivity_results)
         mean_spectral_list.append(spectral_results)
@@ -67,7 +82,8 @@ def mean_with_padding(a):
 
 if __name__ == '__main__':
     # Create a PIN list
-    mean_PIN_results = multiprocessing.Manager().list()
+    mean_PIN_results_small = multiprocessing.Manager().list()
+    mean_PIN_results_big = multiprocessing.Manager().list()
     mean_assortativity_results = multiprocessing.Manager().list()
     mean_bipartivity_results = multiprocessing.Manager().list()
     mean_spectral_results = multiprocessing.Manager().list()
@@ -78,10 +94,10 @@ if __name__ == '__main__':
     # Create three processes for each task using a for loop
     processes = []
     for simulationIndex in range(int(sys.argv[1])):
-        process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results,
-                                                             mean_assortativity_results, mean_bipartivity_results,
-                                                             mean_spectral_results, mean_connected_results,
-                                                             y_price_axis, lock))
+        process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results_small,
+                                                             mean_PIN_results_big, mean_assortativity_results,
+                                                             mean_bipartivity_results, mean_spectral_results,
+                                                             mean_connected_results, y_price_axis, lock))
         processes.append(process)
 
     # Start all processes
@@ -106,8 +122,11 @@ if __name__ == '__main__':
     plt.ylabel('Price')
     plt.savefig("price_evolution.png")
 
-    # Mean PIN
-    mean_PIN_results = mean_with_padding(mean_PIN_results)
+    # Mean PIN (small)
+    mean_PIN_results_small = mean_with_padding(mean_PIN_results_small)
+
+    # Mean PIN (big)
+    mean_PIN_results_big = mean_with_padding(mean_PIN_results_big)
 
     # Mean Assortativity
     mean_assortativity_results = mean_with_padding(mean_assortativity_results)
@@ -122,21 +141,26 @@ if __name__ == '__main__':
     mean_connected_results = mean_with_padding(mean_connected_results)
 
     # CORRELATION PLOTS
-    x_axis_PIN = np.array(mean_PIN_results)
+    x_axis_PIN_small = np.array(mean_PIN_results_small)
+    x_axis_PIN_big = np.array(mean_PIN_results_big)
     y_axis_assortativity = np.array(mean_assortativity_results)
     y_axis_bipartivity = np.array(mean_bipartivity_results)
     y_axis_spectral = np.array(mean_spectral_results)
     y_axis_connected = np.array(mean_connected_results)
 
-    x_axis = []
-    for index in range(len(x_axis_PIN)):
-        x_axis.append(index)
+    x_axis_small = []
+    for index in range(len(x_axis_PIN_small)):
+        x_axis_small.append(index)
+
+    x_axis_big = []
+    for index in range(len(x_axis_PIN_big)):
+        x_axis_big.append(index)
 
     # Plot first
     plt.close()
     plt.title('Correlation between PIN and assortativity')
-    plt.plot(x_axis, x_axis_PIN, label="PIN")
-    plt.plot(x_axis, y_axis_assortativity, label="ASSORTATIVITY")
+    plt.plot(x_axis_small, x_axis_PIN_small, label="PIN")
+    plt.plot(x_axis_small, y_axis_assortativity, label="ASSORTATIVITY")
     plt.legend()
     plt.xlabel('PIN')
     plt.ylabel('Assortativity')
@@ -145,8 +169,8 @@ if __name__ == '__main__':
     # Plot second
     plt.close()
     plt.title('Correlation between PIN and density')
-    plt.plot(x_axis, x_axis_PIN, label="PIN")
-    plt.plot(x_axis, y_axis_bipartivity, label="DENSITY")
+    plt.plot(x_axis_big, x_axis_PIN_big, label="PIN")
+    plt.plot(x_axis_big, y_axis_bipartivity, label="DENSITY")
     plt.legend()
     plt.xlabel('PIN')
     plt.ylabel('Density')
@@ -155,8 +179,8 @@ if __name__ == '__main__':
     # Plot third
     plt.close()
     plt.title('Correlation between PIN and spectral bipartivity')
-    plt.plot(x_axis, x_axis_PIN, label="PIN")
-    plt.plot(x_axis, y_axis_spectral, label="BIPARTIVITY")
+    plt.plot(x_axis_big, x_axis_PIN_big, label="PIN")
+    plt.plot(x_axis_big, y_axis_spectral, label="BIPARTIVITY")
     plt.legend()
     plt.xlabel('PIN')
     plt.ylabel('Bipartivity')
@@ -165,8 +189,8 @@ if __name__ == '__main__':
     # Plot fourth
     plt.close()
     plt.title('Correlation between PIN and connected')
-    plt.plot(x_axis, x_axis_PIN, label="PIN")
-    plt.plot(x_axis, y_axis_connected, label="CONNECTED")
+    plt.plot(x_axis_small, x_axis_PIN_small, label="PIN")
+    plt.plot(x_axis_small, y_axis_connected, label="CONNECTED")
     plt.legend()
     plt.xlabel('PIN')
     plt.ylabel('Connected')

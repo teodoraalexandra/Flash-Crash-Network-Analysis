@@ -7,6 +7,8 @@ def compute_metrics(prices):
     # Length of prices = length of edges from the graph
     informed_transactions = 0
     total_transactions = 0
+    average = 0
+    items = 0
     g = create_graph(prices)
 
     for price in prices:
@@ -15,10 +17,14 @@ def compute_metrics(prices):
             informed_transactions += 1
         total_transactions += 1
 
+        # Add the prices to y-axis -> Average of all prices from chunk
+        average += price.price
+        items += 1
+
     if bipartite.is_bipartite(g):
         isGraphBipartite = bipartite.average_clustering(g)
     else:
         isGraphBipartite = 2
 
     return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), \
-        nx.density(g), isGraphBipartite, nx.number_connected_components(g)
+        nx.density(g), isGraphBipartite, nx.number_connected_components(g), average / items
