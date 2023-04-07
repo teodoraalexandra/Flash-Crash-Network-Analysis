@@ -1,6 +1,5 @@
 from plots.independent.processFile import Price
 from plots.independent.computeMetrics import compute_metrics
-from numpy import ma
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -51,8 +50,6 @@ def task(counter, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list,
             spectral_results.append(spectralBipartivity)
             connected_results.append(conn)
 
-    print(len(PIN_results))
-
     with list_lock:
         y_axis.append(intermediate_y)
         mean_PIN_list.append(PIN_results)
@@ -60,6 +57,12 @@ def task(counter, mean_PIN_list, mean_assortativity_list, mean_bipartivity_list,
         mean_bipartivity_list.append(bipartivity_results)
         mean_spectral_list.append(spectral_results)
         mean_connected_list.append(connected_results)
+
+
+def mean_with_padding(a):
+    max_len = max([len(row) for row in a])
+    mask = np.array([row + [np.nan] * (max_len - len(row)) for row in a])
+    return np.nanmean(mask, axis=0)
 
 
 if __name__ == '__main__':
@@ -103,30 +106,20 @@ if __name__ == '__main__':
     plt.ylabel('Price')
     plt.savefig("price_evolution.png")
 
-    # Convert the data to a numpy array & compute the average of each column
-    print(mean_PIN_results)
-    mean_PIN_results = np.array(mean_PIN_results, dtype=float)
-    # Create a masked array
-    mask = np.ones_like(mean_PIN_results, dtype=bool)
-    for i in range(mean_PIN_results.shape[0]):
-        mask[i, mean_PIN_results[i] is None] = False
-    a = ma.masked_array(mean_PIN_results, mask=~mask)
-    # Calculate the mean along the first axis
-    mean_PIN_results = np.ma.mean(mean_PIN_results, axis=0)
+    # Mean PIN
+    mean_PIN_results = mean_with_padding(mean_PIN_results)
 
-    print(mean_PIN_results)
+    # Mean Assortativity
+    mean_assortativity_results = mean_with_padding(mean_assortativity_results)
 
-    mean_assortativity_results = np.array(mean_assortativity_results, dtype=float)
-    mean_assortativity_results = np.mean(mean_assortativity_results, axis=0)
+    # Mean Bipartivity
+    mean_bipartivity_results = mean_with_padding(mean_bipartivity_results)
 
-    mean_bipartivity_results = np.array(mean_bipartivity_results, dtype=float)
-    mean_bipartivity_results = np.mean(mean_bipartivity_results, axis=0)
+    # Mean Density
+    mean_spectral_results = mean_with_padding(mean_spectral_results)
 
-    mean_spectral_results = np.array(mean_spectral_results, dtype=float)
-    mean_spectral_results = np.mean(mean_spectral_results, axis=0)
-
-    mean_connected_results = np.array(mean_connected_results, dtype=float)
-    mean_connected_results = np.mean(mean_connected_results, axis=0)
+    # Mean Connected Components
+    mean_connected_results = mean_with_padding(mean_connected_results)
 
     # CORRELATION PLOTS
     x_axis_PIN = np.array(mean_PIN_results)

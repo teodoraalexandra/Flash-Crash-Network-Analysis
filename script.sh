@@ -22,8 +22,7 @@ javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 n=2
 days=100
 percentage=10
-#persons=1000
-persons=100
+persons=1000
 informed=1
 
 javaPart() {
