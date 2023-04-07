@@ -21,4 +21,4 @@ def compute_metrics(prices):
         isGraphBipartite = 2
 
     return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), \
-        nx.density(g), isGraphBipartite
+        nx.density(g), isGraphBipartite, nx.number_connected_components(g)

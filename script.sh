@@ -10,6 +10,7 @@ rm -f "random_chosen_network.png"
 rm -f "plot_PIN_assortativity.png"
 rm -f "plot_PIN_density.png"
 rm -f "plot_PIN_spectral_bipartivity.png"
+rm -f "plot_PIN_spectral_connected.png"
 rm -f csvs/*
 rm -f plots/csvs/*
 
@@ -18,11 +19,12 @@ javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=5
+n=2
 days=100
-percentage=30
-persons=200
-informed=11
+percentage=10
+#persons=1000
+persons=100
+informed=1
 
 javaPart() {
   local i=$1
