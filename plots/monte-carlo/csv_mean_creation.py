@@ -197,6 +197,9 @@ if __name__ == '__main__':
     plt.xlabel('PIN')
     plt.ylabel('Assortativity')
     plt.savefig("plot_PIN_assortativity.png")
+    correlation1 = np.corrcoef(x_axis_PIN_small, y_axis_assortativity)
+    print("\nCorrelation between PIN and assortativity\n")
+    print(correlation1)
 
     # Plot second
     plt.close()
@@ -207,6 +210,9 @@ if __name__ == '__main__':
     plt.xlabel('PIN')
     plt.ylabel('Density')
     plt.savefig("plot_PIN_density.png")
+    correlation2 = np.corrcoef(x_axis_PIN_big, y_axis_bipartivity)
+    print("\nCorrelation between PIN and density\n")
+    print(correlation2)
 
     # Plot third
     plt.close()
@@ -217,6 +223,9 @@ if __name__ == '__main__':
     plt.xlabel('PIN')
     plt.ylabel('Bipartivity')
     plt.savefig("plot_PIN_spectral_bipartivity.png")
+    correlation3 = np.corrcoef(x_axis_PIN_big, y_axis_spectral)
+    print("\nCorrelation between PIN and spectral bipartivity\n")
+    print(correlation3)
 
     # Plot fourth
     plt.close()
@@ -227,6 +236,9 @@ if __name__ == '__main__':
     plt.xlabel('PIN')
     plt.ylabel('Connected')
     plt.savefig("plot_PIN_connected.png")
+    correlation4 = np.corrcoef(x_axis_PIN_small, y_axis_connected)
+    print("\nCorrelation between PIN and connected\n")
+    print(correlation4)
 
     # Plot fifth
     plt.close()
@@ -237,5 +249,8 @@ if __name__ == '__main__':
     plt.xlabel('PIN')
     plt.ylabel('Stars')
     plt.savefig("plot_PIN_stars.png")
+    correlation5 = np.corrcoef(x_axis_PIN_super_small, y_axis_stars)
+    print("\nCorrelation between PIN and stars\n")
+    print(correlation5)
 
     plt.close()

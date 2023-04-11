@@ -22,9 +22,9 @@ javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 # Set the number of times to repeat the commands (number of simulations)
 n=1
 days=100
-percentage=10
-persons=100
-informed=1
+aggressivity=10
+persons=1000
+informed=4 # This is percentage
 
 javaPart() {
   local i=$1
@@ -33,7 +33,7 @@ javaPart() {
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "C:\Users\dant\Desktop\Master-Thesis\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" Main "$persons" "$informed" "$percentage" "$days" "$i"
+  java -classpath "C:\Users\dant\Desktop\Master-Thesis\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
   cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i.csv"
   sed -i '/noname/d' "plots/csvs/prices$i.csv"
 }
