@@ -12,8 +12,8 @@ rm -f "plot_PIN_density.png"
 rm -f "plot_PIN_spectral_bipartivity.png"
 rm -f "plot_PIN_connected.png"
 rm -f "plot_PIN_stars.png"
-rm -f csvs/*
-rm -f plots/csvs/*
+#rm -f csvs/*
+#rm -f plots/csvs/*
 
 # Compile the Java program
 javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
@@ -23,7 +23,7 @@ javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 n=1
 days=100
 aggressivity=10
-persons=1000
+persons=100
 informed=4 # This is percentage
 
 javaPart() {
@@ -35,6 +35,7 @@ javaPart() {
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
   java -classpath "C:\Users\dant\Desktop\Master-Thesis\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
   cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i.csv"
+  cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
   sed -i '/noname/d' "plots/csvs/prices$i.csv"
 }
 
@@ -47,12 +48,14 @@ pythonComputationPart() {
 }
 
 echo "Start Java Simulation..."
-for i in $(seq 1 $n); do
-    javaPart "$i" &
-done
-wait
+#for i in $(seq 1 $n); do
+#    javaPart "$i" &
+#done
+#wait
 
-pythonComputationPart
+#pythonComputationPart
+
+python plots/monte-carlo/temp.py
 
 end=$(date +%s.%N)
 runtime=$(python -c "print(${end} - ${start})")
