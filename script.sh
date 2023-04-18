@@ -12,24 +12,23 @@ rm -f "plot_PIN_density.png"
 rm -f "plot_PIN_spectral_bipartivity.png"
 rm -f "plot_PIN_connected.png"
 rm -f "plot_PIN_stars.png"
-#rm -f csvs/*
-#rm -f plots/csvs/*
+rm -f "agents_cash_evolution.png"
+rm -f csvs/*
+rm -f plots/csvs/*
 
 # Compile the Java program
 javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=1
+n=3
 days=100
 aggressivity=10
-persons=100
-informed=4 # This is percentage
+persons=1000
+informed=0.5 # This is percentage of informed
 
 javaPart() {
   local i=$1
-
-  # echo "Start Java Simulation $i..."
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
@@ -40,22 +39,29 @@ javaPart() {
 }
 
 pythonComputationPart() {
-  echo "Start Python Computation..."
+  echo "Start Python Computation (Network metrics part)..."
 
   # Run the Python program for creation
   python plots/monte-carlo/csv_mean_creation.py $n $days
-  echo -e "PIN, assortativity and bipartivity csv files was generated. \n"
+  echo -e "Metrics graphs was generated. \n"
+}
+
+pythonAgentCashPart() {
+  echo "Start Python Computation (Agents' Cash Part)..."
+
+  # Run the Python program for plotting agents' cash
+  python plots/monte-carlo/agent_cash.py $n $days
+  echo -e "Agents' cash evolution graph was generated. \n"
 }
 
 echo "Start Java Simulation..."
-#for i in $(seq 1 $n); do
-#    javaPart "$i" &
-#done
-#wait
+for i in $(seq 1 $n); do
+    javaPart "$i" &
+done
+wait
 
 #pythonComputationPart
-
-python plots/monte-carlo/temp.py
+pythonAgentCashPart
 
 end=$(date +%s.%N)
 runtime=$(python -c "print(${end} - ${start})")
