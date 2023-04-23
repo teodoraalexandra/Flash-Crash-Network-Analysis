@@ -28,13 +28,15 @@ def read_prices_in_chunk(chunk):
 
 
 def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_list,
-         mean_bipartivity_list, mean_spectral_list, mean_connected_list, mean_stars_list, y_axis, list_lock):
+         mean_density_list, mean_average_clustering_list, mean_bipartivity_list, mean_connected_list,
+         mean_stars_list, y_axis, list_lock):
     PIN_results_super_small = []
     PIN_results_small = []
     PIN_results_big = []
     assortativity_results = []
+    density_results = []
+    average_clustering_results = []
     bipartivity_results = []
-    spectral_results = []
     connected_results = []
     stars_results = []
     intermediate_y = []
@@ -43,17 +45,18 @@ def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_
     small_granularity = 300
     super_small_granularity = 50
 
-    # Bipartivity, Spectral on big granularity
+    # Density, Average clustering and Bipartivity on big granularity
     with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
                      chunksize=big_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            PIN, assortativity, bipartivity, spectralBipartivity, conn, averagePrice, stars \
+            PIN, assortativity, density, averageClustering, bipartivity, conn, averagePrice, stars \
                 = compute_metrics(price_array)
 
             PIN_results_big.append(PIN)
+            density_results.append(density)
+            average_clustering_results.append(averageClustering)
             bipartivity_results.append(bipartivity)
-            spectral_results.append(spectralBipartivity)
             intermediate_y.append(averagePrice)
 
     # Assortativity, Connected components on small granularity
@@ -61,7 +64,7 @@ def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_
                      chunksize=small_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            PIN, assortativity, bipartivity, spectralBipartivity, conn, averagePrice, stars \
+            PIN, assortativity, density, averageClustering, bipartivity, conn, averagePrice, stars \
                 = compute_metrics(price_array)
 
             PIN_results_small.append(PIN)
@@ -73,7 +76,7 @@ def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_
                      chunksize=super_small_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            PIN, assortativity, bipartivity, spectralBipartivity, conn, averagePrice, stars \
+            PIN, assortativity, density, averageClustering, bipartivity, conn, averagePrice, stars \
                 = compute_metrics(price_array)
 
             PIN_results_super_small.append(PIN)
@@ -85,8 +88,9 @@ def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_
         mean_PIN_list_small.append(PIN_results_small)
         mean_PIN_list_big.append(PIN_results_big)
         mean_assortativity_list.append(assortativity_results)
+        mean_density_list.append(density_results)
+        mean_average_clustering_list.append(average_clustering_results)
         mean_bipartivity_list.append(bipartivity_results)
-        mean_spectral_list.append(spectral_results)
         mean_connected_list.append(connected_results)
         mean_stars_list.append(stars_results)
 
@@ -103,8 +107,9 @@ if __name__ == '__main__':
     mean_PIN_results_small = multiprocessing.Manager().list()
     mean_PIN_results_big = multiprocessing.Manager().list()
     mean_assortativity_results = multiprocessing.Manager().list()
+    mean_density_results = multiprocessing.Manager().list()
+    mean_average_clustering_results = multiprocessing.Manager().list()
     mean_bipartivity_results = multiprocessing.Manager().list()
-    mean_spectral_results = multiprocessing.Manager().list()
     mean_connected_results = multiprocessing.Manager().list()
     mean_stars_results = multiprocessing.Manager().list()
     y_price_axis = multiprocessing.Manager().list()
@@ -115,9 +120,10 @@ if __name__ == '__main__':
     for simulationIndex in range(int(sys.argv[1])):
         process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results_super_small,
                                                              mean_PIN_results_small, mean_PIN_results_big,
-                                                             mean_assortativity_results, mean_bipartivity_results,
-                                                             mean_spectral_results, mean_connected_results,
-                                                             mean_stars_results, y_price_axis, lock))
+                                                             mean_assortativity_results, mean_density_results,
+                                                             mean_average_clustering_results, mean_bipartivity_results,
+                                                             mean_connected_results, mean_stars_results,
+                                                             y_price_axis, lock))
         processes.append(process)
 
     # Start all processes
@@ -154,11 +160,14 @@ if __name__ == '__main__':
     # Mean Assortativity
     mean_assortativity_results = mean_with_padding(mean_assortativity_results)
 
+    # Mean Density
+    mean_density_results = mean_with_padding(mean_density_results)
+
+    # Mean Average Clustering
+    mean_average_clustering_results = mean_with_padding(mean_average_clustering_results)
+
     # Mean Bipartivity
     mean_bipartivity_results = mean_with_padding(mean_bipartivity_results)
-
-    # Mean Density
-    mean_spectral_results = mean_with_padding(mean_spectral_results)
 
     # Mean Connected Components
     mean_connected_results = mean_with_padding(mean_connected_results)
@@ -171,8 +180,9 @@ if __name__ == '__main__':
     x_axis_PIN_small = np.array(mean_PIN_results_small)
     x_axis_PIN_big = np.array(mean_PIN_results_big)
     y_axis_assortativity = np.array(mean_assortativity_results)
+    y_axis_density = np.array(mean_density_results)
+    y_axis_average_clustering = np.array(mean_average_clustering_results)
     y_axis_bipartivity = np.array(mean_bipartivity_results)
-    y_axis_spectral = np.array(mean_spectral_results)
     y_axis_connected = np.array(mean_connected_results)
     y_axis_stars = np.array(mean_stars_results)
 
@@ -188,69 +198,127 @@ if __name__ == '__main__':
     for index in range(len(x_axis_PIN_big)):
         x_axis_big.append(index)
 
+    COLOR_PIN = "#69b3a2"
+    COLOR_METRIC = "#3399e6"
+
     # Plot first
     plt.close()
-    plt.title('Correlation between PIN and assortativity')
-    plt.plot(x_axis_small, x_axis_PIN_small, label="PIN")
-    plt.plot(x_axis_small, y_axis_assortativity, label="ASSORTATIVITY")
-    plt.legend()
-    plt.xlabel('PIN')
-    plt.ylabel('Assortativity')
-    plt.savefig("plot_PIN_assortativity.png")
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
+    ax1.plot(x_axis_small, x_axis_PIN_small, color=COLOR_PIN)
+    ax2.plot(x_axis_small, y_axis_assortativity, color=COLOR_METRIC)
+    ax1.set_xlabel("Small granularity")
+
+    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
+    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
+
+    ax2.set_ylabel("ASSORTATIVITY", color=COLOR_METRIC, fontsize=14)
+    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
+
+    fig.suptitle('Correlation between PIN and assortativity', fontsize=20)
+    fig.savefig("plot_PIN_assortativity.png")
     correlation1 = np.corrcoef(x_axis_PIN_small, y_axis_assortativity)
     print("\nCorrelation between PIN and assortativity\n")
     print(correlation1)
 
     # Plot second
     plt.close()
-    plt.title('Correlation between PIN and density')
-    plt.plot(x_axis_big, x_axis_PIN_big, label="PIN")
-    plt.plot(x_axis_big, y_axis_bipartivity, label="DENSITY")
-    plt.legend()
-    plt.xlabel('PIN')
-    plt.ylabel('Density')
-    plt.savefig("plot_PIN_density.png")
-    correlation2 = np.corrcoef(x_axis_PIN_big, y_axis_bipartivity)
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
+    ax1.plot(x_axis_big, x_axis_PIN_big, color=COLOR_PIN)
+    ax2.plot(x_axis_big, y_axis_density, color=COLOR_METRIC)
+    ax1.set_xlabel("Big granularity")
+
+    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
+    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
+
+    ax2.set_ylabel("DENSITY", color=COLOR_METRIC, fontsize=14)
+    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
+
+    fig.suptitle('Correlation between PIN and density', fontsize=20)
+    fig.savefig("plot_PIN_density.png")
+    correlation2 = np.corrcoef(x_axis_PIN_big, y_axis_density)
     print("\nCorrelation between PIN and density\n")
     print(correlation2)
 
     # Plot third
     plt.close()
-    plt.title('Correlation between PIN and spectral bipartivity')
-    plt.plot(x_axis_big, x_axis_PIN_big, label="PIN")
-    plt.plot(x_axis_big, y_axis_spectral, label="BIPARTIVITY")
-    plt.legend()
-    plt.xlabel('PIN')
-    plt.ylabel('Bipartivity')
-    plt.savefig("plot_PIN_spectral_bipartivity.png")
-    correlation3 = np.corrcoef(x_axis_PIN_big, y_axis_spectral)
-    print("\nCorrelation between PIN and spectral bipartivity\n")
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
+    ax1.plot(x_axis_big, x_axis_PIN_big, color=COLOR_PIN)
+    ax2.plot(x_axis_big, y_axis_average_clustering, color=COLOR_METRIC)
+    ax1.set_xlabel("Big granularity")
+
+    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
+    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
+
+    ax2.set_ylabel("AVERAGE CLUSTERING", color=COLOR_METRIC, fontsize=14)
+    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
+
+    fig.suptitle('Correlation between PIN and average clustering', fontsize=20)
+    fig.savefig("plot_PIN_average_clustering.png")
+    correlation3 = np.corrcoef(x_axis_PIN_big, y_axis_average_clustering)
+    print("\nCorrelation between PIN and average clustering\n")
     print(correlation3)
 
     # Plot fourth
     plt.close()
-    plt.title('Correlation between PIN and connected')
-    plt.plot(x_axis_small, x_axis_PIN_small, label="PIN")
-    plt.plot(x_axis_small, y_axis_connected, label="CONNECTED")
-    plt.legend()
-    plt.xlabel('PIN')
-    plt.ylabel('Connected')
-    plt.savefig("plot_PIN_connected.png")
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
+    ax1.plot(x_axis_small, x_axis_PIN_small, color=COLOR_PIN)
+    ax2.plot(x_axis_small, y_axis_connected, color=COLOR_METRIC)
+    ax1.set_xlabel("Small granularity")
+
+    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
+    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
+
+    ax2.set_ylabel("CONNECTED COMPONENTS", color=COLOR_METRIC, fontsize=14)
+    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
+
+    fig.suptitle('Correlation between PIN and connected components', fontsize=20)
+    fig.savefig("plot_PIN_connected_components.png")
     correlation4 = np.corrcoef(x_axis_PIN_small, y_axis_connected)
-    print("\nCorrelation between PIN and connected\n")
+    print("\nCorrelation between PIN and connected components\n")
     print(correlation4)
 
     # Plot fifth
     plt.close()
-    plt.title('Correlation between PIN and stars')
-    plt.plot(x_axis_super_small, x_axis_PIN_super_small, label="PIN")
-    plt.plot(x_axis_super_small, y_axis_stars, label="STARS")
-    plt.legend()
-    plt.xlabel('PIN')
-    plt.ylabel('Stars')
-    plt.savefig("plot_PIN_stars.png")
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
+    ax1.plot(x_axis_super_small, x_axis_PIN_super_small, color=COLOR_PIN)
+    ax2.plot(x_axis_super_small, y_axis_stars, color=COLOR_METRIC)
+    ax1.set_xlabel("Smallest granularity")
+
+    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
+    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
+
+    ax2.set_ylabel("STARS", color=COLOR_METRIC, fontsize=14)
+    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
+
+    fig.suptitle('Correlation between PIN and stars', fontsize=20)
+    fig.savefig("plot_PIN_stars.png")
     correlation5 = np.corrcoef(x_axis_PIN_super_small, y_axis_stars)
     print("\nCorrelation between PIN and stars\n")
     print(correlation5)
+
+    # Plot sixth
+    plt.close()
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
+    ax1.plot(x_axis_big, x_axis_PIN_big, color=COLOR_PIN)
+    ax2.plot(x_axis_big, y_axis_bipartivity, color=COLOR_METRIC)
+    ax1.set_xlabel("Big granularity")
+
+    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
+    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
+
+    ax2.set_ylabel("BIPARTIVITY", color=COLOR_METRIC, fontsize=14)
+    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
+
+    fig.suptitle('Correlation between PIN and bipartivity', fontsize=20)
+    fig.savefig("plot_PIN_bipartivity.png")
+    correlation6 = np.corrcoef(x_axis_PIN_big, y_axis_bipartivity)
+    print("\nCorrelation between PIN and bipartivity\n")
+    print(correlation6)
 
     plt.close()

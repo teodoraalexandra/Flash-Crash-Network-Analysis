@@ -119,6 +119,8 @@ if __name__ == '__main__':
     for process in processes:
         process.join()
 
+    plt.figure(figsize=(9, 5))
+
     # Naming the X axis
     plt.xlabel('Day number')
     # Naming the Y axis
@@ -137,6 +139,9 @@ if __name__ == '__main__':
 
     # Giving a title
     plt.title("Evolution of Agents' cash")
+
+    # Prevent scientific notation
+    plt.ticklabel_format(style='plain')
 
     # Adding a label with no duplicates
     legend_without_duplicate_labels(plt)
