@@ -1,5 +1,3 @@
-import random
-
 from plots.independent.processFile import Price
 from plots.independent.network import create_graph
 import matplotlib.pyplot as plt
@@ -53,11 +51,9 @@ def task(counter, mean_laplacian_noise_list, mean_laplacian_informed_list, list_
                 g_informed = create_graph(price_array)
                 laplacian_informed.append(nx.laplacian_spectrum(g_informed))
 
-    laplacian_informed.pop(0)
-    laplacian_informed.pop()
     with list_lock:
-        mean_laplacian_noise_list.append(random.choice(laplacian_noise))
-        mean_laplacian_informed_list.append(random.choice(laplacian_informed))
+        mean_laplacian_noise_list.append(np.mean(laplacian_noise, axis=0, dtype=np.float32))
+        mean_laplacian_informed_list.append(np.mean(laplacian_informed, axis=0, dtype=np.float32))
 
 
 if __name__ == '__main__':
@@ -83,26 +79,24 @@ if __name__ == '__main__':
 
     print('Monte Carlo done. Start generating plots!\n')
     fig, ax1 = plt.subplots(figsize=(8, 8))
+
+    # Average eigenvalues from N simulations
+    mean_laplacian_noise = np.mean(mean_laplacian_noise, axis=0, dtype=np.float)
+    mean_laplacian_informed = np.mean(mean_laplacian_informed, axis=0, dtype=np.float)
+
     # Plot the Laplacian spectrum of Noise
-    for noise in mean_laplacian_noise:
-        number_of_bins_noise = (max(noise) - min(noise)) / (3.5 * np.std(noise) / pow(len(noise), (1 / 3)))
-        print(number_of_bins_noise)
-        for i in range(len(noise)):
-            noise[i] = float("{:.4f}".format(float(noise[i])))
-        print(noise, "\n")
-        plt.hist(noise, alpha=0.5, color='blue', label='Noise')
-        sns.kdeplot(ax=ax1, data=noise, color='blue', alpha=.3, linewidth=0, fill=True, label='Noise')
+    for i in range(len(mean_laplacian_noise)):
+        mean_laplacian_noise[i] = float("{:.4f}".format(float(mean_laplacian_noise[i])))
+    print(mean_laplacian_noise, "\n")
+    # ax1.hist(mean_laplacian_noise, alpha=0.5, color='blue', label='Noise')
+    sns.kdeplot(ax=ax1, data=mean_laplacian_noise, color='blue', alpha=.3, linewidth=0, fill=True, label='Noise')
 
     # Plot the Laplacian spectrum of Informed
-    for informed in mean_laplacian_informed:
-        number_of_bins_informed = (max(informed) - min(informed)) / (3.5 * np.std(informed) / pow(len(informed), (1 / 3)))
-        print(number_of_bins_informed)
-        for i in range(len(informed)):
-            informed[i] = float("{:.4f}".format(float(informed[i])))
-        print(informed)
-        print('\n')
-        ax1.hist(informed, alpha=0.5, color='red', label='Informed')
-        sns.kdeplot(ax=ax1, data=informed, color='red', alpha=.3, linewidth=0, fill=True, label='Informed')
+    for i in range(len(mean_laplacian_informed)):
+        mean_laplacian_informed[i] = float("{:.4f}".format(float(mean_laplacian_informed[i])))
+    print(mean_laplacian_informed, "\n")
+    # ax1.hist(mean_laplacian_informed, alpha=0.5, color='red', label='Informed')
+    sns.kdeplot(ax=ax1, data=mean_laplacian_informed, color='red', alpha=.3, linewidth=0, fill=True, label='Informed')
 
     # Add title, labels, and legend to the plot
     fig.suptitle('Laplacian Spectrum')

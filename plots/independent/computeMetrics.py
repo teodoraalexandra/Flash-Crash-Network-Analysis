@@ -3,7 +3,7 @@ from networkx.algorithms import bipartite
 import networkx as nx
 
 
-def compute_metrics(prices):
+def compute_metrics(prices, granularity):
     # Length of prices = length of edges from the graph
     informed_transactions = 0
     total_transactions = 0
@@ -21,16 +21,21 @@ def compute_metrics(prices):
         average += price.price
         items += 1
 
-    if bipartite.is_bipartite(g):
-        isGraphBipartite = bipartite.average_clustering(g)
-    else:
-        isGraphBipartite = 2
+    if granularity == 0:
+        if bipartite.is_bipartite(g):
+            isGraphBipartite = bipartite.average_clustering(g)
+        else:
+            isGraphBipartite = 2
+        return informed_transactions / total_transactions, nx.density(g), \
+            isGraphBipartite, average / items
 
-    num_stars = sum(1 for node in g if g.degree(node) == 1)
+    if granularity == 1:
+        return informed_transactions / total_transactions, \
+            nx.degree_assortativity_coefficient(g), nx.number_connected_components(g)
 
-    return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), \
-        nx.density(g), isGraphBipartite, bipartite.spectral_bipartivity(g), nx.number_connected_components(g), \
-        average / items, num_stars
+    if granularity == 2:
+        num_stars = sum(1 for node in g if g.degree(node) == 1)
+        return informed_transactions / total_transactions, bipartite.spectral_bipartivity(g), num_stars
 
 # Defs
 # Compute the assortativity of the graph

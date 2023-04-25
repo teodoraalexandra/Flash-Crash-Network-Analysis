@@ -9,7 +9,8 @@ rm -f "price_evolution.png"
 rm -f "random_chosen_network.png"
 rm -f "plot_PIN_assortativity.png"
 rm -f "plot_PIN_density.png"
-rm -f "plot_PIN_spectral_bipartivity.png"
+rm -f "plot_PIN_bipartivity.png"
+rm -f "plot_PIN_average_clustering.png"
 rm -f "plot_PIN_connected_components.png"
 rm -f "plot_PIN_stars.png"
 rm -f "agents_cash_evolution.png"
@@ -30,8 +31,8 @@ javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 n=5
 days=100
 aggressivity=10
-persons=1000
-informed=0.5 # This is percentage of informed
+persons=200
+informed=5 # This is percentage of informed
 
 javaPart() {
   local i=$1
@@ -83,8 +84,8 @@ done
 wait
 
 #pythonGraphMetricsPart
-pythonAgentCashPart
-#pythonLaplacianMetricsPart
+#pythonAgentCashPart
+pythonLaplacianMetricsPart
 #pythonGraphComplexMetricsPart
 
 end=$(date +%s.%N)

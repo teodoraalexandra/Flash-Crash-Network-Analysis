@@ -50,37 +50,37 @@ def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_
                      chunksize=big_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            PIN, assortativity, density, averageClustering, bipartivity, conn, averagePrice, stars \
-                = compute_metrics(price_array)
+            PIN, density, averageClustering, averagePrice = compute_metrics(price_array, 0)
 
             PIN_results_big.append(PIN)
             density_results.append(density)
             average_clustering_results.append(averageClustering)
-            bipartivity_results.append(bipartivity)
             intermediate_y.append(averagePrice)
+    print("Simulation ", counter + 1, " finished big granularity.")
 
     # Assortativity, Connected components on small granularity
     with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
                      chunksize=small_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            PIN, assortativity, density, averageClustering, bipartivity, conn, averagePrice, stars \
-                = compute_metrics(price_array)
+            PIN, assortativity, conn = compute_metrics(price_array, 1)
 
             PIN_results_small.append(PIN)
             assortativity_results.append(assortativity)
             connected_results.append(conn)
+    print("Simulation ", counter + 1, " finished small granularity.")
 
     # Stars on super-small granularity
     with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
                      chunksize=super_small_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            PIN, assortativity, density, averageClustering, bipartivity, conn, averagePrice, stars \
-                = compute_metrics(price_array)
+            PIN, bipartivity, stars = compute_metrics(price_array, 2)
 
             PIN_results_super_small.append(PIN)
+            bipartivity_results.append(bipartivity)
             stars_results.append(stars)
+    print("Simulation ", counter + 1, " finished super small granularity.")
 
     with list_lock:
         y_axis.append(intermediate_y)
@@ -261,6 +261,28 @@ if __name__ == '__main__':
     print("\nCorrelation between PIN and average clustering\n")
     print(correlation3)
 
+    # Plot sixth
+    plt.close()
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
+    ax1.plot(x_axis_super_small, x_axis_PIN_super_small, color=COLOR_PIN)
+    ax2.plot(x_axis_super_small, y_axis_bipartivity, color=COLOR_METRIC)
+    ax1.set_xlabel("Smallest granularity")
+
+    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
+    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
+
+    ax2.set_ylabel("BIPARTIVITY", color=COLOR_METRIC, fontsize=14)
+    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
+
+    fig.suptitle('Correlation between PIN and bipartivity', fontsize=20)
+    fig.savefig("plot_PIN_bipartivity.png")
+    correlation6 = np.corrcoef(x_axis_PIN_super_small, y_axis_bipartivity)
+    print("\nCorrelation between PIN and bipartivity\n")
+    print(correlation6)
+
+    plt.close()
+
     # Plot fourth
     plt.close()
     fig, ax1 = plt.subplots(figsize=(8, 8))
@@ -301,24 +323,3 @@ if __name__ == '__main__':
     print("\nCorrelation between PIN and stars\n")
     print(correlation5)
 
-    # Plot sixth
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_big, x_axis_PIN_big, color=COLOR_PIN)
-    ax2.plot(x_axis_big, y_axis_bipartivity, color=COLOR_METRIC)
-    ax1.set_xlabel("Big granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("BIPARTIVITY", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and bipartivity', fontsize=20)
-    fig.savefig("plot_PIN_bipartivity.png")
-    correlation6 = np.corrcoef(x_axis_PIN_big, y_axis_bipartivity)
-    print("\nCorrelation between PIN and bipartivity\n")
-    print(correlation6)
-
-    plt.close()
