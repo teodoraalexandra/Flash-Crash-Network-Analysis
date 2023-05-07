@@ -44,7 +44,7 @@ def concatenate_lists(a):
 def task(counter, mean_laplacian_noise_list, mean_laplacian_informed_list, list_lock):
     laplacian_noise = []
     laplacian_informed = []
-    laplacian_granularity = 30000
+    laplacian_granularity = 300000
 
     with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
                      chunksize=laplacian_granularity, delimiter=";") as reader:

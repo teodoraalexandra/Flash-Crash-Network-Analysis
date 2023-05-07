@@ -32,7 +32,7 @@ n=5
 days=100
 aggressivity=10
 persons=1000
-informed=0.5 # This is percentage of informed
+informed=3 # This is percentage of informed
 
 javaPart() {
   local i=$1
