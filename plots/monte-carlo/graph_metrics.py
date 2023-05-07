@@ -115,7 +115,7 @@ if __name__ == '__main__':
     y_price_axis = multiprocessing.Manager().list()
     lock = multiprocessing.Lock()
 
-    # Create three processes for each task using a for loop
+    # Create processes for each simulation using a for loop
     processes = []
     for simulationIndex in range(int(sys.argv[1])):
         process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results_super_small,

@@ -31,8 +31,8 @@ javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 n=5
 days=100
 aggressivity=10
-persons=200
-informed=5 # This is percentage of informed
+persons=1000
+informed=0.5 # This is percentage of informed
 
 javaPart() {
   local i=$1
