@@ -4,6 +4,8 @@
 out
 venv
 .idea
+informed.txt
+noise.txt
 
 ### IntelliJ IDEA ###
 out/
