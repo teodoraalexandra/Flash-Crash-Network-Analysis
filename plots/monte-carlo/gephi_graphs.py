@@ -1,5 +1,5 @@
 from laplacian_metrics import read_prices_in_chunk
-from plots.independent.network import create_graph, print_graph
+from plots.independent.network import create_graph, gml_graph
 import pandas as pd
 import random
 
@@ -12,7 +12,7 @@ if __name__ == '__main__':
     random_noise_graphs = []
     random_informed_graphs = []
 
-    with pd.read_csv("plots/csvs/prices1.csv", chunksize=big_granularity, delimiter=";") as reader:
+    with pd.read_csv("plots/csvs/prices1.csv", chunksize=super_small_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array, noise_only, informed_length = read_prices_in_chunk(chunk)
             if noise_only:
@@ -23,6 +23,6 @@ if __name__ == '__main__':
                 random_informed_graphs.append(g_informed)
 
     random_chosen_noise = random.choice(random_noise_graphs)
-    print_graph(random_chosen_noise, "noise_big_granularity")
+    gml_graph(random_chosen_noise, "noise_super_small_granularity")
     random_chosen_informed = random.choice(random_informed_graphs)
-    print_graph(random_chosen_informed, "informed_big_granularity")
+    gml_graph(random_chosen_informed, "informed_super_small_granularity")

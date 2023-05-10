@@ -32,7 +32,7 @@ n=5
 days=100
 aggressivity=10
 persons=1000
-informed=3 # This is percentage of informed
+informed=0.5 # This is percentage of informed
 
 javaPart() {
   local i=$1
@@ -77,6 +77,14 @@ pythonGraphComplexMetricsPart() {
   echo -e "Graph complex metrics was generated. \n"
 }
 
+pythonGephiGraphs() {
+  echo "Start Python Computation (Graph Gephi)..."
+
+  # Run the Python program for computing graph complex metrics
+  python plots/monte-carlo/gephi_graphs.py $n
+  echo -e "Graph gephi was generated. \n"
+}
+
 echo "Start Java Simulation..."
 for i in $(seq 1 $n); do
     javaPart "$i" &
@@ -84,9 +92,10 @@ done
 wait
 
 #pythonGraphMetricsPart
-#pythonAgentCashPart
-pythonLaplacianMetricsPart
+#gpythonAgentCashPart
+#pythonLaplacianMetricsPart
 #pythonGraphComplexMetricsPart
+#pythonGephiGraphs
 
 end=$(date +%s.%N)
 runtime=$(python -c "print(${end} - ${start})")

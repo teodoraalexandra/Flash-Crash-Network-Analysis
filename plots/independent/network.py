@@ -28,3 +28,16 @@ def print_graph(g, fileName):
 
     # Show the plot
     plt.savefig(fileName + ".png")
+
+
+def gml_graph(g, fileName):
+    color_map = []
+    for node in g:
+        if node.startswith("Overvalued"):
+            color_map.append('red')
+        elif node.startswith("Noise"):
+            color_map.append('green')
+        else:
+            color_map.append('blue')
+
+    nx.write_gml(g, fileName + ".gml")
