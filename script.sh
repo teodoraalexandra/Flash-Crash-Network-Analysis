@@ -32,7 +32,7 @@ n=5
 days=100
 aggressivity=10
 persons=1000
-informed=0.5 # This is percentage of informed
+informed=5 # This is percentage of informed
 
 javaPart() {
   local i=$1
@@ -91,11 +91,11 @@ for i in $(seq 1 $n); do
 done
 wait
 
-#pythonGraphMetricsPart
-#gpythonAgentCashPart
-#pythonLaplacianMetricsPart
-#pythonGraphComplexMetricsPart
-#pythonGephiGraphs
+pythonGraphMetricsPart
+pythonAgentCashPart
+pythonLaplacianMetricsPart
+pythonGraphComplexMetricsPart
+pythonGephiGraphs
 
 end=$(date +%s.%N)
 runtime=$(python -c "print(${end} - ${start})")

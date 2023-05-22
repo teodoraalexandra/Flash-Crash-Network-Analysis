@@ -44,7 +44,7 @@ def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_diameter_list, me
                      chunksize=big_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            PIN, diameter, radius, eccentricity, core, independence = compute_complex_metrics(price_array)
+            PIN, independence, core = compute_complex_metrics(price_array, 0)
 
             PIN_results_big.append(PIN)
             independence_results.append(independence)
@@ -55,7 +55,7 @@ def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_diameter_list, me
                      chunksize=small_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            PIN, diameter, radius, eccentricity, core, independence = compute_complex_metrics(price_array)
+            PIN, diameter, radius, eccentricity = compute_complex_metrics(price_array, 1)
 
             PIN_results_small.append(PIN)
             diameter_results.append(diameter)
