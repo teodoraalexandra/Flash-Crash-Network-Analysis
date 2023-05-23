@@ -7,20 +7,67 @@ import multiprocessing
 import sys
 
 
+def plot_metrics(X, Y1, Y2, metric1, metric2):
+    COLOR_PIN = "#3399ff"
+    COLOR_METRIC = "#ff6600"
+
+    plt.close()
+    fig, ax1 = plt.subplots(figsize=(8, 8))
+    ax2 = ax1.twinx()
+    ax1.plot(X, Y1, color=COLOR_PIN)
+    ax2.plot(X, Y2, color=COLOR_METRIC)
+
+    # Standard deviation and confidence interval
+    standard_deviation_metric1 = np.std(Y1)
+    standard_deviation_metric2 = np.std(Y2)
+    average_metric1 = np.mean(Y1)
+    average_metric2 = np.mean(Y2)
+    lower_bound_1 = average_metric1 - 2 * standard_deviation_metric1
+    upper_bound_1 = average_metric1 + 2 * standard_deviation_metric1
+    lower_bound_2 = average_metric2 - 2 * standard_deviation_metric2
+    upper_bound_2 = average_metric2 + 2 * standard_deviation_metric2
+
+    # Correlation
+    correlation = np.corrcoef(Y1, Y2)
+
+    # Plot statistics
+    number_of_rounded_decimals = 6
+    ax1.set_title("Correlation: " + str(correlation))
+    ax2.set_title("[" + str(round(lower_bound_1, number_of_rounded_decimals)) + ", " +
+                  str(round(upper_bound_1, number_of_rounded_decimals)) + "];[" +
+                  str(round(lower_bound_2, number_of_rounded_decimals)) + ", " +
+                  str(round(upper_bound_2, number_of_rounded_decimals)) + "]")
+
+    ax1.set_ylabel(metric1, color=COLOR_PIN, fontsize=14)
+    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
+
+    ax2.set_ylabel(metric2, color=COLOR_METRIC, fontsize=14)
+    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
+
+    fig.suptitle(metric1 + ' and ' + metric2, fontsize=20)
+    fig.savefig("plot_" + metric1 + "_" + metric2 + ".png")
+
+
+def create_price_object(row):
+    # Create price object
+    price_object = Price()
+
+    # Append the properties
+    price_object.price = row[row._fields.index("price")]
+    price_object.quantity = row[row._fields.index("quty")]
+    price_object.direction = row[row._fields.index("dirTrigger")]
+    price_object.first_agent = row[row._fields.index("AgTrigger")]
+    price_object.second_agent = row[row._fields.index("ag2")]
+    price_object.best_ask = row[row._fields.index("bestask")]
+    price_object.best_bid = row[row._fields.index("bestbid")]
+
+    return price_object
+
+
 def read_prices_in_chunk(chunk):
     price_array = []
     for row in chunk.itertuples():
-        # Create price object
-        price_object = Price()
-
-        # Append the properties
-        price_object.price = row[row._fields.index("price")]
-        price_object.quantity = row[row._fields.index("quty")]
-        price_object.direction = row[row._fields.index("dirTrigger")]
-        price_object.first_agent = row[row._fields.index("AgTrigger")]
-        price_object.second_agent = row[row._fields.index("ag2")]
-        price_object.best_ask = row[row._fields.index("bestask")]
-        price_object.best_bid = row[row._fields.index("bestbid")]
+        price_object = create_price_object(row)
 
         # Add the price to the intermediate array
         price_array.append(price_object)
@@ -56,7 +103,6 @@ def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_
             density_results.append(density)
             average_clustering_results.append(averageClustering)
             intermediate_y.append(averagePrice)
-    print("Simulation ", counter + 1, " finished big granularity.")
 
     # Assortativity, Connected components on small granularity
     with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
@@ -68,7 +114,6 @@ def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_
             PIN_results_small.append(PIN)
             assortativity_results.append(assortativity)
             connected_results.append(conn)
-    print("Simulation ", counter + 1, " finished small granularity.")
 
     # Stars on super-small granularity
     with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
@@ -80,7 +125,6 @@ def task(counter, mean_PIN_list_super_small, mean_PIN_list_small, mean_PIN_list_
             PIN_results_super_small.append(PIN)
             bipartivity_results.append(bipartivity)
             stars_results.append(stars)
-    print("Simulation ", counter + 1, " finished super small granularity.")
 
     with list_lock:
         y_axis.append(intermediate_y)
@@ -198,128 +242,9 @@ if __name__ == '__main__':
     for index in range(len(x_axis_PIN_big)):
         x_axis_big.append(index)
 
-    COLOR_PIN = "#69b3a2"
-    COLOR_METRIC = "#3399e6"
-
-    # Plot first
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_small, x_axis_PIN_small, color=COLOR_PIN)
-    ax2.plot(x_axis_small, y_axis_assortativity, color=COLOR_METRIC)
-    ax1.set_xlabel("Small granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("ASSORTATIVITY", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and assortativity', fontsize=20)
-    fig.savefig("plot_PIN_assortativity.png")
-    correlation1 = np.corrcoef(x_axis_PIN_small, y_axis_assortativity)
-    print("\nCorrelation between PIN and assortativity\n")
-    print(correlation1)
-
-    # Plot second
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_big, x_axis_PIN_big, color=COLOR_PIN)
-    ax2.plot(x_axis_big, y_axis_density, color=COLOR_METRIC)
-    ax1.set_xlabel("Big granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("DENSITY", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and density', fontsize=20)
-    fig.savefig("plot_PIN_density.png")
-    correlation2 = np.corrcoef(x_axis_PIN_big, y_axis_density)
-    print("\nCorrelation between PIN and density\n")
-    print(correlation2)
-
-    # Plot third
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_big, x_axis_PIN_big, color=COLOR_PIN)
-    ax2.plot(x_axis_big, y_axis_average_clustering, color=COLOR_METRIC)
-    ax1.set_xlabel("Big granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("AVERAGE CLUSTERING", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and average clustering', fontsize=20)
-    fig.savefig("plot_PIN_average_clustering.png")
-    correlation3 = np.corrcoef(x_axis_PIN_big, y_axis_average_clustering)
-    print("\nCorrelation between PIN and average clustering\n")
-    print(correlation3)
-
-    # Plot sixth
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_super_small, x_axis_PIN_super_small, color=COLOR_PIN)
-    ax2.plot(x_axis_super_small, y_axis_bipartivity, color=COLOR_METRIC)
-    ax1.set_xlabel("Smallest granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("BIPARTIVITY", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and bipartivity', fontsize=20)
-    fig.savefig("plot_PIN_bipartivity.png")
-    correlation6 = np.corrcoef(x_axis_PIN_super_small, y_axis_bipartivity)
-    print("\nCorrelation between PIN and bipartivity\n")
-    print(correlation6)
-
-    plt.close()
-
-    # Plot fourth
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_small, x_axis_PIN_small, color=COLOR_PIN)
-    ax2.plot(x_axis_small, y_axis_connected, color=COLOR_METRIC)
-    ax1.set_xlabel("Small granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("CONNECTED COMPONENTS", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and connected components', fontsize=20)
-    fig.savefig("plot_PIN_connected_components.png")
-    correlation4 = np.corrcoef(x_axis_PIN_small, y_axis_connected)
-    print("\nCorrelation between PIN and connected components\n")
-    print(correlation4)
-
-    # Plot fifth
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_super_small, x_axis_PIN_super_small, color=COLOR_PIN)
-    ax2.plot(x_axis_super_small, y_axis_stars, color=COLOR_METRIC)
-    ax1.set_xlabel("Smallest granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("STARS", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and stars', fontsize=20)
-    fig.savefig("plot_PIN_stars.png")
-    correlation5 = np.corrcoef(x_axis_PIN_super_small, y_axis_stars)
-    print("\nCorrelation between PIN and stars\n")
-    print(correlation5)
-
+    plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_assortativity, "PIN", "ASSORTATIVITY")
+    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_density, "PIN", "DENSITY")
+    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_average_clustering, "PIN", "AVERAGE CLUSTERING")
+    plot_metrics(x_axis_super_small, x_axis_PIN_super_small, y_axis_bipartivity, "PIN", "BIPARTIVITY")
+    plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_connected, "PIN", "CONNECTED COMPONENTS")
+    plot_metrics(x_axis_super_small, x_axis_PIN_super_small, y_axis_stars, "PIN", "NUMBER OF STARS")

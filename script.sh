@@ -31,8 +31,8 @@ javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 n=5
 days=100
 aggressivity=10
-persons=1000
-informed=5 # This is percentage of informed
+persons=200
+informed=2 # This is percentage of informed
 
 javaPart() {
   local i=$1
@@ -92,10 +92,10 @@ done
 wait
 
 pythonGraphMetricsPart
-pythonAgentCashPart
-pythonLaplacianMetricsPart
-pythonGraphComplexMetricsPart
-pythonGephiGraphs
+#pythonAgentCashPart
+#pythonLaplacianMetricsPart
+#pythonGraphComplexMetricsPart
+#pythonGephiGraphs
 
 end=$(date +%s.%N)
 runtime=$(python -c "print(${end} - ${start})")

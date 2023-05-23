@@ -1,30 +1,9 @@
-from plots.independent.processFile import Price
+from graph_metrics import read_prices_in_chunk, plot_metrics
 from plots.independent.computeComplexMetrics import compute_complex_metrics
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import multiprocessing
 import sys
-
-
-def read_prices_in_chunk(chunk):
-    price_array = []
-    for row in chunk.itertuples():
-        # Create price object
-        price_object = Price()
-
-        # Append the properties
-        price_object.price = row[row._fields.index("price")]
-        price_object.quantity = row[row._fields.index("quty")]
-        price_object.direction = row[row._fields.index("dirTrigger")]
-        price_object.first_agent = row[row._fields.index("AgTrigger")]
-        price_object.second_agent = row[row._fields.index("ag2")]
-        price_object.best_ask = row[row._fields.index("bestask")]
-        price_object.best_bid = row[row._fields.index("bestbid")]
-
-        # Add the price to the intermediate array
-        price_array.append(price_object)
-    return price_array
 
 
 def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_diameter_list, mean_radius_list,
@@ -145,105 +124,8 @@ if __name__ == '__main__':
     for index in range(len(x_axis_PIN_big)):
         x_axis_big.append(index)
 
-    COLOR_PIN = "#69b3a2"
-    COLOR_METRIC = "#3399e6"
-
-    # Plot first
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_small, x_axis_PIN_small, color=COLOR_PIN)
-    ax2.plot(x_axis_small, y_axis_diameter, color=COLOR_METRIC)
-    ax1.set_xlabel("Small granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("DIAMETER", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and diameter', fontsize=20)
-    fig.savefig("plot_PIN_diameter.png")
-    correlation1 = np.corrcoef(x_axis_PIN_small, y_axis_diameter)
-    print("\nCorrelation between PIN and diameter\n")
-    print(correlation1)
-
-    # Plot second
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_small, x_axis_PIN_small, color=COLOR_PIN)
-    ax2.plot(x_axis_small, y_axis_radius, color=COLOR_METRIC)
-    ax1.set_xlabel("Small granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("RADIUS", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and radius', fontsize=20)
-    fig.savefig("plot_PIN_radius.png")
-    correlation2 = np.corrcoef(x_axis_PIN_small, y_axis_radius)
-    print("\nCorrelation between PIN and radius\n")
-    print(correlation2)
-
-    # Plot third
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_small, x_axis_PIN_small, color=COLOR_PIN)
-    ax2.plot(x_axis_small, y_axis_eccentricity, color=COLOR_METRIC)
-    ax1.set_xlabel("Small granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("ECCENTRICITY", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and eccentricity', fontsize=20)
-    fig.savefig("plot_PIN_eccentricity.png")
-    correlation3 = np.corrcoef(x_axis_PIN_small, y_axis_eccentricity)
-    print("\nCorrelation between PIN and eccentricity\n")
-    print(correlation3)
-
-    # Plot fourth
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_big, x_axis_PIN_big, color=COLOR_PIN)
-    ax2.plot(x_axis_big, y_axis_core, color=COLOR_METRIC)
-    ax1.set_xlabel("Big granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("CORE", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and core', fontsize=20)
-    fig.savefig("plot_PIN_core.png")
-    correlation4 = np.corrcoef(x_axis_PIN_big, y_axis_core)
-    print("\nCorrelation between PIN and core\n")
-    print(correlation4)
-
-    # Plot fifth
-    plt.close()
-    fig, ax1 = plt.subplots(figsize=(8, 8))
-    ax2 = ax1.twinx()
-    ax1.plot(x_axis_big, x_axis_PIN_big, color=COLOR_PIN)
-    ax2.plot(x_axis_big, y_axis_independence, color=COLOR_METRIC)
-    ax1.set_xlabel("Big granularity")
-
-    ax1.set_ylabel("PIN", color=COLOR_PIN, fontsize=14)
-    ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
-
-    ax2.set_ylabel("INDEPENDENCE", color=COLOR_METRIC, fontsize=14)
-    ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
-
-    fig.suptitle('Correlation between PIN and independence', fontsize=20)
-    fig.savefig("plot_PIN_independence.png")
-    correlation5 = np.corrcoef(x_axis_PIN_big, y_axis_independence)
-    print("\nCorrelation between PIN and independence\n")
-    print(correlation5)
+    plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_diameter, "PIN", "DIAMETER")
+    plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_radius, "PIN", "RADIUS")
+    plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_eccentricity, "PIN", "ECCENTRICITY")
+    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_core, "PIN", "CORE NUMBER")
+    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_independence, "PIN", "MAXIMAL INDEPENDENT SET")
