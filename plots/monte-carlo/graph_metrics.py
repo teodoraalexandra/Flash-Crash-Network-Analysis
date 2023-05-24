@@ -32,11 +32,12 @@ def plot_metrics(X, Y1, Y2, metric1, metric2):
 
     # Plot statistics
     number_of_rounded_decimals = 6
-    ax1.set_title("Correlation: " + str(correlation))
-    ax2.set_title("[" + str(round(lower_bound_1, number_of_rounded_decimals)) + ", " +
-                  str(round(upper_bound_1, number_of_rounded_decimals)) + "];[" +
-                  str(round(lower_bound_2, number_of_rounded_decimals)) + ", " +
-                  str(round(upper_bound_2, number_of_rounded_decimals)) + "]")
+    subtitle1 = metric1 + " CI: [" + str(round(lower_bound_1, number_of_rounded_decimals)) + ", " + \
+        str(round(upper_bound_1, number_of_rounded_decimals)) + "]"
+    subtitle2 = metric2 + " CI: [" + str(round(lower_bound_2, number_of_rounded_decimals)) + ", " + \
+        str(round(upper_bound_2, number_of_rounded_decimals)) + "]"
+
+    ax1.set_xlabel("Correlation: " + str(correlation))
 
     ax1.set_ylabel(metric1, color=COLOR_PIN, fontsize=14)
     ax1.tick_params(axis="y", labelcolor=COLOR_PIN)
@@ -45,6 +46,8 @@ def plot_metrics(X, Y1, Y2, metric1, metric2):
     ax2.tick_params(axis="y", labelcolor=COLOR_METRIC)
 
     fig.suptitle(metric1 + ' and ' + metric2, fontsize=20)
+    fig.text(0.5, 0.93, subtitle1, ha='center', fontsize=14)
+    fig.text(0.5, 0.90, subtitle2, ha='center', fontsize=14)
     fig.savefig("plot_" + metric1 + "_" + metric2 + ".png")
 
 
