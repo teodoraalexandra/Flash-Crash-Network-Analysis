@@ -98,15 +98,20 @@ if __name__ == '__main__':
     # Create three processes for each task using a for loop
     processes = []
 
+    simulations = sys.argv[1]
+    agents = sys.argv[2]
+    percentage = sys.argv[3]
+    days = sys.argv[4]
+
     # X axis values
-    x = list(range(1, int(sys.argv[2]) + 1))
+    x = list(range(1, int(agents) + 1))
 
     axis_noise = multiprocessing.Manager().list()
     axis_informed = multiprocessing.Manager().list()
     axis_noise_average = multiprocessing.Manager().list()
     axis_informed_average = multiprocessing.Manager().list()
 
-    for simulationIndex in range(int(sys.argv[1])):
+    for simulationIndex in range(int(simulations)):
         process = multiprocessing.Process(target=task, args=(simulationIndex, axis_noise, axis_informed,
                                                              axis_noise_average, axis_informed_average, lock))
         processes.append(process)
@@ -147,5 +152,5 @@ if __name__ == '__main__':
     legend_without_duplicate_labels(plt)
 
     # Function to show the plot
-    plt.savefig("agents_cash_evolution.png")
+    plt.savefig("agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
     plt.close()

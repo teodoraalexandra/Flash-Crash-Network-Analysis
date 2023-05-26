@@ -62,9 +62,13 @@ if __name__ == '__main__':
     mean_laplacian_informed = multiprocessing.Manager().list()
     lock = multiprocessing.Lock()
 
+    simulations = sys.argv[1]
+    agents = sys.argv[2]
+    percentage = sys.argv[3]
+
     # Create three processes for each task using a for loop
     processes = []
-    for simulationIndex in range(int(sys.argv[1])):
+    for simulationIndex in range(int(simulations)):
         process = multiprocessing.Process(target=task, args=(simulationIndex, mean_laplacian_noise,
                                                              mean_laplacian_informed, lock))
         processes.append(process)
@@ -99,4 +103,4 @@ if __name__ == '__main__':
     ax1.set_xlabel('Eigenvalue')
     ax1.set_ylabel('Frequency')
     ax1.legend()
-    fig.savefig("laplacian.png")
+    fig.savefig("laplacian" + "_" + simulations + "_" + agents + "_" + percentage + ".png")

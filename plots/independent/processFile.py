@@ -23,7 +23,8 @@ class Day:
         self.fixed_prices = fixed_prices
 
     def __str__(self):
-        return f"Day {self.day_number}: {self.first_price} {self.last_price} {self.lowest_price} {self.highest_price} {self.fixed_prices}"
+        return f"Day {self.day_number}: {self.first_price} {self.last_price} {self.lowest_price} " \
+               f"{self.highest_price} {self.fixed_prices}"
 
 
 class Agent:
