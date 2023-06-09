@@ -35,39 +35,16 @@ def compute_metrics(prices, granularity):
 
         try:
             if nx.is_connected(g):
-                # For core, we will compute only the average of the 3 highest values
-                values = sorted(nx.core_number(g).values(), reverse=True)
-                core = sum(values[:3]) / 3
+                diameter = nx.diameter(g)
             else:
-                cores = []
+                diameters = []
                 for component in nx.connected_components(g):
                     subgraph = g.subgraph(component)
-                    values = sorted(nx.core_number(subgraph).values(), reverse=True)
-                    core = sum(values[:3]) / 3
-                    cores.append(core)
-                core = max(cores)
+                    diameter = nx.diameter(subgraph)
+                    diameters.append(diameter)
+                diameter = max(diameters)
         except nx.NetworkXError:
-            core = 0
-
-        return informed_transactions / total_transactions, nx.density(g), \
-            isGraphBipartite, average / items, maximal_independent_set_length, core
-
-    if granularity == 1:
-        try:
-            if nx.is_connected(g):
-                # For eccentricity, we will compute only the average of the 3 highest values
-                values = sorted(nx.eccentricity(g).values(), reverse=True)
-                eccentricity = sum(values[:3]) / 3
-            else:
-                eccentricities = []
-                for component in nx.connected_components(g):
-                    subgraph = g.subgraph(component)
-                    values = sorted(nx.eccentricity(subgraph).values(), reverse=True)
-                    eccentricity = sum(values[:3]) / 3
-                    eccentricities.append(eccentricity)
-                eccentricity = max(eccentricities)
-        except nx.NetworkXError:
-            eccentricity = 0
+            diameter = 0
 
         try:
             if nx.is_connected(g):
@@ -84,24 +61,26 @@ def compute_metrics(prices, granularity):
 
         try:
             if nx.is_connected(g):
-                diameter = nx.diameter(g)
+                # For eccentricity, we will compute only the average of the 3 highest values
+                values = sorted(nx.eccentricity(g).values(), reverse=True)
+                eccentricity = sum(values[:3]) / 3
             else:
-                diameters = []
+                eccentricities = []
                 for component in nx.connected_components(g):
                     subgraph = g.subgraph(component)
-                    diameter = nx.diameter(subgraph)
-                    diameters.append(diameter)
-                diameter = max(diameters)
+                    values = sorted(nx.eccentricity(subgraph).values(), reverse=True)
+                    eccentricity = sum(values[:3]) / 3
+                    eccentricities.append(eccentricity)
+                eccentricity = max(eccentricities)
         except nx.NetworkXError:
-            diameter = 0
+            eccentricity = 0
 
-        return informed_transactions / total_transactions, \
-            nx.degree_assortativity_coefficient(g), nx.number_connected_components(g), \
-            diameter, radius, eccentricity
+        return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), diameter, radius, eccentricity, \
+            maximal_independent_set_length, nx.density(g), isGraphBipartite
 
-    if granularity == 2:
+    if granularity == 1:
         num_stars = sum(1 for node in g if g.degree(node) == 1)
-        return informed_transactions / total_transactions, bipartite.spectral_bipartivity(g), num_stars
+        return informed_transactions / total_transactions, nx.number_connected_components(g), num_stars
 
 # Defs
 # Compute the assortativity of the graph
