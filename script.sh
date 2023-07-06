@@ -27,15 +27,15 @@ javaPart() {
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "src:atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
+  java -classpath "C:\Users\dant\Desktop\Master-Thesis\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
   cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i$persons$informed.csv"
-  #cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
+  cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
   sed -i '/noname/d' "plots/csvs/prices$i$persons$informed.csv"
   echo "Java Simulation $i finished." 
 }
 
 pythonGraphMetricsPart() {
-  total_rows=$(cat plots/csvs/prices1$persons$informed.csv | wc -l)
+  total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
   big_granularity=$((total_rows * 2662 / 1000000))
   small_granularity=$((total_rows * 2662 / 10000000))
 
@@ -45,7 +45,7 @@ pythonGraphMetricsPart() {
   echo "Start Python Computation (Network metrics part)..."
 
   # Run the Python program for creation
-  python $ROOT_FOLDER/plots/monte-carlo/graph_metrics.py $n $persons $informed $big_granularity $small_granularity
+  python "$ROOT_FOLDER"/plots/monte-carlo/graph_metrics.py $n "$persons" "$informed" $big_granularity $small_granularity
   echo -e "Metrics graphs was generated. \n"
 }
 
@@ -53,7 +53,7 @@ pythonAgentCashPart() {
   echo "Start Python Computation (Agents' Cash Part)..."
 
   # Run the Python program for plotting agents' cash
-  python $ROOT_FOLDER/plots/monte-carlo/agent_cash.py $n $persons $informed $days
+  python "$ROOT_FOLDER"/plots/monte-carlo/agent_cash.py $n "$persons" "$informed" $days
   echo -e "Agents' cash evolution graph was generated. \n"
 }
 
@@ -61,7 +61,7 @@ pythonLaplacianMetricsPart() {
   echo "Start Python Computation (Laplacian Metrics Part)..."
 
   # Run the Python program for computing laplacian metrics
-  python $ROOT_FOLDER/plots/monte-carlo/laplacian_metrics.py $n $persons $informed
+  python "$ROOT_FOLDER"/plots/monte-carlo/laplacian_metrics.py $n "$persons" "$informed"
   echo -e "Laplacian graph was generated. \n"
 }
 
@@ -81,8 +81,8 @@ for i in $(seq 1 $n); do
 done
 wait
 
-pythonGraphMetricsPart
-#pythonAgentCashPart
+#pythonGraphMetricsPart
+pythonAgentCashPart
 #pythonLaplacianMetricsPart
 
 # Use this only for generating gml files

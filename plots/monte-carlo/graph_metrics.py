@@ -84,7 +84,7 @@ def read_prices_in_chunk(chunk):
 
 def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_list,
          mean_density_list, mean_average_clustering_list, mean_connected_list,
-         mean_stars_list, mean_diameter_list, mean_radius_list, mean_eccentricity_list,
+         mean_stars_list, mean_diameter_list,
          mean_independence_list, list_lock):
     PIN_results_small = []
     PIN_results_big = []
@@ -94,8 +94,6 @@ def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_lis
     connected_results = []
     stars_results = []
     diameter_results = []
-    radius_results = []
-    eccentricity_results = []
     independence_results = []
 
     agents = sys.argv[2]
@@ -112,16 +110,14 @@ def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_lis
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
             if len(price_array) == big_granularity:
-            	PIN, assortativity, diameter, radius, eccentricity, independence, density, averageClustering = compute_metrics(price_array, 0)
+                PIN, assortativity, diameter, independence, density, averageClustering = compute_metrics(price_array, 0)
 
-            	PIN_results_big.append(PIN)
-            	assortativity_results.append(assortativity)
-            	diameter_results.append(diameter)
-            	radius_results.append(radius)
-            	eccentricity_results.append(eccentricity)
-            	independence_results.append(independence)
-            	density_results.append(density)
-            	average_clustering_results.append(averageClustering)
+                PIN_results_big.append(PIN)
+                assortativity_results.append(assortativity)
+                diameter_results.append(diameter)
+                independence_results.append(independence)
+                density_results.append(density)
+                average_clustering_results.append(averageClustering)
     print("Finish granularity big", counter + 1)
 
     with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
@@ -129,11 +125,11 @@ def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_lis
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
             if len(price_array) == small_granularity:
-            	PIN, conn, stars = compute_metrics(price_array, 1)
+                PIN, conn, stars = compute_metrics(price_array, 1)
 
-            	PIN_results_small.append(PIN)
-            	connected_results.append(conn)
-            	stars_results.append(stars)
+                PIN_results_small.append(PIN)
+                connected_results.append(conn)
+                stars_results.append(stars)
     print("Finish granularity small", counter + 1)
 
     with list_lock:
@@ -145,8 +141,6 @@ def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_lis
         mean_connected_list.append(connected_results)
         mean_stars_list.append(stars_results)
         mean_diameter_list.append(diameter_results)
-        mean_radius_list.append(radius_results)
-        mean_eccentricity_list.append(eccentricity_results)
         mean_independence_list.append(independence_results)
 
 
@@ -167,8 +161,6 @@ if __name__ == '__main__':
     mean_connected_results = multiprocessing.Manager().list()
     mean_stars_results = multiprocessing.Manager().list()
     mean_diameter_results = multiprocessing.Manager().list()
-    mean_radius_results = multiprocessing.Manager().list()
-    mean_eccentricity_results = multiprocessing.Manager().list()
     mean_independence_results = multiprocessing.Manager().list()
 
     lock = multiprocessing.Lock()
@@ -178,12 +170,12 @@ if __name__ == '__main__':
     # Create processes for each simulation using a for loop
     processes = []
     for simulationIndex in range(number_of_simulations):
-        process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results_small, mean_PIN_results_big,
+        process = multiprocessing.Process(target=task, args=(simulationIndex, mean_PIN_results_small,
+                                                             mean_PIN_results_big,
                                                              mean_assortativity_results, mean_density_results,
                                                              mean_average_clustering_results, 
                                                              mean_connected_results, mean_stars_results,
                                                              mean_diameter_results,
-                                                             mean_radius_results, mean_eccentricity_results,
                                                              mean_independence_results,
                                                              lock))
         processes.append(process)
@@ -222,12 +214,6 @@ if __name__ == '__main__':
     # Mean Diameter
     mean_diameter_results = mean_with_padding(mean_diameter_results)
 
-    # Mean Radius
-    mean_radius_results = mean_with_padding(mean_radius_results)
-
-    # Mean Eccentricity
-    mean_eccentricity_results = mean_with_padding(mean_eccentricity_results)
-
     # Mean Independence results
     mean_independence_results = mean_with_padding(mean_independence_results)
 
@@ -240,8 +226,6 @@ if __name__ == '__main__':
     y_axis_connected = np.array(mean_connected_results)
     y_axis_stars = np.array(mean_stars_results)
     y_axis_diameter = np.array(mean_diameter_results)
-    y_axis_radius = np.array(mean_radius_results)
-    y_axis_eccentricity = np.array(mean_eccentricity_results)
     y_axis_independence = np.array(mean_independence_results)
 
     x_axis_small = []
@@ -258,6 +242,4 @@ if __name__ == '__main__':
     plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_connected, "PIN", "CONNECTED COMPONENTS")
     plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_stars, "PIN", "NUMBER OF STARS")
     plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_diameter, "PIN", "DIAMETER")
-    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_radius, "PIN", "RADIUS")
-    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_eccentricity, "PIN", "ECCENTRICITY")
     plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_independence, "PIN", "MAXIMAL INDEPENDENT SET")

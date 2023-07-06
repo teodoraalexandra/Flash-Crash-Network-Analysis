@@ -36,7 +36,10 @@ def task(counter, mean_laplacian_noise_list, mean_laplacian_informed_list, list_
     laplacian_informed = []
     laplacian_granularity = 300000
 
-    with pd.read_csv("plots/csvs/prices" + str(counter + 1) + ".csv",
+    agents = sys.argv[2]
+    percentage = sys.argv[3]
+
+    with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
                      chunksize=laplacian_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array, noise_only, informed_length = read_prices_in_chunk(chunk)
@@ -63,8 +66,6 @@ if __name__ == '__main__':
     lock = multiprocessing.Lock()
 
     simulations = sys.argv[1]
-    agents = sys.argv[2]
-    percentage = sys.argv[3]
 
     # Create three processes for each task using a for loop
     processes = []
@@ -103,4 +104,8 @@ if __name__ == '__main__':
     ax1.set_xlabel('Eigenvalue')
     ax1.set_ylabel('Frequency')
     ax1.legend()
-    fig.savefig("laplacian" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
+
+    no_agents = sys.argv[2]
+    percentage_informed = sys.argv[3]
+
+    fig.savefig("laplacian" + "_" + simulations + "_" + no_agents + "_" + percentage_informed + ".png")

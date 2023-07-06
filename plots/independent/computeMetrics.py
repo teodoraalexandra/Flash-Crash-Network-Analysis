@@ -46,36 +46,7 @@ def compute_metrics(prices, granularity):
         except nx.NetworkXError:
             diameter = 0
 
-        try:
-            if nx.is_connected(g):
-                radius = nx.radius(g)
-            else:
-                radius_list = []
-                for component in nx.connected_components(g):
-                    subgraph = g.subgraph(component)
-                    radius = nx.radius(subgraph)
-                    radius_list.append(radius)
-                radius = max(radius_list)
-        except nx.NetworkXError:
-            radius = 0
-
-        try:
-            if nx.is_connected(g):
-                # For eccentricity, we will compute only the average of the 3 highest values
-                values = sorted(nx.eccentricity(g).values(), reverse=True)
-                eccentricity = sum(values[:3]) / 3
-            else:
-                eccentricities = []
-                for component in nx.connected_components(g):
-                    subgraph = g.subgraph(component)
-                    values = sorted(nx.eccentricity(subgraph).values(), reverse=True)
-                    eccentricity = sum(values[:3]) / 3
-                    eccentricities.append(eccentricity)
-                eccentricity = max(eccentricities)
-        except nx.NetworkXError:
-            eccentricity = 0
-
-        return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), diameter, radius, eccentricity, \
+        return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), diameter, \
             maximal_independent_set_length, nx.density(g), isGraphBipartite
 
     if granularity == 1:

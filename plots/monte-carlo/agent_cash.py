@@ -2,6 +2,7 @@ import csv
 import sys
 import multiprocessing
 import matplotlib.pyplot as plt
+import numpy as np
 from statistics import mean
 from plots.independent.processFile import Day
 from plots.independent.processFile import Agent
@@ -10,7 +11,7 @@ from plots.independent.processFile import Agent
 def legend_without_duplicate_labels(figure):
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    figure.legend(by_label.values(), by_label.keys(), loc='upper right')
+    figure.legend(by_label.values(), by_label.keys(), loc='upper left')
 
 
 def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_all_average, list_lock):
@@ -93,6 +94,12 @@ def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_a
         y_informed_all_average.append(column_average_informed)
 
 
+def mean_with_padding(a):
+    max_len = max([len(row) for row in a])
+    mask = np.array([row + [np.nan] * (max_len - len(row)) for row in a])
+    return np.nanmean(mask, axis=0)
+
+
 if __name__ == '__main__':
     lock = multiprocessing.Lock()
     # Create three processes for each task using a for loop
@@ -104,7 +111,7 @@ if __name__ == '__main__':
     days = sys.argv[4]
 
     # X axis values
-    x = list(range(1, int(agents) + 1))
+    x = list(range(1, int(days) + 1))
 
     axis_noise = multiprocessing.Manager().list()
     axis_informed = multiprocessing.Manager().list()
@@ -150,6 +157,17 @@ if __name__ == '__main__':
 
     # Adding a label with no duplicates
     legend_without_duplicate_labels(plt)
+
+    axis_noise_average = mean_with_padding(axis_noise_average)
+    print("Initial price", axis_noise_average[0])
+    print("Final price", axis_noise_average[-1])
+
+    # Decrease = Original Number - New Number
+    # Decrease = Decrease ÷ Original Number × 100
+    decrease = axis_noise_average[-1] - 1
+    decrease = int(decrease * 100)
+
+    plt.suptitle("Final price: " + str(int(axis_noise_average[-1])))
 
     # Function to show the plot
     plt.savefig("agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
