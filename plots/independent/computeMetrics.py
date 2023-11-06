@@ -53,6 +53,9 @@ def compute_metrics(prices, granularity):
         num_stars = sum(1 for node in g if g.degree(node) == 1)
         return informed_transactions / total_transactions, nx.number_connected_components(g), num_stars
 
+    if granularity == 2:
+        return average / items
+
 # Defs
 # Compute the assortativity of the graph
 # This function calculates Pearson's correlation coefficient between

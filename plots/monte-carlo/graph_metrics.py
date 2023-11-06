@@ -85,7 +85,7 @@ def read_prices_in_chunk(chunk):
 def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_list,
          mean_density_list, mean_average_clustering_list, mean_connected_list,
          mean_stars_list, mean_diameter_list,
-         mean_independence_list, list_lock):
+         mean_independence_list, y_axis, list_lock, PRICE_ONLY):
     PIN_results_small = []
     PIN_results_big = []
     assortativity_results = []
@@ -96,6 +96,8 @@ def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_lis
     diameter_results = []
     independence_results = []
 
+    intermediate_y = []
+
     agents = sys.argv[2]
     percentage = sys.argv[3]
 
@@ -105,34 +107,47 @@ def task(counter, mean_PIN_list_small, mean_PIN_list_big, mean_assortativity_lis
     print("Big granularity = ", big_granularity)
     print("Small granularity = ", small_granularity)
 
+    if not PRICE_ONLY:
+        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
+                         chunksize=big_granularity, delimiter=";") as reader:
+            for chunk in reader:
+                price_array = read_prices_in_chunk(chunk)
+                if len(price_array) == big_granularity:
+                    PIN, assortativity, diameter, independence, density, averageClustering = \
+                        compute_metrics(price_array, 0)
+
+                    PIN_results_big.append(PIN)
+                    assortativity_results.append(assortativity)
+                    diameter_results.append(diameter)
+                    independence_results.append(independence)
+                    density_results.append(density)
+                    average_clustering_results.append(averageClustering)
+        print("Finish granularity big", counter + 1)
+
+        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
+                         chunksize=small_granularity, delimiter=";") as reader:
+            for chunk in reader:
+                price_array = read_prices_in_chunk(chunk)
+                if len(price_array) == small_granularity:
+                    PIN, conn, stars = compute_metrics(price_array, 1)
+
+                    PIN_results_small.append(PIN)
+                    connected_results.append(conn)
+                    stars_results.append(stars)
+        print("Finish granularity small", counter + 1)
+
     with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
-                     chunksize=big_granularity, delimiter=";") as reader:
+                     chunksize=big_granularity * 2, delimiter=";") as reader:
         for chunk in reader:
             price_array = read_prices_in_chunk(chunk)
-            if len(price_array) == big_granularity:
-                PIN, assortativity, diameter, independence, density, averageClustering = compute_metrics(price_array, 0)
+            if len(price_array) == big_granularity * 2:
+                averagePrice = compute_metrics(price_array, 2)
 
-                PIN_results_big.append(PIN)
-                assortativity_results.append(assortativity)
-                diameter_results.append(diameter)
-                independence_results.append(independence)
-                density_results.append(density)
-                average_clustering_results.append(averageClustering)
-    print("Finish granularity big", counter + 1)
-
-    with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
-                     chunksize=small_granularity, delimiter=";") as reader:
-        for chunk in reader:
-            price_array = read_prices_in_chunk(chunk)
-            if len(price_array) == small_granularity:
-                PIN, conn, stars = compute_metrics(price_array, 1)
-
-                PIN_results_small.append(PIN)
-                connected_results.append(conn)
-                stars_results.append(stars)
-    print("Finish granularity small", counter + 1)
+                intermediate_y.append(averagePrice)
+    print("Finish granularity for price", counter + 1)
 
     with list_lock:
+        y_axis.append(intermediate_y)
         mean_PIN_list_small.append(PIN_results_small)
         mean_PIN_list_big.append(PIN_results_big)
         mean_assortativity_list.append(assortativity_results)
@@ -151,6 +166,8 @@ def mean_with_padding(a):
 
 
 if __name__ == '__main__':
+    ONLY_PRICE = False
+
     # Create a PIN list
     mean_PIN_results_small = multiprocessing.Manager().list()
     mean_PIN_results_big = multiprocessing.Manager().list()
@@ -162,6 +179,8 @@ if __name__ == '__main__':
     mean_stars_results = multiprocessing.Manager().list()
     mean_diameter_results = multiprocessing.Manager().list()
     mean_independence_results = multiprocessing.Manager().list()
+
+    y_price_axis = multiprocessing.Manager().list()
 
     lock = multiprocessing.Lock()
 
@@ -177,7 +196,8 @@ if __name__ == '__main__':
                                                              mean_connected_results, mean_stars_results,
                                                              mean_diameter_results,
                                                              mean_independence_results,
-                                                             lock))
+                                                             y_price_axis,
+                                                             lock, ONLY_PRICE))
         processes.append(process)
 
     # Start all processes
@@ -190,56 +210,71 @@ if __name__ == '__main__':
 
     print('Monte Carlo done. Start generating plots!\n')
 
-    # Mean PIN (small)
-    mean_PIN_results_small = mean_with_padding(mean_PIN_results_small)
+    x_axis = []
+    plt.figure().set_figheight(5)
+    plt.figure().set_figwidth(20)
+    for simulationIndex in range(int(sys.argv[1])):
+        for priceIndex in range(len(y_price_axis[simulationIndex])):
+            x_axis.append(priceIndex)
+        print(y_price_axis[simulationIndex])
+        plt.plot(x_axis, y_price_axis[simulationIndex], label="Simulation" + str(simulationIndex + 1))
+        x_axis = []
+    plt.title('Price evolution')
+    plt.xlabel('Time')
+    plt.ylabel('Price')
+    plt.savefig("price_evolution.png")
 
-    # Mean PIN (big)
-    mean_PIN_results_big = mean_with_padding(mean_PIN_results_big)
+    if not ONLY_PRICE:
+        # Mean PIN (small)
+        mean_PIN_results_small = mean_with_padding(mean_PIN_results_small)
 
-    # Mean Assortativity
-    mean_assortativity_results = mean_with_padding(mean_assortativity_results)
+        # Mean PIN (big)
+        mean_PIN_results_big = mean_with_padding(mean_PIN_results_big)
 
-    # Mean Average Clustering
-    mean_average_clustering_results = mean_with_padding(mean_average_clustering_results)
+        # Mean Assortativity
+        mean_assortativity_results = mean_with_padding(mean_assortativity_results)
 
-    # Mean Density
-    mean_density_results = mean_with_padding(mean_density_results)
+        # Mean Average Clustering
+        mean_average_clustering_results = mean_with_padding(mean_average_clustering_results)
 
-    # Mean Connected Components
-    mean_connected_results = mean_with_padding(mean_connected_results)
+        # Mean Density
+        mean_density_results = mean_with_padding(mean_density_results)
 
-    # Mean Stars
-    mean_stars_results = mean_with_padding(mean_stars_results)
+        # Mean Connected Components
+        mean_connected_results = mean_with_padding(mean_connected_results)
 
-    # Mean Diameter
-    mean_diameter_results = mean_with_padding(mean_diameter_results)
+        # Mean Stars
+        mean_stars_results = mean_with_padding(mean_stars_results)
 
-    # Mean Independence results
-    mean_independence_results = mean_with_padding(mean_independence_results)
+        # Mean Diameter
+        mean_diameter_results = mean_with_padding(mean_diameter_results)
 
-    # CORRELATION PLOTS
-    x_axis_PIN_small = np.array(mean_PIN_results_small)
-    x_axis_PIN_big = np.array(mean_PIN_results_big)
-    y_axis_assortativity = np.array(mean_assortativity_results)
-    y_axis_density = np.array(mean_density_results)
-    y_axis_average_clustering = np.array(mean_average_clustering_results)
-    y_axis_connected = np.array(mean_connected_results)
-    y_axis_stars = np.array(mean_stars_results)
-    y_axis_diameter = np.array(mean_diameter_results)
-    y_axis_independence = np.array(mean_independence_results)
+        # Mean Independence results
+        mean_independence_results = mean_with_padding(mean_independence_results)
 
-    x_axis_small = []
-    for index in range(len(x_axis_PIN_small)):
-        x_axis_small.append(index)
+        # CORRELATION PLOTS
+        x_axis_PIN_small = np.array(mean_PIN_results_small)
+        x_axis_PIN_big = np.array(mean_PIN_results_big)
+        y_axis_assortativity = np.array(mean_assortativity_results)
+        y_axis_density = np.array(mean_density_results)
+        y_axis_average_clustering = np.array(mean_average_clustering_results)
+        y_axis_connected = np.array(mean_connected_results)
+        y_axis_stars = np.array(mean_stars_results)
+        y_axis_diameter = np.array(mean_diameter_results)
+        y_axis_independence = np.array(mean_independence_results)
 
-    x_axis_big = []
-    for index in range(len(x_axis_PIN_big)):
-        x_axis_big.append(index)
+        x_axis_small = []
+        for index in range(len(x_axis_PIN_small)):
+            x_axis_small.append(index)
 
-    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_assortativity, "PIN", "ASSORTATIVITY")
-    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_density, "PIN", "DENSITY")
-    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_average_clustering, "PIN", "AVERAGE CLUSTERING")
-    plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_connected, "PIN", "CONNECTED COMPONENTS")
-    plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_stars, "PIN", "NUMBER OF STARS")
-    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_diameter, "PIN", "DIAMETER")
-    plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_independence, "PIN", "MAXIMAL INDEPENDENT SET")
+        x_axis_big = []
+        for index in range(len(x_axis_PIN_big)):
+            x_axis_big.append(index)
+
+        plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_assortativity, "PIN", "ASSORTATIVITY")
+        plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_density, "PIN", "DENSITY")
+        plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_average_clustering, "PIN", "AVERAGE CLUSTERING")
+        plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_connected, "PIN", "CONNECTED COMPONENTS")
+        plot_metrics(x_axis_small, x_axis_PIN_small, y_axis_stars, "PIN", "NUMBER OF STARS")
+        plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_diameter, "PIN", "DIAMETER")
+        plot_metrics(x_axis_big, x_axis_PIN_big, y_axis_independence, "PIN", "MAXIMAL INDEPENDENT SET")

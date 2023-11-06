@@ -9,7 +9,7 @@ rm -f csvs/*
 rm -f plots/csvs/*
 
 # Compile the Java program
-# javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
+javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
 
 ROOT_FOLDER=$(dirname "$(realpath "$0")")
 export PYTHONPATH=$ROOT_FOLDER
@@ -81,8 +81,8 @@ for i in $(seq 1 $n); do
 done
 wait
 
-#pythonGraphMetricsPart
-pythonAgentCashPart
+pythonGraphMetricsPart
+#pythonAgentCashPart
 #pythonLaplacianMetricsPart
 
 # Use this only for generating gml files

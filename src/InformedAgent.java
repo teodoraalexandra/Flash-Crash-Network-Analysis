@@ -8,15 +8,17 @@ class InformedAgent extends Agent {
     protected int aggressivity;
 
     protected double volatility;
-    protected double[] prices;
+    protected int[] prices;
+    protected int pricesByDay;
 
-    public InformedAgent(String name, int aggressivity, double[] prices, double volatility, int minQuty, int maxQuty) {
+    public InformedAgent(String name, int aggressivity, int[] prices, double volatility, int minQuty, int maxQuty, int pricesByDay) {
         super(name, 0L);
         this.minQuty = minQuty;
         this.maxQuty = maxQuty;
         this.aggressivity = aggressivity;
         this.volatility = volatility; // The standard deviation of returns (sigma)
         this.prices = prices;
+        this.pricesByDay = pricesByDay;
     }
 
     public Order decide(String obName, Day day) {
@@ -28,8 +30,10 @@ class InformedAgent extends Agent {
             // They believe that the security is overvalued
             // They want to sell it at a lower price than the min market price
 
-            long minPrice = (long) (prices[day.dayNumber - 1] - 2 * this.volatility * prices[day.dayNumber - 1]);
-            long maxPrice = (long) (prices[day.dayNumber - 1] + 2 * this.volatility * prices[day.dayNumber - 1]);
+            // PRICE_PER_DAY * (dayNumber - 1) + tick - 1
+            int priceIndex = this.pricesByDay * (day.dayNumber - 1) + day.currentPeriod().currentTick() - 1;
+            long minPrice = (long) (prices[priceIndex] - 2 * this.volatility * prices[priceIndex]);
+            long maxPrice = (long) (prices[priceIndex] + 2 * this.volatility * prices[priceIndex]);
 
             minPrice = minPrice - ((this.aggressivity * minPrice) / 100);
             maxPrice = maxPrice - ((this.aggressivity * maxPrice) / 100);

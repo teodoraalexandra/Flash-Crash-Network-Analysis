@@ -3,12 +3,12 @@ import java.util.Random;
 
 public class Main {
 
-    public static double[] generateBrownianMotion(double initialPrice, int nbSessions, double volatility, int pricesByDay) {
-        double[] prices = new double[nbSessions * pricesByDay];
+    public static int[] generateBrownianMotion(int initialPrice, int daysOfSimulation, double volatility, int pricesByDay) {
+        int[] prices = new int[daysOfSimulation * pricesByDay];
         prices[0] = initialPrice;
         java.util.Random random = new Random(0);
-        for (int i = 1; i < nbSessions * pricesByDay; i++) {
-            prices[i] = prices[i - 1] + prices[i - 1] * random.nextGaussian() * volatility;
+        for (int i = 1; i < daysOfSimulation * pricesByDay; i++) {
+            prices[i] = (int) Math.ceil(prices[i - 1] + prices[i - 1] * random.nextGaussian() * volatility);
         }
         return prices;
     }
@@ -22,8 +22,8 @@ public class Main {
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
         double VOLATILITY =  0.003;
-        int PRICES_BY_DAY = 1;
-        long INITIAL_PRICE = 14500L;
+        int PRICES_BY_DAY = 25;
+        int INITIAL_PRICE = 14500;
 
         int MIN_QTY_UNINFORMED = 1;
         int MAX_QTY_UNINFORMED = 10;
@@ -46,18 +46,18 @@ public class Main {
         // Default for ZIT: cash=0, minPrice=14k, maxPrice=15k, minQty=10, maxQty=100
         // Informed agents -> We will try to simulate a crash by adding them -> Disequilibrium in market
 
-        double[] prices = generateBrownianMotion(INITIAL_PRICE, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
+        int[] prices = generateBrownianMotion(INITIAL_PRICE, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
 
         for (int index = 1; index <= UNINFORMED_TRADERS; index++) {
-            sim.addNewAgent(new NoiseAgent("Noise" + index, prices, VOLATILITY, MIN_QTY_UNINFORMED, MAX_QTY_UNINFORMED));
+            sim.addNewAgent(new NoiseAgent("Noise" + index, prices, VOLATILITY, MIN_QTY_UNINFORMED, MAX_QTY_UNINFORMED, PRICES_BY_DAY));
         }
 
         for (int index = 1; index <= INFORMED_TRADERS; index++) {
-            sim.addNewAgent(new InformedAgent("Overvalued" + index, AGGRESSIVITY, prices, VOLATILITY, MIN_QTY_INFORMED, MAX_QTY_INFORMED));
+            sim.addNewAgent(new InformedAgent("Overvalued" + index, AGGRESSIVITY, prices, VOLATILITY, MIN_QTY_INFORMED, MAX_QTY_INFORMED, PRICES_BY_DAY));
         }
 
         // Step 5. Launch the simulation with a specification of the structure of trading day
         // (defaults are provided for EuroNEXT) and the number of days to simulate.
-        sim.run(Day.createEuroNEXT(10, 200, 5), DAYS_OF_SIMULATION);
+        sim.run(Day.createSinglePeriod(MarketPlace.CONTINUOUS, PRICES_BY_DAY), DAYS_OF_SIMULATION);
     }
 }
