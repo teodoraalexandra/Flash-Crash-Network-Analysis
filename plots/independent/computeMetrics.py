@@ -12,8 +12,7 @@ def compute_metrics(prices, granularity):
     g = create_graph(prices)
 
     for price in prices:
-        if price.first_agent.startswith("Overvalued") or price.first_agent.startswith("Undervalued") \
-                or price.second_agent.startswith("Overvalued") or price.second_agent.startswith("Undervalued"):
+        if price.first_agent.startswith("Overvalued") or price.second_agent.startswith("Overvalued"):
             informed_transactions += 1
         total_transactions += 1
 
@@ -22,17 +21,6 @@ def compute_metrics(prices, granularity):
         items += 1
 
     if granularity == 0:
-        if bipartite.is_bipartite(g):
-            isGraphBipartite = bipartite.average_clustering(g)
-        else:
-            isGraphBipartite = 2
-
-        try:
-            independent_set = nx.maximal_independent_set(g)
-            maximal_independent_set_length = len(independent_set)
-        except nx.NetworkXUnfeasible:
-            maximal_independent_set_length = 0
-
         try:
             if nx.is_connected(g):
                 diameter = nx.diameter(g)
@@ -46,21 +34,28 @@ def compute_metrics(prices, granularity):
         except nx.NetworkXError:
             diameter = 0
 
-        return informed_transactions / total_transactions, nx.degree_assortativity_coefficient(g), diameter, \
-            maximal_independent_set_length, nx.density(g), isGraphBipartite
+        num_stars = sum(1 for node in g if g.degree(node) == 1)
+
+        return informed_transactions / total_transactions, average / items, diameter, num_stars
 
     if granularity == 1:
-        num_stars = sum(1 for node in g if g.degree(node) == 1)
-        return informed_transactions / total_transactions, nx.number_connected_components(g), num_stars
+        try:
+            independent_set = nx.maximal_independent_set(g)
+            maximal_independent_set_length = len(independent_set)
+        except nx.NetworkXUnfeasible:
+            maximal_independent_set_length = 0
+
+        return informed_transactions / total_transactions, average / items, maximal_independent_set_length, \
+            nx.degree_assortativity_coefficient(g), nx.number_connected_components(g), nx.density(g)
 
     if granularity == 2:
-        return average / items
+        closeness_dict = nx.closeness_centrality(g)
+        betweenness_dict = nx.betweenness_centrality(g)
 
-# Defs
-# Compute the assortativity of the graph
-# This function calculates Pearson's correlation coefficient between
-# the degrees of all pairs of connected nodes in the graph.
-# The degree_assortativity_coefficient function returns a value between -1 and 1,
-# where a value of -1 means that nodes tend to connect to nodes with a different degree,
-# a value of 0 means that the degree of connected nodes is uncorrelated,
-# and a value of 1 means that nodes tend to connect to nodes with the same degree.
+        if bipartite.is_bipartite(g):
+            isGraphBipartite = bipartite.average_clustering(g)
+        else:
+            isGraphBipartite = 2
+
+        return informed_transactions / total_transactions, average / items, \
+            max(closeness_dict.values()), max(betweenness_dict.values()), isGraphBipartite

@@ -1,8 +1,6 @@
 import fr.cristal.smac.atom.*;
 import fr.cristal.smac.atom.orders.*;
 
-// Useful for last price: this.market.orderBooks.get(obName).extradayLog.get(day.dayNumber - 1).LOW
-
 // Noise agents have no private information and simply trade based on random fluctuations in prices
 class NoiseAgent extends Agent {
     protected int minQuty;

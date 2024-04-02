@@ -22,7 +22,9 @@ public class Main {
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
         double VOLATILITY =  0.003;
-        int PRICES_BY_DAY = 25;
+
+        // Crash length (24 = 8h ; 6-9: 2-3h crash)
+        int PRICES_BY_DAY = 2;
         int INITIAL_PRICE = 14500;
 
         int MIN_QTY_UNINFORMED = 1;

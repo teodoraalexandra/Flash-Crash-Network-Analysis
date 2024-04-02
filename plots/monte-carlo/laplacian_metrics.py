@@ -60,7 +60,7 @@ def task(counter, mean_laplacian_noise_list, mean_laplacian_informed_list, list_
 
 
 if __name__ == '__main__':
-    # Create a PIN list
+    # Create a VPIN list
     mean_laplacian_noise = multiprocessing.Manager().list()
     mean_laplacian_informed = multiprocessing.Manager().list()
     lock = multiprocessing.Lock()

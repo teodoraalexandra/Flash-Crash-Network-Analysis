@@ -63,8 +63,11 @@ def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_a
         for day in result.keys():
             value = result.get(day).get(agent)
             if agent.startswith('Noise'):
-                y_noise.append(round(mean(value)))
-            else:
+                if value is None:
+                    y_noise.append(0)
+                else:
+                    y_noise.append(round(mean(value)))
+            elif agent.startswith('Overvalued'):
                 if value is None:
                     y_informed.append(0)
                 else:
@@ -159,15 +162,21 @@ if __name__ == '__main__':
     legend_without_duplicate_labels(plt)
 
     axis_noise_average = mean_with_padding(axis_noise_average)
-    print("Initial price", axis_noise_average[0])
-    print("Final price", axis_noise_average[-1])
+    axis_informed_average = mean_with_padding(axis_informed_average)
 
-    # Decrease = Original Number - New Number
-    # Decrease = Decrease ÷ Original Number × 100
-    decrease = axis_noise_average[-1] - 1
-    decrease = int(decrease * 100)
+    initial_price_noise = int(axis_noise_average[0])  # First day
+    final_price_noise = int(axis_noise_average[-1])  # Last day
 
-    plt.suptitle("Final price: " + str(int(axis_noise_average[-1])))
+    print("Initial price noise", initial_price_noise)
+    print("Final price noise", final_price_noise)
+    print("Average profit noise", (final_price_noise - initial_price_noise) / initial_price_noise * 100)
+
+    initial_price_informed = int(axis_informed_average[29])  # Day 30 (day of the crash)
+    final_price_informed = int(axis_informed_average[30])  # Day 31 (final price for informed)
+
+    print("Initial price informed", initial_price_informed)
+    print("Final price informed", final_price_informed)
+    print("Average profit informed", (final_price_informed - initial_price_informed) / initial_price_informed * 100)
 
     # Function to show the plot
     plt.savefig("agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
