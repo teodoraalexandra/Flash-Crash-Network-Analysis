@@ -180,11 +180,11 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
 
     if PRICE_ONLY:
         with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
-                         chunksize=big_granularity * 2, delimiter=";") as reader:
+                         chunksize=small_granularity * 2, delimiter=";") as reader:
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
-                if len(price_array) == big_granularity * 2:
-                    averagePrice = compute_metrics(price_array, 2)
+                if len(price_array) == small_granularity * 2:
+                    averagePrice = compute_metrics(price_array, 3)
 
                     intermediate_y.append(averagePrice)
 
@@ -240,6 +240,8 @@ if __name__ == '__main__':
     lock = multiprocessing.Lock()
 
     number_of_simulations = int(sys.argv[1])
+    small_granularity = int(sys.argv[5])
+    days = int(sys.argv[7])
 
     # Create processes for each simulation using a for loop
     processes = []
@@ -275,6 +277,7 @@ if __name__ == '__main__':
     print('Monte Carlo done. Start generating plots!\n')
 
     x_axis = []
+    number_of_days = 1
     plt.figure().set_figheight(5)
     plt.figure().set_figwidth(20)
 
@@ -282,11 +285,15 @@ if __name__ == '__main__':
         for simulationIndex in range(int(sys.argv[1])):
             for priceIndex in range(len(y_price_axis[simulationIndex])):
                 x_axis.append(priceIndex)
+            number_of_days = len(x_axis)
             plt.plot(x_axis, y_price_axis[simulationIndex], label="Simulation" + str(simulationIndex + 1))
             x_axis = []
         plt.title('Price evolution')
         plt.xlabel('Time')
         plt.ylabel('Price')
+        # number_of_days (250) === days (40)
+        # fictive_crash_day (x) === day (15)
+        plt.axvline(x=((15 * number_of_days) / days), color='r', label='Crash Day')
         plt.savefig("price_evolution.png")
 
     if not ONLY_PRICE:

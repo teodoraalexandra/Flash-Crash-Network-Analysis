@@ -59,3 +59,6 @@ def compute_metrics(prices, granularity):
 
         return informed_transactions / total_transactions, average / items, \
             max(closeness_dict.values()), max(betweenness_dict.values()), isGraphBipartite
+
+    if granularity == 3:
+        return average / items

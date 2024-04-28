@@ -141,7 +141,7 @@ if __name__ == '__main__':
     # Naming the Y axis
     plt.ylabel('Cash')
 
-    plt.axvline(x=30, color='r', label='Crash Day')
+    plt.axvline(x=15, color='r', label='Crash Day')
 
     for noise in axis_noise:
         plt.plot(x, noise, color='g', label='Uninformed agents')
@@ -171,8 +171,8 @@ if __name__ == '__main__':
     print("Final price noise", final_price_noise)
     print("Average profit noise", (final_price_noise - initial_price_noise) / initial_price_noise * 100)
 
-    initial_price_informed = int(axis_informed_average[29])  # Day 30 (day of the crash)
-    final_price_informed = int(axis_informed_average[30])  # Day 31 (final price for informed)
+    initial_price_informed = int(axis_informed_average[14])  # Day 15
+    final_price_informed = int(axis_informed_average[15])  # Day 16
 
     print("Initial price informed", initial_price_informed)
     print("Final price informed", final_price_informed)

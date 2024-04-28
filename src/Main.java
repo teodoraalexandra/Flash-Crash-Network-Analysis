@@ -3,14 +3,23 @@ import java.util.Random;
 
 public class Main {
 
-    public static int[] generateBrownianMotion(int initialPrice, int daysOfSimulation, double volatility, int pricesByDay) {
-        int[] prices = new int[daysOfSimulation * pricesByDay];
-        prices[0] = initialPrice;
+    public static InformationPair[] generateBrownianMotion(long initialPrice, double initialUncertainty, int daysOfSimulation, double volatility, int pricesByDay) {
+        InformationPair[] informationPairs = new InformationPair[daysOfSimulation * pricesByDay];
+        informationPairs[0] = new InformationPair(initialPrice, initialUncertainty);
         java.util.Random random = new Random(0);
         for (int i = 1; i < daysOfSimulation * pricesByDay; i++) {
-            prices[i] = (int) Math.ceil(prices[i - 1] + prices[i - 1] * random.nextGaussian() * volatility);
+            int computedFundamentalValue = (int) Math.ceil(informationPairs[i - 1].fundamentalValue + informationPairs[i - 1].fundamentalValue * random.nextGaussian() * volatility);
+            int computedValuationUncertainty = (int) Math.ceil(informationPairs[i - 1].valuationUncertainty + informationPairs[i - 1].valuationUncertainty * random.nextGaussian() * volatility);
+            informationPairs[i] = new InformationPair(computedFundamentalValue, computedValuationUncertainty);
         }
-        return prices;
+        return informationPairs;
+    }
+
+    // Function to generate endowment following power law distribution
+    private static double generateEndowment(double alpha) {
+        Random random = new Random();
+        double u = random.nextDouble(); // Generate a random number between 0 and 1
+        return 1.0 / Math.pow(u, 1.0 / (alpha - 1.0));
     }
 
     public static void main(String[] args) {
@@ -22,15 +31,16 @@ public class Main {
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
         double VOLATILITY =  0.003;
+        double alpha = 3.5;   // Value of alpha for power law distribution - the wealth disparity within the society.
+        // The lower the alpha, the bigger the discrepancy between the cash
 
         // Crash length (24 = 8h ; 6-9: 2-3h crash)
         int PRICES_BY_DAY = 2;
         int INITIAL_PRICE = 14500;
+        double INITIAL_UNCERTAINTY_UNINFORMED = 50;
+        double INITIAL_UNCERTAINTY_INFORMED = 0;
 
-        int MIN_QTY_UNINFORMED = 1;
-        int MAX_QTY_UNINFORMED = 10;
-        int MIN_QTY_INFORMED = 20;
-        int MAX_QTY_INFORMED = 500;
+        int MULTIPLY_INFORMED = 1000; // Has enough cash for at least 1000 stocks
 
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
         int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS;
@@ -48,14 +58,45 @@ public class Main {
         // Default for ZIT: cash=0, minPrice=14k, maxPrice=15k, minQty=10, maxQty=100
         // Informed agents -> We will try to simulate a crash by adding them -> Disequilibrium in market
 
-        int[] prices = generateBrownianMotion(INITIAL_PRICE, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
+        InformationPair[] pricesUninformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_UNINFORMED, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
+        InformationPair[] pricesInformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_INFORMED, DAYS_OF_SIMULATION, 0, PRICES_BY_DAY);
 
-        for (int index = 1; index <= UNINFORMED_TRADERS; index++) {
-            sim.addNewAgent(new NoiseAgent("Noise" + index, prices, VOLATILITY, MIN_QTY_UNINFORMED, MAX_QTY_UNINFORMED, PRICES_BY_DAY));
+        int totalTraders = UNINFORMED_TRADERS + INFORMED_TRADERS;
+        long[] cashEndowments = new long[totalTraders];
+        int[] assetEndowments = new int[totalTraders];
+
+        // Generate cash and asset endowments for uninformed traders
+        for (int index = 0; index < UNINFORMED_TRADERS; index++) {
+            long cash = (long) generateEndowment(alpha);
+            cashEndowments[index] = cash * INITIAL_PRICE;
+
+            // Generate asset endowment for uninformed traders
+            int asset = (int) generateEndowment(alpha);
+            assetEndowments[index] = asset;
         }
 
-        for (int index = 1; index <= INFORMED_TRADERS; index++) {
-            sim.addNewAgent(new InformedAgent("Overvalued" + index, AGGRESSIVITY, prices, VOLATILITY, MIN_QTY_INFORMED, MAX_QTY_INFORMED, PRICES_BY_DAY));
+        // Generate cash and asset endowments for informed traders
+        for (int index = UNINFORMED_TRADERS; index < UNINFORMED_TRADERS + INFORMED_TRADERS; index++) {
+            long cash = (long) generateEndowment(alpha);
+            cashEndowments[index] = cash * INITIAL_PRICE * MULTIPLY_INFORMED;
+
+            // Informed traders do not receive asset endowments
+            int asset = (int) generateEndowment(alpha);
+            assetEndowments[index] = asset * MULTIPLY_INFORMED; // Set asset endowment to 0 for informed traders
+        }
+
+        for (int index = 0; index < UNINFORMED_TRADERS; index++) {
+            Random random = new Random();
+            double toleranceLevel = random.nextDouble();
+            NoiseAgent noiseAgent = new NoiseAgent("Noise" + index, cashEndowments[index], pricesUninformed, PRICES_BY_DAY, toleranceLevel);
+            noiseAgent.setInvest(obName, assetEndowments[index]);
+            sim.addNewAgent(noiseAgent);
+        }
+
+        for (int index = UNINFORMED_TRADERS; index < UNINFORMED_TRADERS + INFORMED_TRADERS; index++) {
+            InformedAgent informedAgent = new InformedAgent("Overvalued" + index, cashEndowments[index], AGGRESSIVITY, pricesInformed, PRICES_BY_DAY);
+            informedAgent.setInvest(obName, assetEndowments[index]);
+            sim.addNewAgent(informedAgent);
         }
 
         // Step 5. Launch the simulation with a specification of the structure of trading day

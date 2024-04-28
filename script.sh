@@ -9,7 +9,7 @@ rm -f csvs/*
 rm -f plots/csvs/*
 
 # Compile the Java program - Windows
-javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java
+javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java src/InformationPair.java
 
 # Compile the Java program - Linux
 # javac -cp "atom-1.14.jar:." -d . application/src/atomSimulation/Main.java application/src/atomSimulation/InformedAgent.java application/src/atomSimulation/NoiseAgent.java
@@ -41,12 +41,12 @@ pythonGraphMetricsPart() {
   total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
   big_granularity=$((total_rows / 50))
   small_granularity=$((total_rows / 500))
-  very_small_granularity=$((total_rows / 5000))
+  very_small_granularity=$((total_rows / 1000))
 
   echo "Start Python Computation (Network metrics part)..."
 
   # Run the Python program for creation
-  python "$ROOT_FOLDER"/plots/monte-carlo/graph_metrics.py $n "$persons" "$informed" $big_granularity $small_granularity $very_small_granularity
+  python "$ROOT_FOLDER"/plots/monte-carlo/graph_metrics.py $n "$persons" "$informed" $big_granularity $small_granularity $very_small_granularity $days
   echo -e "Metrics graphs was generated. \n"
 }
 

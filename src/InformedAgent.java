@@ -3,44 +3,71 @@ import fr.cristal.smac.atom.orders.*;
 
 // Informed agents have private information about the true value of the security
 class InformedAgent extends Agent {
-    protected int minQuty;
-    protected int maxQuty;
     protected int aggressivity;
 
-    protected double volatility;
-    protected int[] prices;
+    protected InformationPair[] prices;
     protected int pricesByDay;
 
-    public InformedAgent(String name, int aggressivity, int[] prices, double volatility, int minQuty, int maxQuty, int pricesByDay) {
-        super(name, 0L);
-        this.minQuty = minQuty;
-        this.maxQuty = maxQuty;
+    public InformedAgent(String name, long cash, int aggressivity, InformationPair[] prices, int pricesByDay) {
+        super(name, cash);
         this.aggressivity = aggressivity;
-        this.volatility = volatility; // The standard deviation of returns (sigma)
         this.prices = prices;
         this.pricesByDay = pricesByDay;
     }
 
     public Order decide(String obName, Day day) {
-        if (day.dayNumber >= 30 && day.dayNumber <= 31) {
-            int quty = this.minQuty + (int) (Math.random() * (double) (this.maxQuty - this.minQuty));
-            char dir = 'A';
-
-            // Price lower than the min market price
-            // They believe that the security is overvalued
-            // They want to sell it at a lower price than the min market price
-
-            // PRICE_PER_DAY * (dayNumber - 1) + tick - 1
+        // TODO Change from Master-Thesis
+        // TODO script.sh do not work for Linux + windows has hardcoded scripts
+        // TODO Re-run the experiments
+        // TODO Modify model in Overleaf
+        // TODO Try with smaller MULTIPLY_INFORMED
+        // TODO Run agents cash
+        if (day.dayNumber >= 15 && day.dayNumber <= 16) {
             int priceIndex = this.pricesByDay * (day.dayNumber - 1) + day.currentPeriod().currentTick() - 1;
-            long minPrice = (long) (prices[priceIndex] - 2 * this.volatility * prices[priceIndex]);
-            long maxPrice = (long) (prices[priceIndex] + 2 * this.volatility * prices[priceIndex]);
+            long realFundamentalValue = this.prices[priceIndex].fundamentalValue;
+            double realValuationUncertainty = this.prices[priceIndex].valuationUncertainty;
 
-            minPrice = minPrice - ((this.aggressivity * minPrice) / 100);
-            maxPrice = maxPrice - ((this.aggressivity * maxPrice) / 100);
+            double lowestValuationInterval = realFundamentalValue - realValuationUncertainty / 2;
+            double highestValuationInterval = realFundamentalValue + realValuationUncertainty / 2;
 
-            long price = minPrice + (long) ((int) (Math.random() * (double) (maxPrice - minPrice)));
+            long realPrice = this.market.orderBooks.get("lvmh").lastFixedPrice != null ?
+                    this.market.orderBooks.get("lvmh").lastFixedPrice.price :
+                    realFundamentalValue;
 
-            return new LimitOrder(obName, "" + this.myId, dir, quty, price);
+            if (realPrice >= highestValuationInterval) {
+                // CASE: Outside the upper interval
+                // (1) Decide the SELL
+                char direction = 'A';
+
+                // (2) SELL all the owned assets
+                int numberOfAssets = this.getInvest("lvmh");
+
+                // (3) Desired price
+                long desiredPrice = (long) (highestValuationInterval - ((this.aggressivity * highestValuationInterval) / 100));
+
+                if (numberOfAssets > 0) {
+                    return new LimitOrder(obName, "" + this.myId, direction, numberOfAssets, desiredPrice);
+                }
+            }
+
+            if (realPrice <= lowestValuationInterval) {
+                // CASE: Outside the lower interval
+                // (1) Decide the BUY
+                char direction = 'B';
+
+                // (2) BUY with available cash
+                long wealth = this.getWealth();
+                int quantityDesiredToBeInvested = (int) (wealth / realPrice);
+
+                // (3) Desired price
+                long desiredPrice = (long) (lowestValuationInterval + ((this.aggressivity * lowestValuationInterval) / 100));
+
+                if (quantityDesiredToBeInvested > 0 && wealth > 0) {
+                    return new LimitOrder(obName, "" + this.myId, direction, quantityDesiredToBeInvested, desiredPrice);
+                }
+            }
+
+            return null;
         }
         return null;
     }
