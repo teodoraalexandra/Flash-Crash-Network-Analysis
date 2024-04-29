@@ -18,7 +18,6 @@ class InformedAgent extends Agent {
     public Order decide(String obName, Day day) {
         // TODO Change from Master-Thesis
         // TODO script.sh do not work for Linux + windows has hardcoded scripts
-        // TODO Re-run the experiments
         // TODO Modify model in Overleaf
         if (day.dayNumber >= 15 && day.dayNumber <= 16) {
             int priceIndex = this.pricesByDay * (day.dayNumber - 1) + day.currentPeriod().currentTick() - 1;

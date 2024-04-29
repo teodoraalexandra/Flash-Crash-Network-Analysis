@@ -87,8 +87,8 @@ for i in $(seq 1 $n); do
 done
 wait
 
-#pythonGraphMetricsPart
-pythonAgentCashPart
+pythonGraphMetricsPart
+#pythonAgentCashPart
 #pythonLaplacianMetricsPart
 
 # Use this only for generating gml files

@@ -74,7 +74,7 @@ def plot_metrics(X, Y1, Y2, Y3, metric1, metric2, metric3):
     # Adjust layout to make room for the legend
     plt.subplots_adjust(left=-0.5)
 
-    plt.savefig("plot_" + metric1 + "_" + metric2 + "_" + simulations + "_" + agents + "_" + percentage + ".png",
+    plt.savefig("images/plot_" + metric1 + "_" + metric2 + "_" + simulations + "_" + agents + "_" + percentage + ".png",
                 bbox_inches='tight')
 
 
