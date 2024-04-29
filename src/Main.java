@@ -40,7 +40,7 @@ public class Main {
         double INITIAL_UNCERTAINTY_UNINFORMED = 50;
         double INITIAL_UNCERTAINTY_INFORMED = 0;
 
-        int MULTIPLY_INFORMED = 1000; // Has enough cash for at least 1000 stocks
+        int MULTIPLY_INFORMED = 200; // Has enough cash for at least 200 stocks
 
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
         int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS;
