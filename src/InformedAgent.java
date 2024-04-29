@@ -20,7 +20,6 @@ class InformedAgent extends Agent {
         // TODO script.sh do not work for Linux + windows has hardcoded scripts
         // TODO Re-run the experiments
         // TODO Modify model in Overleaf
-        // TODO Run agents cash
         if (day.dayNumber >= 15 && day.dayNumber <= 16) {
             int priceIndex = this.pricesByDay * (day.dayNumber - 1) + day.currentPeriod().currentTick() - 1;
             long realFundamentalValue = this.prices[priceIndex].fundamentalValue;

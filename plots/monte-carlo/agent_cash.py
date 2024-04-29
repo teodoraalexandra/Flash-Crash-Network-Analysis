@@ -11,7 +11,7 @@ from plots.independent.processFile import Agent
 def legend_without_duplicate_labels(figure):
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    figure.legend(by_label.values(), by_label.keys(), loc='upper left')
+    figure.legend(by_label.values(), by_label.keys(), loc='upper right')
 
 
 def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_all_average, list_lock):
@@ -35,15 +35,19 @@ def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_a
                 agent_object = Agent()
                 agent_object.name = row[1]
                 agent_object.cash = row[2]
+                agent_object.invests = row[4]
+                agent_object.LastFixedPrice = row[5]
 
                 if agent_object.name not in list_of_agents:
                     list_of_agents.append(agent_object.name)
 
                 # Add the price to the intermediate array
                 if agent_object.name in array:
-                    array[agent_object.name].append(int(agent_object.cash))
+                    wealth = int(agent_object.cash) + int(agent_object.invests) * int(agent_object.LastFixedPrice)
+                    array[agent_object.name].append(wealth)
                 else:
-                    array[agent_object.name] = [int(agent_object.cash)]
+                    wealth = int(agent_object.cash) + int(agent_object.invests) * int(agent_object.LastFixedPrice)
+                    array[agent_object.name] = [wealth]
             elif row[0] == 'Day':
                 day_object = Day()
                 day_object.day_number = row[1]
@@ -147,10 +151,9 @@ if __name__ == '__main__':
         plt.plot(x, noise, color='g', label='Uninformed agents')
     for informed in axis_informed:
         plt.plot(x, informed, color='m', label='Informed agents')
-    for noiseAverage in axis_noise_average:
-        plt.plot(x, noiseAverage, color='b', label='Uninformed average performance')
-    for informedAverage in axis_informed_average:
-        plt.plot(x, informedAverage, color='c', label='Informed average performance')
+
+    plt.plot(x, mean_with_padding(axis_noise_average), color='b', label='Uninformed average performance')
+    plt.plot(x, mean_with_padding(axis_informed_average), color='c', label='Informed average performance')
 
     # Giving a title
     plt.title("Evolution of Agents' cash")
@@ -167,17 +170,15 @@ if __name__ == '__main__':
     initial_price_noise = int(axis_noise_average[0])  # First day
     final_price_noise = int(axis_noise_average[-1])  # Last day
 
-    print("Initial price noise", initial_price_noise)
-    print("Final price noise", final_price_noise)
-    print("Average profit noise", (final_price_noise - initial_price_noise) / initial_price_noise * 100)
+    print("Average profit noise",
+          int((final_price_noise - initial_price_noise) / initial_price_noise * 100), "%")
 
     initial_price_informed = int(axis_informed_average[14])  # Day 15
     final_price_informed = int(axis_informed_average[15])  # Day 16
 
-    print("Initial price informed", initial_price_informed)
-    print("Final price informed", final_price_informed)
-    print("Average profit informed", (final_price_informed - initial_price_informed) / initial_price_informed * 100)
+    print("Average profit informed",
+          int((final_price_informed - initial_price_informed) / initial_price_informed * 100), "%")
 
     # Function to show the plot
-    plt.savefig("agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
+    plt.savefig("images/agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
     plt.close()
