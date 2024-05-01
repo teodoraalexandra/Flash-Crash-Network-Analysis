@@ -120,5 +120,11 @@ public class Main {
         // Step 5. Launch the simulation with a specification of the structure of trading day
         // (defaults are provided for EuroNEXT) and the number of days to simulate.
         sim.run(Day.createSinglePeriod(MarketPlace.CONTINUOUS, PRICES_BY_DAY), DAYS_OF_SIMULATION);
+
+        // TODO Change from Master-Thesis
+        // TODO script.sh do not work for Linux + windows has hardcoded scripts
+        // TODO Modify model in Overleaf
+        // TODO Re-run experiments with market makers - metrics
+        // TODO Re-run experiments with market makers - agent cash
     }
 }
