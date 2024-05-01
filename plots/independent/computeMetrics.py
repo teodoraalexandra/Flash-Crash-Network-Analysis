@@ -6,16 +6,30 @@ import networkx as nx
 def compute_metrics(prices, granularity):
     # Length of prices = length of edges from the graph
     informed_transactions = 0
+    uninformed_transactions = 0
+    market_makers_transactions = 0
     total_transactions = 0
     average = 0
     items = 0
     g = create_graph(prices)
 
     for price in prices:
-        if price.first_agent.startswith("Overvalued") or price.second_agent.startswith("Overvalued"):
+        if price.first_agent.startswith("Overvalued"):
             informed_transactions += 1
-        total_transactions += 1
+        if price.second_agent.startswith("Overvalued"):
+            informed_transactions += 1
 
+        if price.first_agent.startswith("Noise"):
+            uninformed_transactions += 1
+        if price.second_agent.startswith("Noise"):
+            uninformed_transactions += 1
+
+        if price.first_agent.startswith("MM"):
+            market_makers_transactions += 1
+        if price.second_agent.startswith("MM"):
+            market_makers_transactions += 1
+
+        total_transactions += 1
         # Add the prices to y-axis -> Average of all prices from chunk
         average += price.price
         items += 1
@@ -61,4 +75,4 @@ def compute_metrics(prices, granularity):
             max(closeness_dict.values()), max(betweenness_dict.values()), isGraphBipartite
 
     if granularity == 3:
-        return average / items
+        return average / items, informed_transactions, uninformed_transactions, market_makers_transactions

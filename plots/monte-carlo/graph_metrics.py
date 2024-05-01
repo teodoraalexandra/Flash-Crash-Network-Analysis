@@ -109,7 +109,7 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
          mean_assortativity_list, mean_bipartivity_list, mean_average_clustering_list,
          mean_connected_list, mean_stars_list, mean_diameter_list,
          mean_independence_list, mean_closeness_list, mean_betweenness_list,
-         y_axis, list_lock, PRICE_ONLY):
+         y_axis, informed, uninformed, marketMaker, list_lock, PRICE_ONLY):
     VPIN_results_very_small = []
     VPIN_results_small = []
     VPIN_results_big = []
@@ -129,6 +129,9 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
     betweenness_results = []
 
     intermediate_y = []
+    intermediate_informed = 0
+    intermediate_uninformed = 0
+    intermediate_market_maker = 0
 
     agents = sys.argv[2]
     percentage = sys.argv[3]
@@ -184,11 +187,17 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
                 if len(price_array) == small_granularity * 2:
-                    averagePrice = compute_metrics(price_array, 3)
+                    averagePrice, informed_agents, uninformed_agents, mm_agents = compute_metrics(price_array, 3)
 
                     intermediate_y.append(averagePrice)
+                    intermediate_informed += informed_agents
+                    intermediate_uninformed += uninformed_agents
+                    intermediate_market_maker += mm_agents
 
     with list_lock:
+        informed.append(intermediate_informed)
+        uninformed.append(intermediate_uninformed)
+        marketMaker.append(intermediate_market_maker)
         y_axis.append(intermediate_y)
         mean_VPIN_list_very_small.append(VPIN_results_very_small)
         mean_VPIN_list_small.append(VPIN_results_small)
@@ -236,6 +245,9 @@ if __name__ == '__main__':
     mean_betweenness_results = multiprocessing.Manager().list()
 
     y_price_axis = multiprocessing.Manager().list()
+    informed_transactions = multiprocessing.Manager().list()
+    uninformed_transactions = multiprocessing.Manager().list()
+    market_maker_transactions = multiprocessing.Manager().list()
 
     lock = multiprocessing.Lock()
 
@@ -263,6 +275,9 @@ if __name__ == '__main__':
                                                              mean_closeness_results,
                                                              mean_betweenness_results,
                                                              y_price_axis,
+                                                             informed_transactions,
+                                                             uninformed_transactions,
+                                                             market_maker_transactions,
                                                              lock, ONLY_PRICE))
         processes.append(process)
 
@@ -295,6 +310,15 @@ if __name__ == '__main__':
         # fictive_crash_day (x) === day (15)
         plt.axvline(x=((15 * number_of_days) / days), color='r', label='Crash Day')
         plt.savefig("price_evolution.png")
+
+        average_informed = np.nanmean(informed_transactions, axis=0)
+        average_uninformed = np.nanmean(uninformed_transactions, axis=0)
+        average_mm = np.nanmean(market_maker_transactions, axis=0)
+        total = average_informed + average_uninformed + average_mm
+
+        print("Informed percentage " + str(average_informed * 100 / total))
+        print("Uninformed percentage " + str(average_uninformed * 100 / total))
+        print("Market makers percentage " + str(average_mm * 100 / total))
 
     if not ONLY_PRICE:
         # Mean VPIN (very small)

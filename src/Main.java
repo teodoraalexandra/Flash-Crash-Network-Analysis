@@ -30,7 +30,7 @@ public class Main {
         int DAYS_OF_SIMULATION = Integer.parseInt(args[3]);
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
-        double VOLATILITY =  0.003;
+        double VOLATILITY =  0.005;
         double alpha = 3.5;   // Value of alpha for power law distribution - the wealth disparity within the society.
         // The lower the alpha, the bigger the discrepancy between the cash
 
@@ -41,9 +41,11 @@ public class Main {
         double INITIAL_UNCERTAINTY_INFORMED = 0;
 
         int MULTIPLY_INFORMED = 125; // Has enough cash for at least 125 stocks
+        int MULTIPLY_MARKET_MAKERS = 5; // Has enough cash for at least 5 stocks
 
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
-        int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS;
+        int MARKET_MAKERS = (int) Math.round((PERCENTAGE_OF_INFORMED * 2 / 100) * NUMBER_OF_PERSONS);
+        int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS - MARKET_MAKERS;
 
         // Step 1. Create a simulation object by choosing a mono or multithreaded implementation.
         Simulation sim = new MonothreadedSimulation();
@@ -61,7 +63,7 @@ public class Main {
         InformationPair[] pricesUninformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_UNINFORMED, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
         InformationPair[] pricesInformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_INFORMED, DAYS_OF_SIMULATION, 0, PRICES_BY_DAY);
 
-        int totalTraders = UNINFORMED_TRADERS + INFORMED_TRADERS;
+        int totalTraders = UNINFORMED_TRADERS + INFORMED_TRADERS + MARKET_MAKERS;
         long[] cashEndowments = new long[totalTraders];
         int[] assetEndowments = new int[totalTraders];
 
@@ -85,6 +87,16 @@ public class Main {
             assetEndowments[index] = asset * MULTIPLY_INFORMED; // Set asset endowment to 0 for informed traders
         }
 
+        // Generate cash and asset endowments for market makers
+        for (int index = UNINFORMED_TRADERS + INFORMED_TRADERS; index < totalTraders; index++) {
+            long cash = (long) generateEndowment(alpha);
+            cashEndowments[index] = cash * INITIAL_PRICE * MULTIPLY_MARKET_MAKERS;
+
+            // Generate asset endowment for uninformed traders
+            int asset = (int) generateEndowment(alpha);
+            assetEndowments[index] = asset * MULTIPLY_MARKET_MAKERS;
+        }
+
         for (int index = 0; index < UNINFORMED_TRADERS; index++) {
             Random random = new Random();
             double toleranceLevel = random.nextDouble();
@@ -97,6 +109,12 @@ public class Main {
             InformedAgent informedAgent = new InformedAgent("Overvalued" + index, cashEndowments[index], AGGRESSIVITY, pricesInformed, PRICES_BY_DAY);
             informedAgent.setInvest(obName, assetEndowments[index]);
             sim.addNewAgent(informedAgent);
+        }
+
+        for (int index = UNINFORMED_TRADERS + INFORMED_TRADERS; index < totalTraders; index++) {
+            MarketMaker marketMaker = new MarketMaker("MM" + index, cashEndowments[index], 15, 0.05 * INITIAL_PRICE, INITIAL_PRICE);
+            marketMaker.setInvest(obName, assetEndowments[index]);
+            sim.addNewAgent(marketMaker);
         }
 
         // Step 5. Launch the simulation with a specification of the structure of trading day

@@ -9,7 +9,7 @@ rm -f csvs/*
 rm -f plots/csvs/*
 
 # Compile the Java program - Windows
-javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java src/InformationPair.java
+javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java src/MarketMaker.java src/InformationPair.java
 
 # Compile the Java program - Linux
 # javac -cp "atom-1.14.jar:." -d . application/src/atomSimulation/Main.java application/src/atomSimulation/InformedAgent.java application/src/atomSimulation/NoiseAgent.java
