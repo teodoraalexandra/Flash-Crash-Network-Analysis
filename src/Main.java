@@ -117,7 +117,7 @@ public class Main {
         sim.run(Day.createSinglePeriod(MarketPlace.CONTINUOUS, PRICES_BY_DAY), DAYS_OF_SIMULATION);
 
         // TODO Change from Master-Thesis
-        // TODO script.sh do not work for Linux + windows has hardcoded scripts
+        // TODO script.sh docker
         // TODO Modify model in Overleaf
         // TODO Re-run experiments with market makers - metrics
         // TODO Re-run experiments with market makers - agent cash

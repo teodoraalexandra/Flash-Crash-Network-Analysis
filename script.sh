@@ -8,11 +8,8 @@ start=$(date +%s.%N)
 rm -f csvs/*
 rm -f plots/csvs/*
 
-# Compile the Java program - Windows
+# Compile the Java program
 javac -cp atom-1.14.jar src/Main.java src/NoiseAgent.java src/InformedAgent.java src/MarketMaker.java src/InformationPair.java
-
-# Compile the Java program - Linux
-# javac -cp "atom-1.14.jar:." -d . application/src/atomSimulation/Main.java application/src/atomSimulation/InformedAgent.java application/src/atomSimulation/NoiseAgent.java
 
 ROOT_FOLDER=$(dirname "$(realpath "$0")")
 export PYTHONPATH=$ROOT_FOLDER
@@ -33,7 +30,7 @@ javaPart() {
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "C:\Users\dant\Desktop\Master-Thesis\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i" "$java_alpha"
+  java -classpath "src;atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i" "$java_alpha"
   cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i$persons$informed.csv"
   cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
   sed -i '/noname/d' "plots/csvs/prices$i$persons$informed.csv"
