@@ -14,7 +14,8 @@ def legend_without_duplicate_labels(figure):
     figure.legend(by_label.values(), by_label.keys(), loc='upper right')
 
 
-def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_all_average, list_lock):
+def task(counter, y_noise_all, y_informed_all, y_mm_all,
+         y_noise_all_average, y_informed_all_average, y_mm_all_average, list_lock):
     list_of_agents = []
 
     with open("plots/csvs/agents" + str(counter + 1) + ".csv", "r") as csvfile:
@@ -62,6 +63,8 @@ def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_a
     y_noise_average = []
     y_informed = []
     y_informed_average = []
+    y_mm = []
+    y_mm_average = []
 
     for agent in sorted_list_of_agents:
         for day in result.keys():
@@ -71,11 +74,16 @@ def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_a
                     y_noise.append(0)
                 else:
                     y_noise.append(round(mean(value)))
-            elif agent.startswith('Overvalued'):
+            if agent.startswith('Overvalued'):
                 if value is None:
                     y_informed.append(0)
                 else:
                     y_informed.append(round(mean(value)))
+            if agent.startswith('MM'):
+                if value is None:
+                    y_mm.append(0)
+                else:
+                    y_mm.append(round(mean(value)))
 
         # Plotting the points
         if agent.startswith('Noise'):
@@ -84,21 +92,29 @@ def task(counter, y_noise_all, y_informed_all, y_noise_all_average, y_informed_a
         if agent.startswith('Overvalued'):
             with list_lock:
                 y_informed_all.append(y_informed)
+        if agent.startswith('MM'):
+            with list_lock:
+                y_mm_all.append(y_mm)
 
         if agent.startswith('Noise'):
             y_noise_average.append(y_noise)
             y_noise = []
-        else:
+        if agent.startswith('Overvalued'):
             y_informed_average.append(y_informed)
             y_informed = []
+        if agent.startswith('MM'):
+            y_mm_average.append(y_mm)
+            y_mm = []
 
     column_average_noise = [sum(sub_list) / len(sub_list) for sub_list in zip(*y_noise_average)]
     column_average_informed = [sum(sub_list) / len(sub_list) for sub_list in zip(*y_informed_average)]
+    column_average_mm = [sum(sub_list) / len(sub_list) for sub_list in zip(*y_mm_average)]
 
     # Plotting the points
     with list_lock:
         y_noise_all_average.append(column_average_noise)
         y_informed_all_average.append(column_average_informed)
+        y_mm_all_average.append(column_average_mm)
 
 
 def mean_with_padding(a):
@@ -122,12 +138,15 @@ if __name__ == '__main__':
 
     axis_noise = multiprocessing.Manager().list()
     axis_informed = multiprocessing.Manager().list()
+    axis_mm = multiprocessing.Manager().list()
     axis_noise_average = multiprocessing.Manager().list()
     axis_informed_average = multiprocessing.Manager().list()
+    axis_mm_average = multiprocessing.Manager().list()
 
     for simulationIndex in range(int(simulations)):
-        process = multiprocessing.Process(target=task, args=(simulationIndex, axis_noise, axis_informed,
-                                                             axis_noise_average, axis_informed_average, lock))
+        process = multiprocessing.Process(target=task, args=(simulationIndex, axis_noise, axis_informed, axis_mm,
+                                                             axis_noise_average, axis_informed_average, axis_mm_average,
+                                                             lock))
         processes.append(process)
 
     # Start all processes
@@ -145,15 +164,19 @@ if __name__ == '__main__':
     # Naming the Y axis
     plt.ylabel('Cash')
 
-    plt.axvline(x=15, color='r', label='Crash Day')
+    plt.axvline(x=15, color='m', label='Crash Day')
 
-    for noise in axis_noise:
-        plt.plot(x, noise, color='g', label='Uninformed agents')
-    for informed in axis_informed:
-        plt.plot(x, informed, color='m', label='Informed agents')
+    # For a more detailed graph
+    # for noise in axis_noise:
+    #     plt.plot(x, noise, color='k', label='Uninformed agents')
+    # for informed in axis_informed:
+    #     plt.plot(x, informed, color='r', label='Informed agents')
+    # for market in axis_mm:
+    #     plt.plot(x, market, color='g', label='Market makers')
 
-    plt.plot(x, mean_with_padding(axis_noise_average), color='b', label='Uninformed average performance')
-    plt.plot(x, mean_with_padding(axis_informed_average), color='c', label='Informed average performance')
+    plt.plot(x, mean_with_padding(axis_noise_average), color='k', label='Uninformed average performance')
+    plt.plot(x, mean_with_padding(axis_informed_average), color='r', label='Informed average performance')
+    plt.plot(x, mean_with_padding(axis_mm), color='g', label='Market makers average performance')
 
     # Giving a title
     plt.title("Evolution of Agents' cash")
@@ -169,15 +192,8 @@ if __name__ == '__main__':
 
     initial_price_noise = int(axis_noise_average[0])  # First day
     final_price_noise = int(axis_noise_average[-1])  # Last day
-
-    print("Average profit noise",
-          int((final_price_noise - initial_price_noise) / initial_price_noise * 100), "%")
-
     initial_price_informed = int(axis_informed_average[14])  # Day 15
     final_price_informed = int(axis_informed_average[15])  # Day 16
-
-    print("Average profit informed",
-          int((final_price_informed - initial_price_informed) / initial_price_informed * 100), "%")
 
     # Function to show the plot
     plt.savefig("images/agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")

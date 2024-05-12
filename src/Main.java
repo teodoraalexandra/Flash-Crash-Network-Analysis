@@ -30,38 +30,38 @@ public class Main {
         int DAYS_OF_SIMULATION = Integer.parseInt(args[3]);
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
-        double VOLATILITY =  0.005;
-        double alpha = 3.5;   // Value of alpha for power law distribution - the wealth disparity within the society.
+        double VOLATILITY_UNINFORMED =  0.005;
+        double VOLATILITY_INFORMED = 0;
+
+        // Value of alpha for power law distribution - the wealth disparity within the society.
         // The lower the alpha, the bigger the discrepancy between the cash
+        double alpha_uninformed = 3.5;
+        double ALPHA_INFORMED = Double.parseDouble(args[5]);
 
         // Crash length (24 = 8h ; 6-9: 2-3h crash)
         int PRICES_BY_DAY = 2;
-        int INITIAL_PRICE = 14500;
-        double INITIAL_UNCERTAINTY_UNINFORMED = 50;
+        int INITIAL_PRICE = 15000;
+        double INITIAL_UNCERTAINTY_UNINFORMED = 0.01 * INITIAL_PRICE;
         double INITIAL_UNCERTAINTY_INFORMED = 0;
 
-        int MULTIPLY_INFORMED = 125; // Has enough cash for at least 125 stocks
-        int MULTIPLY_MARKET_MAKERS = 5; // Has enough cash for at least 5 stocks
+        int MULTIPLY_INFORMED = 20;
+        int MULTIPLY_MARKET_MAKERS = 10;
+        int MULTIPLY_UNINFORMED = 5;
+
+        int MM_SPREAD = 15;
+        double MM_ACCEPTED_LOSS = 0.05 * INITIAL_PRICE;
 
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
         int MARKET_MAKERS = (int) Math.round((PERCENTAGE_OF_INFORMED * 2 / 100) * NUMBER_OF_PERSONS);
         int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS - MARKET_MAKERS;
 
-        // Step 1. Create a simulation object by choosing a mono or multithreaded implementation.
         Simulation sim = new MonothreadedSimulation();
-
-        // Step 2. Define what kind of logging you need.
         sim.setLogger(new Logger("csvs/data" + SIMULATION_INDEX + ".csv"));
-        // Step 3. Create orderbooks.
         String obName = "lvmh";
         sim.addNewOrderBook(obName);
 
-        // Step 4. Create agents that will be used and add them to the simulation.
-        // Default for ZIT: cash=0, minPrice=14k, maxPrice=15k, minQty=10, maxQty=100
-        // Informed agents -> We will try to simulate a crash by adding them -> Disequilibrium in market
-
-        InformationPair[] pricesUninformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_UNINFORMED, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
-        InformationPair[] pricesInformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_INFORMED, DAYS_OF_SIMULATION, 0, PRICES_BY_DAY);
+        InformationPair[] pricesUninformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_UNINFORMED, DAYS_OF_SIMULATION, VOLATILITY_UNINFORMED, PRICES_BY_DAY);
+        InformationPair[] pricesInformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_INFORMED, DAYS_OF_SIMULATION, VOLATILITY_INFORMED, PRICES_BY_DAY);
 
         int totalTraders = UNINFORMED_TRADERS + INFORMED_TRADERS + MARKET_MAKERS;
         long[] cashEndowments = new long[totalTraders];
@@ -69,31 +69,28 @@ public class Main {
 
         // Generate cash and asset endowments for uninformed traders
         for (int index = 0; index < UNINFORMED_TRADERS; index++) {
-            long cash = (long) generateEndowment(alpha);
-            cashEndowments[index] = cash * INITIAL_PRICE;
+            long cash = (long) generateEndowment(alpha_uninformed);
+            cashEndowments[index] = cash * INITIAL_PRICE * MULTIPLY_UNINFORMED;
 
-            // Generate asset endowment for uninformed traders
-            int asset = (int) generateEndowment(alpha);
-            assetEndowments[index] = asset;
+            int asset = (int) generateEndowment(alpha_uninformed);
+            assetEndowments[index] = asset * MULTIPLY_UNINFORMED;
         }
 
         // Generate cash and asset endowments for informed traders
         for (int index = UNINFORMED_TRADERS; index < UNINFORMED_TRADERS + INFORMED_TRADERS; index++) {
-            long cash = (long) generateEndowment(alpha);
+            long cash = (long) generateEndowment(ALPHA_INFORMED);
             cashEndowments[index] = cash * INITIAL_PRICE * MULTIPLY_INFORMED;
 
-            // Informed traders do not receive asset endowments
-            int asset = (int) generateEndowment(alpha);
-            assetEndowments[index] = asset * MULTIPLY_INFORMED; // Set asset endowment to 0 for informed traders
+            int asset = (int) generateEndowment(ALPHA_INFORMED);
+            assetEndowments[index] = asset * MULTIPLY_INFORMED;
         }
 
         // Generate cash and asset endowments for market makers
         for (int index = UNINFORMED_TRADERS + INFORMED_TRADERS; index < totalTraders; index++) {
-            long cash = (long) generateEndowment(alpha);
+            long cash = (long) generateEndowment(alpha_uninformed);
             cashEndowments[index] = cash * INITIAL_PRICE * MULTIPLY_MARKET_MAKERS;
 
-            // Generate asset endowment for uninformed traders
-            int asset = (int) generateEndowment(alpha);
+            int asset = (int) generateEndowment(alpha_uninformed);
             assetEndowments[index] = asset * MULTIPLY_MARKET_MAKERS;
         }
 
@@ -112,13 +109,11 @@ public class Main {
         }
 
         for (int index = UNINFORMED_TRADERS + INFORMED_TRADERS; index < totalTraders; index++) {
-            MarketMaker marketMaker = new MarketMaker("MM" + index, cashEndowments[index], 15, 0.05 * INITIAL_PRICE, INITIAL_PRICE);
+            MarketMaker marketMaker = new MarketMaker("MM" + index, cashEndowments[index], MM_SPREAD, MM_ACCEPTED_LOSS, INITIAL_PRICE);
             marketMaker.setInvest(obName, assetEndowments[index]);
             sim.addNewAgent(marketMaker);
         }
 
-        // Step 5. Launch the simulation with a specification of the structure of trading day
-        // (defaults are provided for EuroNEXT) and the number of days to simulate.
         sim.run(Day.createSinglePeriod(MarketPlace.CONTINUOUS, PRICES_BY_DAY), DAYS_OF_SIMULATION);
 
         // TODO Change from Master-Thesis

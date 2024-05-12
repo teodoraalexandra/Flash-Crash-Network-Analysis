@@ -24,20 +24,33 @@ days=40
 aggressivity=10
 persons=$1 # This is the total number of the agents
 informed=$2 # This is percentage of informed
+alpha_graphics=1.001
+alpha_agents=3.5
 
 javaPart() {
   local i=$1
+  local java_alpha=$2
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "C:\Users\dant\Desktop\Master-Thesis\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
+  java -classpath "C:\Users\dant\Desktop\Master-Thesis\src;C:\Users\dant\Desktop\Master-Thesis\atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i" "$java_alpha"
   cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i$persons$informed.csv"
   cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
   sed -i '/noname/d' "plots/csvs/prices$i$persons$informed.csv"
-  echo "Java Simulation $i finished." 
+}
+
+callJava() {
+  local alpha=$1
+
+  echo "Start Java Simulation..."
+  for i in $(seq 1 $n); do
+      javaPart "$i" "$alpha" &
+  done
+  wait
 }
 
 pythonGraphMetricsPart() {
+  callJava "$alpha_graphics"
   total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
   big_granularity=$((total_rows / 50))
   small_granularity=$((total_rows / 500))
@@ -51,6 +64,7 @@ pythonGraphMetricsPart() {
 }
 
 pythonAgentCashPart() {
+  callJava "$alpha_agents"
   echo "Start Python Computation (Agents' Cash Part)..."
 
   # Run the Python program for plotting agents' cash
@@ -59,6 +73,7 @@ pythonAgentCashPart() {
 }
 
 pythonLaplacianMetricsPart() {
+  callJava "$alpha_graphics"
   echo "Start Python Computation (Laplacian Metrics Part)..."
 
   # Run the Python program for computing laplacian metrics
@@ -67,6 +82,7 @@ pythonLaplacianMetricsPart() {
 }
 
 pythonGephiGraphs() {
+  callJava "$alpha_graphics"
   total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
   big_granularity=$((total_rows * 2662 / 10000))
   small_granularity=$((total_rows * 2662 / 100000))
@@ -81,14 +97,8 @@ pythonGephiGraphs() {
 
 echo "Running bash script with $persons agents and $informed percentage"
 
-echo "Start Java Simulation..."
-for i in $(seq 1 $n); do
-    javaPart "$i" &
-done
-wait
-
 pythonGraphMetricsPart
-#pythonAgentCashPart
+pythonAgentCashPart
 #pythonLaplacianMetricsPart
 
 # Use this only for generating gml files
