@@ -30,7 +30,8 @@ javaPart() {
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "src;atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i" "$java_alpha"
+  java -classpath "src:atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i" "$java_alpha"
+#  java -classpath "src:atom-1.14.jar" Main 1000 10 10 40 1 1.001
   cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i$persons$informed.csv"
   cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
   sed -i '/noname/d' "plots/csvs/prices$i$persons$informed.csv"
