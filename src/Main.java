@@ -119,7 +119,5 @@ public class Main {
         // TODO Change from Master-Thesis
         // TODO script.sh docker
         // TODO Modify model in Overleaf
-        // TODO Re-run experiments with market makers - metrics
-        // TODO Re-run experiments with market makers - agent cash
     }
 }
