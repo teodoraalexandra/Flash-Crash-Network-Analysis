@@ -44,7 +44,7 @@ public class Main {
         double INITIAL_UNCERTAINTY_UNINFORMED = 0.01 * INITIAL_PRICE;
         double INITIAL_UNCERTAINTY_INFORMED = 0;
 
-        int MULTIPLY_INFORMED = 20;
+        int MULTIPLY_INFORMED = 25;
         int MULTIPLY_MARKET_MAKERS = 10;
         int MULTIPLY_UNINFORMED = 5;
 
