@@ -11,8 +11,8 @@ COPY script.sh .
 COPY . .
 COPY requirements.txt .
 
-# Define a volume for the images
-VOLUME /app/images
+# Define a volume for the results
+VOLUME /app/results
 
 # Upgrade pip and install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt --verbose

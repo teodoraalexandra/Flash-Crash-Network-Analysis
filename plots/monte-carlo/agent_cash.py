@@ -196,5 +196,5 @@ if __name__ == '__main__':
     final_price_informed = int(axis_informed_average[15])  # Day 16
 
     # Function to show the plot
-    plt.savefig("images/agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
+    plt.savefig("results/agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
     plt.close()
