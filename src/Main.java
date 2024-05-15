@@ -115,8 +115,5 @@ public class Main {
         }
 
         sim.run(Day.createSinglePeriod(MarketPlace.CONTINUOUS, PRICES_BY_DAY), DAYS_OF_SIMULATION);
-
-        // TODO Change from Master-Thesis
-        // TODO Modify model in Overleaf
     }
 }

@@ -1,8 +1,8 @@
-# Master-Thesis
+# Flash-Crash-Network-Analysis
 
 ## Steps for running simulation
 
-1. Git clone the repository using `https://github.com/teodoraalexandra/Master-Thesis.git`
+1. Git clone the repository using `https://github.com/teodoraalexandra/Flash-Crash-Network-Analysis.git`
 2. Install Docker https://docs.docker.com/engine/install/. Make sure that Docker is up and running. 
 3. Build Docker image using `docker build -t flash-crash-ntw-anls:latest .`
 4. If you have Linux, run command: `chmod +x exec.sh` for the permissions. For Windows, you can skip this step.
