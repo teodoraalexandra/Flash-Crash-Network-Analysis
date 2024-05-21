@@ -22,6 +22,12 @@ public class Main {
         return 1.0 / Math.pow(u, 1.0 / (alpha - 1.0));
     }
 
+    // Function to generate a random number from a uniform distribution within [min, max]
+    private static double generateUniform(double min, double max) {
+        Random random = new Random();
+        return min + (max - min) * random.nextDouble();
+    }
+
     public static void main(String[] args) {
         // Pre-requisite: Initialize the parameters
         int NUMBER_OF_PERSONS = Integer.parseInt(args[0]);
@@ -30,26 +36,20 @@ public class Main {
         int DAYS_OF_SIMULATION = Integer.parseInt(args[3]);
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
-        double VOLATILITY_UNINFORMED =  0.005;
-        double VOLATILITY_INFORMED = 0;
+        double VOLATILITY =  0.003;
 
         // Value of alpha for power law distribution - the wealth disparity within the society.
         // The lower the alpha, the bigger the discrepancy between the cash
-        double alpha_uninformed = 3.5;
-        double ALPHA_INFORMED = Double.parseDouble(args[5]);
+        double alpha = 3;
 
         // Crash length (24 = 8h ; 6-9: 2-3h crash)
         int PRICES_BY_DAY = 2;
         int INITIAL_PRICE = 15000;
-        double INITIAL_UNCERTAINTY_UNINFORMED = 0.01 * INITIAL_PRICE;
-        double INITIAL_UNCERTAINTY_INFORMED = 0;
+        double INITIAL_UNCERTAINTY_UNINFORMED = 0.1 * INITIAL_PRICE;
+        double INITIAL_UNCERTAINTY_INFORMED = 0.01 * INITIAL_PRICE;
 
-        int MULTIPLY_INFORMED = 25;
-        int MULTIPLY_MARKET_MAKERS = 10;
-        int MULTIPLY_UNINFORMED = 5;
-
-        int MM_SPREAD = 15;
-        double MM_ACCEPTED_LOSS = 0.05 * INITIAL_PRICE;
+        int MM_SPREAD = 25;
+        double MM_ACCEPTED_LOSS = 0.1 * INITIAL_PRICE;
 
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
         int MARKET_MAKERS = (int) Math.round((PERCENTAGE_OF_INFORMED * 2 / 100) * NUMBER_OF_PERSONS);
@@ -60,8 +60,8 @@ public class Main {
         String obName = "lvmh";
         sim.addNewOrderBook(obName);
 
-        InformationPair[] pricesUninformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_UNINFORMED, DAYS_OF_SIMULATION, VOLATILITY_UNINFORMED, PRICES_BY_DAY);
-        InformationPair[] pricesInformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_INFORMED, DAYS_OF_SIMULATION, VOLATILITY_INFORMED, PRICES_BY_DAY);
+        InformationPair[] pricesUninformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_UNINFORMED, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
+        InformationPair[] pricesInformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_INFORMED, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
 
         int totalTraders = UNINFORMED_TRADERS + INFORMED_TRADERS + MARKET_MAKERS;
         long[] cashEndowments = new long[totalTraders];
@@ -69,29 +69,29 @@ public class Main {
 
         // Generate cash and asset endowments for uninformed traders
         for (int index = 0; index < UNINFORMED_TRADERS; index++) {
-            long cash = (long) generateEndowment(alpha_uninformed);
-            cashEndowments[index] = cash * INITIAL_PRICE * MULTIPLY_UNINFORMED;
+            long cash = (long) generateEndowment(alpha);
+            cashEndowments[index] = cash * INITIAL_PRICE;
 
-            int asset = (int) generateEndowment(alpha_uninformed);
-            assetEndowments[index] = asset * MULTIPLY_UNINFORMED;
+            int asset = (int) generateEndowment(alpha);
+            assetEndowments[index] = asset;
         }
 
         // Generate cash and asset endowments for informed traders
         for (int index = UNINFORMED_TRADERS; index < UNINFORMED_TRADERS + INFORMED_TRADERS; index++) {
-            long cash = (long) generateEndowment(ALPHA_INFORMED);
-            cashEndowments[index] = cash * INITIAL_PRICE * MULTIPLY_INFORMED;
+            long cash = (long) generateUniform(50, 200);
+            cashEndowments[index] = cash * INITIAL_PRICE ;
 
-            int asset = (int) generateEndowment(ALPHA_INFORMED);
-            assetEndowments[index] = asset * MULTIPLY_INFORMED;
+            int asset = (int) generateUniform(50, 200);
+            assetEndowments[index] = asset;
         }
 
         // Generate cash and asset endowments for market makers
         for (int index = UNINFORMED_TRADERS + INFORMED_TRADERS; index < totalTraders; index++) {
-            long cash = (long) generateEndowment(alpha_uninformed);
-            cashEndowments[index] = cash * INITIAL_PRICE * MULTIPLY_MARKET_MAKERS;
+            long cash = (long) generateUniform(1, 25);
+            cashEndowments[index] = cash * INITIAL_PRICE ;
 
-            int asset = (int) generateEndowment(alpha_uninformed);
-            assetEndowments[index] = asset * MULTIPLY_MARKET_MAKERS;
+            int asset = (int) generateUniform(1, 25);
+            assetEndowments[index] = asset;
         }
 
         for (int index = 0; index < UNINFORMED_TRADERS; index++) {
