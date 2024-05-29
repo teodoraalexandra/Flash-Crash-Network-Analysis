@@ -48,9 +48,6 @@ public class Main {
         double INITIAL_UNCERTAINTY_UNINFORMED = 0.1 * INITIAL_PRICE;
         double INITIAL_UNCERTAINTY_INFORMED = 0.01 * INITIAL_PRICE;
 
-        int MM_SPREAD = 25;
-        double MM_ACCEPTED_LOSS = 0.1 * INITIAL_PRICE;
-
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
         int MARKET_MAKERS = (int) Math.round((PERCENTAGE_OF_INFORMED * 2 / 100) * NUMBER_OF_PERSONS);
         int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS - MARKET_MAKERS;
@@ -109,7 +106,7 @@ public class Main {
         }
 
         for (int index = UNINFORMED_TRADERS + INFORMED_TRADERS; index < totalTraders; index++) {
-            MarketMaker marketMaker = new MarketMaker("MM" + index, cashEndowments[index], MM_SPREAD, MM_ACCEPTED_LOSS, INITIAL_PRICE);
+            MarketMaker marketMaker = new MarketMaker("MM" + index, cashEndowments[index], INITIAL_PRICE);
             marketMaker.setInvest(obName, assetEndowments[index]);
             sim.addNewAgent(marketMaker);
         }

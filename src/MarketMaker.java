@@ -3,39 +3,30 @@ import fr.cristal.smac.atom.*;
 import fr.cristal.smac.atom.orders.*;
 
 class MarketMaker extends Agent {
-    protected double spread; // Spread between bid and ask prices
-    protected double maxAcceptableLoss; // Maximum acceptable loss threshold
     protected int INITIAL_PRICE;
 
-    public MarketMaker(String name, long cash, double spread, double maxAcceptableLoss, int INITIAL_PRICE) {
+    public MarketMaker(String name, long cash, int INITIAL_PRICE) {
         super(name, cash);
-        this.spread = spread;
-        this.maxAcceptableLoss = maxAcceptableLoss;
         this.INITIAL_PRICE = INITIAL_PRICE;
     }
 
-    private int calculateOrderQuantity(double price) {
-        return Math.max(1, (int) (this.cash / price)); // Place orders based on available cash
+    private int calculateOrderQuantity(double price, int currentInventory, int maxInventory) {
+        int baseQuantity = (int) (0.5 * this.cash / price); // Base quantity as x% of cash divided by price
+
+        // Adjust base quantity based on inventory levels
+        if (currentInventory > maxInventory) {
+            baseQuantity /= 1.1; // Reduce order size if inventory is high
+        } else if (currentInventory < -maxInventory) {
+            baseQuantity *= 1.1; // Increase order size if inventory is low
+        }
+
+        // Ensure order quantity is at least 1
+        return Math.max(1, baseQuantity);
     }
 
     private double calculatePotentialLoss(double bidPrice, double askPrice) {
-        int inventory = this.getInvest("lvmh");
-
-        // Calculate order quantity based on available inventory and order type (bid or ask)
-        int orderQuantity = calculateOrderQuantity(bidPrice); // Use the same quantity for bid and ask for simplicity
-
-        // Calculate potential loss based on the impact of executing orders against current inventory
-        double potentialLoss;
-
-        if (inventory >= orderQuantity) {
-            // If inventory is sufficient to cover the order quantity, calculate loss based on executed quantity
-            potentialLoss = Math.abs((bidPrice - askPrice) * orderQuantity);
-        } else {
-            // If inventory is insufficient to cover the full order quantity, calculate loss based on remaining inventory
-            potentialLoss = Math.abs((bidPrice - askPrice) * inventory);
-        }
-
-        return potentialLoss;
+        double expectedValue = (bidPrice + askPrice) / 2.0;
+        return Math.abs(expectedValue - bidPrice) + Math.abs(expectedValue - askPrice);
     }
 
     public Order decide(String obName, Day day) {
@@ -43,11 +34,36 @@ class MarketMaker extends Agent {
         long lastPrice = this.market.orderBooks.get("lvmh").lastFixedPrice != null ?
                 this.market.orderBooks.get("lvmh").lastFixedPrice.price :
                 this.INITIAL_PRICE;
-        long bidPrice = (long) (lastPrice - (this.spread / 2));
-        long askPrice = (long) (lastPrice + (this.spread / 2));
+        // Determine the sensitivity parameter lambda
+//        double lambda = 0.5;
+//
+//        long totalOrderFlow = this.market.orderBooks.get(obName).numberOfOrdersReceived;
+//        long newPrice = (long) (lastPrice + lambda * totalOrderFlow);
+//
+        double spread = 0.05 * lastPrice;
+        long bidPrice = (long) (lastPrice - (spread / 2));
+        long askPrice = (long) (lastPrice + (spread / 2));
+
+        // Check the inventory levels
+        int currentInventory = this.getInvest("lvmh");
+        int maxInventory = (int) (0.5 * this.cash / lastPrice); // max x% of cash in inventory
+
+        // Adjust prices if inventory exceeds max level
+        if (currentInventory > maxInventory) {
+            // Increase the spread and adjust bid price to be lower
+            spread *= 2; // Increase spread
+            bidPrice = (long) (lastPrice - (spread / 2));
+            askPrice = (long) (lastPrice + (spread / 2));
+        } else if (currentInventory < -maxInventory) {
+            // Decrease the spread to encourage inventory buildup
+            spread /= 2; // Decrease spread
+            bidPrice = (long) (lastPrice - (spread / 2));
+            askPrice = (long) (lastPrice + (spread / 2));
+        }
 
         // Evaluate potential risk before placing orders
         double potentialLoss = calculatePotentialLoss(bidPrice, askPrice);
+        double maxAcceptableLoss = 0.1 * this.cash;
 
         // Check if placing orders exceeds the maximum acceptable loss threshold
         if (potentialLoss > maxAcceptableLoss) {
@@ -55,14 +71,21 @@ class MarketMaker extends Agent {
         }
 
         // Randomly choose between placing bid ('A') or ask ('B') order
-        char orderType = (new Random().nextBoolean() ? 'A' : 'B');
+        char orderType;
+        if (currentInventory > maxInventory / 2) {
+            orderType = 'B'; // More inclined to place ask orders to reduce inventory
+        } else if (currentInventory < -maxInventory / 2) {
+            orderType = 'A'; // More inclined to place bid orders to increase inventory
+        } else {
+            orderType = (new Random().nextBoolean() ? 'A' : 'B');
+        }
 
         if (orderType == 'A') {
             // Place a bid order
-            return new LimitOrder(obName, "" + this.myId, 'A', calculateOrderQuantity(bidPrice), bidPrice);
+            return new LimitOrder(obName, "" + this.myId, 'A', calculateOrderQuantity(bidPrice, currentInventory, maxInventory), bidPrice);
         } else {
             // Place an ask order
-            return new LimitOrder(obName, "" + this.myId, 'B', calculateOrderQuantity(askPrice), askPrice);
+            return new LimitOrder(obName, "" + this.myId, 'B', calculateOrderQuantity(askPrice, currentInventory, maxInventory), askPrice);
         }
     }
 }

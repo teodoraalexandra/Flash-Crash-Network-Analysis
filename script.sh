@@ -16,7 +16,7 @@ export PYTHONPATH=$ROOT_FOLDER
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=50
+n=49
 days=40
 aggressivity=10
 persons=$1 # This is the total number of the agents
@@ -27,7 +27,7 @@ javaPart() {
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "src:atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
+  java -classpath "src;atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
   cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i$persons$informed.csv"
   cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
   sed -i '/noname/d' "plots/csvs/prices$i$persons$informed.csv"
