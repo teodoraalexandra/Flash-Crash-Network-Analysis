@@ -104,17 +104,19 @@ def read_prices_in_chunk(chunk):
     return price_array
 
 
-def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_list_big,
-         mean_PRICE_list_very_small, mean_PRICE_list_small, mean_PRICE_list_big,
+def task(counter, mean_VPIN_list_small, mean_VPIN_list_big,
+         mean_EVPIN_list_small, mean_EVPIN_list_big,
+         mean_PRICE_list_small, mean_PRICE_list_big,
          mean_assortativity_list, mean_bipartivity_list, mean_average_clustering_list,
          mean_connected_list, mean_stars_list, mean_diameter_list,
          mean_independence_list, mean_closeness_list, mean_betweenness_list,
          y_axis, informed, uninformed, marketMaker, list_lock, PRICE_ONLY):
-    VPIN_results_very_small = []
     VPIN_results_small = []
     VPIN_results_big = []
 
-    PRICE_results_very_small = []
+    EVPIN_results_small = []
+    EVPIN_results_big = []
+
     PRICE_results_small = []
     PRICE_results_big = []
 
@@ -138,7 +140,6 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
 
     big_granularity = int(sys.argv[4])
     small_granularity = int(sys.argv[5])
-    very_small_granularity = int(sys.argv[6])
 
     if not PRICE_ONLY:
         with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
@@ -146,11 +147,17 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
                 if len(price_array) == big_granularity:
-                    VPIN, PRICE, diameter, stars = compute_metrics(price_array, 0)
+                    VPIN, EVPIN, PRICE, assortativity, averageClustering, diameter, independence, stars = \
+                        compute_metrics(price_array, 0)
 
                     VPIN_results_big.append(VPIN)
+                    EVPIN_results_big.append(EVPIN)
                     PRICE_results_big.append(PRICE)
+
+                    assortativity_results.append(assortativity)
+                    average_clustering_results.append(averageClustering)
                     diameter_results.append(diameter)
+                    independence_results.append(independence)
                     stars_results.append(stars)
 
         with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
@@ -158,28 +165,17 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
                 if len(price_array) == small_granularity:
-                    VPIN, PRICE, independence, assortativity, conn, bipartivity = \
+                    VPIN, EVPIN, PRICE, betweenness, bipartivity, closeness, conn = \
                         compute_metrics(price_array, 1)
 
                     VPIN_results_small.append(VPIN)
+                    EVPIN_results_small.append(EVPIN)
                     PRICE_results_small.append(PRICE)
-                    independence_results.append(independence)
-                    assortativity_results.append(assortativity)
-                    connected_results.append(conn)
-                    bipartivity_results.append(bipartivity)
 
-        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
-                         chunksize=very_small_granularity, delimiter=";") as reader:
-            for chunk in reader:
-                price_array = read_prices_in_chunk(chunk)
-                if len(price_array) == very_small_granularity:
-                    VPIN, PRICE, closeness, betweenness, averageClustering = compute_metrics(price_array, 2)
-
-                    VPIN_results_very_small.append(VPIN)
-                    PRICE_results_very_small.append(PRICE)
-                    closeness_results.append(closeness)
                     betweenness_results.append(betweenness)
-                    average_clustering_results.append(averageClustering)
+                    bipartivity_results.append(bipartivity)
+                    closeness_results.append(closeness)
+                    connected_results.append(conn)
 
     if PRICE_ONLY:
         with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
@@ -187,7 +183,7 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
                 if len(price_array) == small_granularity * 2:
-                    averagePrice, informed_agents, uninformed_agents, mm_agents = compute_metrics(price_array, 3)
+                    averagePrice, informed_agents, uninformed_agents, mm_agents = compute_metrics(price_array, 2)
 
                     intermediate_y.append(averagePrice)
                     intermediate_informed += informed_agents
@@ -199,10 +195,10 @@ def task(counter, mean_VPIN_list_very_small, mean_VPIN_list_small, mean_VPIN_lis
         uninformed.append(intermediate_uninformed)
         marketMaker.append(intermediate_market_maker)
         y_axis.append(intermediate_y)
-        mean_VPIN_list_very_small.append(VPIN_results_very_small)
         mean_VPIN_list_small.append(VPIN_results_small)
         mean_VPIN_list_big.append(VPIN_results_big)
-        mean_PRICE_list_very_small.append(PRICE_results_very_small)
+        mean_EVPIN_list_small.append(EVPIN_results_small)
+        mean_EVPIN_list_big.append(EVPIN_results_big)
         mean_PRICE_list_small.append(PRICE_results_small)
         mean_PRICE_list_big.append(PRICE_results_big)
         mean_assortativity_list.append(assortativity_results)
@@ -226,11 +222,13 @@ if __name__ == '__main__':
     ONLY_PRICE = False
 
     # Create a VPIN list
-    mean_VPIN_results_very_small = multiprocessing.Manager().list()
     mean_VPIN_results_small = multiprocessing.Manager().list()
     mean_VPIN_results_big = multiprocessing.Manager().list()
 
-    mean_PRICE_results_very_small = multiprocessing.Manager().list()
+    # Create a EVPIN list
+    mean_EVPIN_results_small = multiprocessing.Manager().list()
+    mean_EVPIN_results_big = multiprocessing.Manager().list()
+
     mean_PRICE_results_small = multiprocessing.Manager().list()
     mean_PRICE_results_big = multiprocessing.Manager().list()
 
@@ -253,16 +251,16 @@ if __name__ == '__main__':
 
     number_of_simulations = int(sys.argv[1])
     small_granularity = int(sys.argv[5])
-    days = int(sys.argv[7])
+    days = int(sys.argv[6])
 
     # Create processes for each simulation using a for loop
     processes = []
     for simulationIndex in range(number_of_simulations):
         process = multiprocessing.Process(target=task, args=(simulationIndex,
-                                                             mean_VPIN_results_very_small,
                                                              mean_VPIN_results_small,
                                                              mean_VPIN_results_big,
-                                                             mean_PRICE_results_very_small,
+                                                             mean_EVPIN_results_small,
+                                                             mean_EVPIN_results_big,
                                                              mean_PRICE_results_small,
                                                              mean_PRICE_results_big,
                                                              mean_assortativity_results,
@@ -321,17 +319,17 @@ if __name__ == '__main__':
         print("Market makers percentage " + str(average_mm * 100 / total))
 
     if not ONLY_PRICE:
-        # Mean VPIN (very small)
-        mean_VPIN_results_very_small = mean_with_padding(mean_VPIN_results_very_small)
-
         # Mean VPIN (small)
         mean_VPIN_results_small = mean_with_padding(mean_VPIN_results_small)
 
         # Mean VPIN (big)
         mean_VPIN_results_big = mean_with_padding(mean_VPIN_results_big)
 
-        # Mean PRICE (very small)
-        mean_PRICE_results_very_small = mean_with_padding(mean_PRICE_results_very_small)
+        # Mean EVPIN (small)
+        mean_EVPIN_results_small = mean_with_padding(mean_EVPIN_results_small)
+
+        # Mean EVPIN (big)
+        mean_EVPIN_results_big = mean_with_padding(mean_EVPIN_results_big)
 
         # Mean PRICE (small)
         mean_PRICE_results_small = mean_with_padding(mean_PRICE_results_small)
@@ -366,26 +364,29 @@ if __name__ == '__main__':
         # Mean Betweeness results
         mean_betweenness_results = mean_with_padding(mean_betweenness_results)
 
-        # CORRELATION PLOTS
-        x_axis_VPIN_very_small = np.array(mean_VPIN_results_very_small)
-        x_axis_VPIN_small = np.array(mean_VPIN_results_small)
-        x_axis_VPIN_big = np.array(mean_VPIN_results_big)
-        y_axis_PRICE_very_small = np.array(mean_PRICE_results_very_small)
-        y_axis_PRICE_small = np.array(mean_PRICE_results_small)
-        y_axis_PRICE_big = np.array(mean_PRICE_results_big)
-        y_axis_assortativity = np.array(mean_assortativity_results)
-        y_axis_bipartivity = np.array(mean_bipartivity_results)
-        y_axis_average_clustering = np.array(mean_average_clustering_results)
-        y_axis_connected = np.array(mean_connected_results)
-        y_axis_stars = np.array(mean_stars_results)
-        y_axis_diameter = np.array(mean_diameter_results)
-        y_axis_independence = np.array(mean_independence_results)
-        y_axis_closeness = np.array(mean_closeness_results)
-        y_axis_betweeness = np.array(mean_betweenness_results)
+        big_granularity = int(0.1 * len(mean_PRICE_results_big))
+        small_granularity = int(0.1 * len(mean_PRICE_results_small))
 
-        x_axis_very_small = []
-        for index in range(len(x_axis_VPIN_very_small)):
-            x_axis_very_small.append(index)
+        # CORRELATION PLOTS
+        x_axis_VPIN_small = np.array(mean_VPIN_results_small)[:-small_granularity]
+        x_axis_VPIN_big = np.array(mean_VPIN_results_big)[:-big_granularity]
+        x_axis_EVPIN_small = np.array(mean_EVPIN_results_small)[:-small_granularity]
+        x_axis_EVPIN_big = np.array(mean_EVPIN_results_big)[:-big_granularity]
+        y_axis_PRICE_small = np.array(mean_PRICE_results_small)[:-small_granularity]
+        y_axis_PRICE_big = np.array(mean_PRICE_results_big)[:-big_granularity]
+
+        # BIG
+        y_axis_assortativity = np.array(mean_assortativity_results)[:-big_granularity]
+        y_axis_average_clustering = np.array(mean_average_clustering_results)[:-big_granularity]
+        y_axis_diameter = np.array(mean_diameter_results)[:-big_granularity]
+        y_axis_independence = np.array(mean_independence_results)[:-big_granularity]
+        y_axis_stars = np.array(mean_stars_results)[:-big_granularity]
+
+        # SMALL
+        y_axis_betweeness = np.array(mean_betweenness_results)[:-small_granularity]
+        y_axis_bipartivity = np.array(mean_bipartivity_results)[:-small_granularity]
+        y_axis_closeness = np.array(mean_closeness_results)[:-small_granularity]
+        y_axis_connected = np.array(mean_connected_results)[:-small_granularity]
 
         x_axis_small = []
         for index in range(len(x_axis_VPIN_small)):
@@ -395,21 +396,37 @@ if __name__ == '__main__':
         for index in range(len(x_axis_VPIN_big)):
             x_axis_big.append(index)
 
+        # BIG
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_assortativity, y_axis_PRICE_big,
+                     "VPIN", "ASSORTATIVITY", "PRICE")
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_average_clustering, y_axis_PRICE_big,
+                     "VPIN", "AVERAGE CLUSTERING", "PRICE")
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_diameter, y_axis_PRICE_big,
                      "VPIN", "DIAMETER", "PRICE")
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_independence, y_axis_PRICE_big,
+                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE")
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_stars, y_axis_PRICE_big,
                      "VPIN", "NUMBER OF STARS", "PRICE")
-        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_independence, y_axis_PRICE_small,
-                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE")
-        plot_metrics(x_axis_very_small, x_axis_VPIN_very_small, y_axis_average_clustering, y_axis_PRICE_very_small,
-                     "VPIN", "AVERAGE CLUSTERING", "PRICE")
-        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_assortativity, y_axis_PRICE_small,
-                     "VPIN", "ASSORTATIVITY", "PRICE")
-        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_connected, y_axis_PRICE_small,
-                     "VPIN", "CONNECTED COMPONENTS", "PRICE")
+
+        # SMALL
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_betweeness, y_axis_PRICE_small,
+                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE")
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_bipartivity, y_axis_PRICE_small,
                      "VPIN", "BIPARTIVITY", "PRICE")
-        plot_metrics(x_axis_very_small, x_axis_VPIN_very_small, y_axis_closeness, y_axis_PRICE_very_small,
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_closeness, y_axis_PRICE_small,
                      "VPIN", "CLOSENESS CENTRALITY", "PRICE")
-        plot_metrics(x_axis_very_small, x_axis_VPIN_very_small, y_axis_betweeness, y_axis_PRICE_very_small,
-                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE")
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_connected, y_axis_PRICE_small,
+                     "VPIN", "CONNECTED COMPONENTS", "PRICE")
+
+        # EASLEY
+        # Should be normalized first
+        e_vpin_big = np.array(x_axis_EVPIN_big)
+        e_vpin_small = np.array(x_axis_EVPIN_small)
+        # Normalize all values to be between 0 and 1
+        e_vpin_norm_big= (e_vpin_big - np.min(e_vpin_big)) / (np.max(e_vpin_big) - np.min(e_vpin_big))
+        e_vpin_norm_small = (e_vpin_small - np.min(e_vpin_small)) / (np.max(e_vpin_small) - np.min(e_vpin_small))
+
+        plot_metrics(x_axis_big, x_axis_VPIN_big, e_vpin_norm_big, y_axis_PRICE_big,
+                     "VPIN", "EASLEY VPIN (Low Frequency)", "PRICE")
+        plot_metrics(x_axis_small, x_axis_VPIN_small, e_vpin_norm_small, y_axis_PRICE_small,
+                     "VPIN", "EASLEY VPIN (High Frequency)", "PRICE")

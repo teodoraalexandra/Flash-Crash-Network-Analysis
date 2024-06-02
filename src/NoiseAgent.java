@@ -4,6 +4,7 @@ import java.util.Random;
 
 // Noise agents have no private information and simply trade based on random fluctuations in prices
 class NoiseAgent extends Agent {
+    public static int UninformedTransactions;
     protected InformationPair[] prices;
     protected int pricesByDay;
 
@@ -48,6 +49,7 @@ class NoiseAgent extends Agent {
             long howMuchMoneyShouldBeInvested = (long) (randomPercentage * wealth);
             int quantityDesiredToBeInvested = (int) (howMuchMoneyShouldBeInvested / realPrice);
 
+            UninformedTransactions += 1;
             return new MarketOrder(obName, "" + this.myId, oppositeDirection, quantityDesiredToBeInvested);
         }
 
@@ -65,6 +67,7 @@ class NoiseAgent extends Agent {
             if (quantityDesiredToBeInvested > 0) {
                 double n = Math.random();
                 char dir = (n > 0.5 ? 'B' : 'A');
+                UninformedTransactions += 1;
                 return new LimitOrder(obName, "" + this.myId, dir, quantityDesiredToBeInvested, price);
             }
             return null;

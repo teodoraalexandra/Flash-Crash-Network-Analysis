@@ -3,6 +3,7 @@ import fr.cristal.smac.atom.*;
 import fr.cristal.smac.atom.orders.*;
 
 class MarketMaker extends Agent {
+    public static int MMTransactions;
     protected int INITIAL_PRICE;
 
     public MarketMaker(String name, long cash, int INITIAL_PRICE) {
@@ -10,23 +11,27 @@ class MarketMaker extends Agent {
         this.INITIAL_PRICE = INITIAL_PRICE;
     }
 
-    private int calculateOrderQuantity(double price, int currentInventory, int maxInventory) {
-        int baseQuantity = (int) (0.5 * this.cash / price); // Base quantity as x% of cash divided by price
-
-        // Adjust base quantity based on inventory levels
-        if (currentInventory > maxInventory) {
-            baseQuantity /= 1.1; // Reduce order size if inventory is high
-        } else if (currentInventory < -maxInventory) {
-            baseQuantity *= 1.1; // Increase order size if inventory is low
-        }
-
-        // Ensure order quantity is at least 1
-        return Math.max(1, baseQuantity);
+    private int calculateOrderQuantity(double price) {
+        return Math.max(1, (int) (this.cash / price)); // Place orders based on available cash
     }
 
     private double calculatePotentialLoss(double bidPrice, double askPrice) {
-        double expectedValue = (bidPrice + askPrice) / 2.0;
-        return Math.abs(expectedValue - bidPrice) + Math.abs(expectedValue - askPrice);
+        int inventory = this.getInvest("lvmh");
+        // Calculate order quantity based on available inventory and order type (bid or ask)
+        int orderQuantity = calculateOrderQuantity(bidPrice);
+
+        // Calculate potential loss based on the impact of executing orders against current inventory
+        double potentialLoss;
+
+        if (inventory >= orderQuantity) {
+            // If inventory is sufficient to cover the order quantity, calculate loss based on executed quantity
+            potentialLoss = Math.abs((bidPrice - askPrice) * orderQuantity);
+        } else {
+            // If inventory is insufficient to cover the full order quantity, calculate loss based on remaining inventory
+            potentialLoss = Math.abs((bidPrice - askPrice) * inventory);
+        }
+
+        return potentialLoss;
     }
 
     public Order decide(String obName, Day day) {
@@ -34,13 +39,8 @@ class MarketMaker extends Agent {
         long lastPrice = this.market.orderBooks.get("lvmh").lastFixedPrice != null ?
                 this.market.orderBooks.get("lvmh").lastFixedPrice.price :
                 this.INITIAL_PRICE;
-        // Determine the sensitivity parameter lambda
-//        double lambda = 0.5;
-//
-//        long totalOrderFlow = this.market.orderBooks.get(obName).numberOfOrdersReceived;
-//        long newPrice = (long) (lastPrice + lambda * totalOrderFlow);
-//
-        double spread = 0.05 * lastPrice;
+
+        double spread = 0.005 * lastPrice;
         long bidPrice = (long) (lastPrice - (spread / 2));
         long askPrice = (long) (lastPrice + (spread / 2));
 
@@ -63,7 +63,7 @@ class MarketMaker extends Agent {
 
         // Evaluate potential risk before placing orders
         double potentialLoss = calculatePotentialLoss(bidPrice, askPrice);
-        double maxAcceptableLoss = 0.1 * this.cash;
+        double maxAcceptableLoss = 0.02 * this.getWealth();
 
         // Check if placing orders exceeds the maximum acceptable loss threshold
         if (potentialLoss > maxAcceptableLoss) {
@@ -80,12 +80,13 @@ class MarketMaker extends Agent {
             orderType = (new Random().nextBoolean() ? 'A' : 'B');
         }
 
+        MMTransactions += 1;
         if (orderType == 'A') {
             // Place a bid order
-            return new LimitOrder(obName, "" + this.myId, 'A', calculateOrderQuantity(bidPrice, currentInventory, maxInventory), bidPrice);
+            return new LimitOrder(obName, "" + this.myId, 'A', calculateOrderQuantity(bidPrice), bidPrice);
         } else {
             // Place an ask order
-            return new LimitOrder(obName, "" + this.myId, 'B', calculateOrderQuantity(askPrice, currentInventory, maxInventory), askPrice);
+            return new LimitOrder(obName, "" + this.myId, 'B', calculateOrderQuantity(askPrice), askPrice);
         }
     }
 }

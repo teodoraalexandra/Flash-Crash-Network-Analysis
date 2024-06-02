@@ -16,7 +16,7 @@ export PYTHONPATH=$ROOT_FOLDER
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=49
+n=100
 days=40
 aggressivity=10
 persons=$1 # This is the total number of the agents
@@ -27,7 +27,7 @@ javaPart() {
 
   # Run the program and print the output to prices.csv
   # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "src;atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
+  java -classpath "src:atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
   cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i$persons$informed.csv"
   cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
   sed -i '/noname/d' "plots/csvs/prices$i$persons$informed.csv"
@@ -44,13 +44,12 @@ callJava() {
 pythonGraphMetricsPart() {
   total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
   big_granularity=$((total_rows / 50))
-  small_granularity=$((total_rows / 500))
-  very_small_granularity=$((total_rows / 1000))
+  small_granularity=$((total_rows / 1000))
 
   echo "Start Python Computation (Network metrics part)..."
 
   # Run the Python program for creation
-  python "$ROOT_FOLDER"/plots/monte-carlo/graph_metrics.py $n "$persons" "$informed" $big_granularity $small_granularity $very_small_granularity $days
+  python "$ROOT_FOLDER"/plots/monte-carlo/graph_metrics.py $n "$persons" "$informed" $big_granularity $small_granularity $days
   echo -e "Metrics graphs was generated. \n"
 }
 
@@ -74,12 +73,11 @@ pythonGephiGraphs() {
   total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
   big_granularity=$((total_rows * 2662 / 10000))
   small_granularity=$((total_rows * 2662 / 100000))
-  very_small_granularity=$((total_rows * 2662 / 1000000))
 
   echo "Start Python Computation (Graph Gephi)..."
 
   # Run the Python program for computing graph complex metrics
-  python plots/monte-carlo/gephi_graphs.py $n "$persons" "$informed" $big_granularity $small_granularity $very_small_granularity
+  python plots/monte-carlo/gephi_graphs.py $n "$persons" "$informed" $big_granularity $small_granularity
   echo -e "Graph gephi was generated. \n"
 }
 

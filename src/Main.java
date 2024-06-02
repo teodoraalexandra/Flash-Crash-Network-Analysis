@@ -40,7 +40,7 @@ public class Main {
 
         // Value of alpha for power law distribution - the wealth disparity within the society.
         // The lower the alpha, the bigger the discrepancy between the cash
-        double alpha = 3;
+        double alpha = 2.5;
 
         // Crash length (24 = 8h ; 6-9: 2-3h crash)
         int PRICES_BY_DAY = 2;
@@ -49,7 +49,7 @@ public class Main {
         double INITIAL_UNCERTAINTY_INFORMED = 0.01 * INITIAL_PRICE;
 
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
-        int MARKET_MAKERS = (int) Math.round((PERCENTAGE_OF_INFORMED * 2 / 100) * NUMBER_OF_PERSONS);
+        int MARKET_MAKERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
         int UNINFORMED_TRADERS = NUMBER_OF_PERSONS - INFORMED_TRADERS - MARKET_MAKERS;
 
         Simulation sim = new MonothreadedSimulation();
@@ -75,19 +75,19 @@ public class Main {
 
         // Generate cash and asset endowments for informed traders
         for (int index = UNINFORMED_TRADERS; index < UNINFORMED_TRADERS + INFORMED_TRADERS; index++) {
-            long cash = (long) generateUniform(50, 200);
+            long cash = (long) generateUniform(100, 150);
             cashEndowments[index] = cash * INITIAL_PRICE ;
 
-            int asset = (int) generateUniform(50, 200);
+            int asset = (int) generateUniform(100, 150);
             assetEndowments[index] = asset;
         }
 
         // Generate cash and asset endowments for market makers
         for (int index = UNINFORMED_TRADERS + INFORMED_TRADERS; index < totalTraders; index++) {
-            long cash = (long) generateUniform(1, 25);
+            long cash = (long) generateUniform(1, 50);
             cashEndowments[index] = cash * INITIAL_PRICE ;
 
-            int asset = (int) generateUniform(1, 25);
+            int asset = (int) generateUniform(1, 50);
             assetEndowments[index] = asset;
         }
 
@@ -112,5 +112,10 @@ public class Main {
         }
 
         sim.run(Day.createSinglePeriod(MarketPlace.CONTINUOUS, PRICES_BY_DAY), DAYS_OF_SIMULATION);
+
+        int totalTransactions = MarketMaker.MMTransactions + InformedAgent.InformedTransactions + NoiseAgent.UninformedTransactions;
+//        System.out.println("MM: " + MarketMaker.MMTransactions + " / " + totalTransactions);
+//        System.out.println("Informed: " + InformedAgent.InformedTransactions + " / " + totalTransactions);
+//        System.out.println("Uninformed: " + NoiseAgent.UninformedTransactions + " / " + totalTransactions);
     }
 }

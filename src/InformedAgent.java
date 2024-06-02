@@ -3,6 +3,7 @@ import fr.cristal.smac.atom.orders.*;
 
 // Informed agents have private information about the true value of the security
 class InformedAgent extends Agent {
+    public static int InformedTransactions;
     protected int aggressivity;
 
     protected InformationPair[] prices;
@@ -16,7 +17,7 @@ class InformedAgent extends Agent {
     }
 
     public Order decide(String obName, Day day) {
-        if (day.dayNumber >= 15 && day.dayNumber <= 16) {
+        if (day.dayNumber >= 15 && day.dayNumber <= 17) {
             int priceIndex = this.pricesByDay * (day.dayNumber - 1) + day.currentPeriod().currentTick() - 1;
             long realFundamentalValue = this.prices[priceIndex].fundamentalValue;
             double realValuationUncertainty = this.prices[priceIndex].valuationUncertainty;
@@ -40,6 +41,7 @@ class InformedAgent extends Agent {
                 long desiredPrice = (long) (highestValuationInterval - ((this.aggressivity * highestValuationInterval) / 100));
 
                 if (numberOfAssets > 0) {
+                    InformedTransactions += 1;
                     return new LimitOrder(obName, "" + this.myId, direction, numberOfAssets, desiredPrice);
                 }
             }
@@ -57,6 +59,7 @@ class InformedAgent extends Agent {
                 long desiredPrice = (long) (lowestValuationInterval + ((this.aggressivity * lowestValuationInterval) / 100));
 
                 if (quantityDesiredToBeInvested > 0 && wealth > 0) {
+                    InformedTransactions += 1;
                     return new LimitOrder(obName, "" + this.myId, direction, quantityDesiredToBeInvested, desiredPrice);
                 }
             }
