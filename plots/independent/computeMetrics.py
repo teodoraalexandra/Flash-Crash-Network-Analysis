@@ -7,6 +7,7 @@ def calculate_easley_vpin(bucket):
     buy_volume = sum(trade.quantity for trade in bucket if trade.direction == 'B')
     sell_volume = sum(trade.quantity for trade in bucket if trade.direction == 'A')
     total_volume = buy_volume + sell_volume
+    total_volume = total_volume * 2
     imbalance = abs(buy_volume - sell_volume) / total_volume if total_volume != 0 else 0
     return imbalance
 
