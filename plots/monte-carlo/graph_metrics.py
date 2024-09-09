@@ -23,10 +23,10 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4):
     COLOR_PRICE = "#696969"
     COLOR_EASLEY_VPIN = "#00FF00"
 
-    # Y3 Should be normalized first
+    # Price (Y3) Should be normalized first
     x = np.array(Y3)
     # Normalize all values to be between 0 and 1
-    x_norm = (x - np.min(x)) / (np.max(x) - np.min(x))
+    Y3_norm = (x - np.min(x)) / (np.max(x) - np.min(x))
 
     plt.close()
     fig, ax1 = plt.subplots(figsize=(12, 8))
@@ -34,7 +34,7 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4):
 
     l1, = ax2.plot(X, Y1, color=COLOR_VPIN)
     l2, = ax1.plot(X, Y2, color=COLOR_METRIC)
-    l3, = ax2.plot(X, x_norm, color=COLOR_PRICE)
+    l3, = ax2.plot(X, Y3_norm, color=COLOR_PRICE)
     l4, = ax2.plot(X, Y4, color=COLOR_EASLEY_VPIN)
 
     # Standard deviation and confidence interval
@@ -53,7 +53,7 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4):
 
     # Correlation
     correlation_vpin_metric = np.corrcoef(Y1, Y2)
-    correlation_easley_vpin_metric = np.corrcoef(Y4, Y2)
+    correlation_vpin_easley_vpin = np.corrcoef(Y1, Y4)
 
     # Plot statistics
     number_of_rounded_decimals = 6
@@ -64,9 +64,9 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4):
     ci3 = metric4 + " CI: [" + str(round(lower_bound_4, number_of_rounded_decimals)) + ", " + \
           str(round(upper_bound_4, number_of_rounded_decimals)) + "]"
     subtitle_vpin_metric = round(correlation_vpin_metric[1][0], 4)
-    subtitle_easley_vpin_metric = round(correlation_easley_vpin_metric[1][0], 4)
+    subtitle_vpin_easley_vpin = round(correlation_vpin_easley_vpin[1][0], 4)
 
-    fig.text(0.2, 0.93, "Correlation with VPIN: " + str(subtitle_vpin_metric) + "; Correlation with Easley VPIN: " + str(subtitle_easley_vpin_metric), ha='center', fontsize=18)
+    fig.text(0.2, 0.93, "Correlation VPIN - metric: " + str(subtitle_vpin_metric) + "; Correlation VPIN - Easley's VPIN: " + str(subtitle_vpin_easley_vpin), ha='center', fontsize=18)
 
     ax1.set_xlabel(ci1 + " - " + ci2 + " - " + ci3)
     ax1.set_xticks([])
