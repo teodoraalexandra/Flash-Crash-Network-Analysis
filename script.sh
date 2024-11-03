@@ -19,7 +19,7 @@ export PYTHONPATH=$ROOT_FOLDER
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=100
+n=75
 days=40
 aggressivity=10
 persons=$1 # This is the total number of the agents
