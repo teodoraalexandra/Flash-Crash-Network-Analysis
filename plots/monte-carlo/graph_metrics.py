@@ -7,7 +7,11 @@ import multiprocessing
 import sys
 
 
-def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4):
+def rolling_correlation(Y1, Y2, window_size):
+    df = pd.DataFrame({'Y1': Y1, 'Y2': Y2})
+    return df['Y1'].rolling(window=window_size).corr(df['Y2'])
+
+def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_size):
     # Y1 = VPIN
     # Y2 = Metric values
     # Y3 = PRICE
@@ -52,8 +56,10 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4):
     upper_bound_4 = average_metric4 + 2 * standard_deviation_metric4
 
     # Correlation
-    correlation_vpin_metric = np.corrcoef(Y1, Y2)
-    correlation_vpin_easley_vpin = np.corrcoef(Y1, Y4)
+    correlation_vpin_metric = rolling_correlation(Y1, Y2, window_size=window_size)
+    correlation_vpin_metric = correlation_vpin_metric.mean()
+    correlation_vpin_easley_vpin = rolling_correlation(Y1, Y4, window_size=window_size)
+    correlation_vpin_easley_vpin = correlation_vpin_easley_vpin.mean()
 
     # Plot statistics
     number_of_rounded_decimals = 6
@@ -63,8 +69,8 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4):
         str(round(upper_bound_2, number_of_rounded_decimals)) + "]"
     ci3 = metric4 + " CI: [" + str(round(lower_bound_4, number_of_rounded_decimals)) + ", " + \
           str(round(upper_bound_4, number_of_rounded_decimals)) + "]"
-    subtitle_vpin_metric = round(correlation_vpin_metric[1][0], 4)
-    subtitle_vpin_easley_vpin = round(correlation_vpin_easley_vpin[1][0], 4)
+    subtitle_vpin_metric = round(correlation_vpin_metric, 4)
+    subtitle_vpin_easley_vpin = round(correlation_vpin_easley_vpin, 4)
 
     fig.text(0.2, 0.93, "Correlation VPIN - metric: " + str(subtitle_vpin_metric) + "; Correlation VPIN - Easley's VPIN: " + str(subtitle_vpin_easley_vpin), ha='center', fontsize=18)
 
@@ -416,30 +422,33 @@ if __name__ == '__main__':
         e_vpin_norm_big= (e_vpin_big - np.min(e_vpin_big)) / (np.max(e_vpin_big) - np.min(e_vpin_big))
         e_vpin_norm_small = (e_vpin_small - np.min(e_vpin_small)) / (np.max(e_vpin_small) - np.min(e_vpin_small))
 
+        WINDOW_SIZE_BIG = 40 # Low frequency
+        WINDOW_SIZE_SMALL = 20 # High frequency
+
         # BIG
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_assortativity, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "ASSORTATIVITY", "PRICE", "Easley VPIN")
+                     "VPIN", "ASSORTATIVITY", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_average_clustering, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "AVERAGE CLUSTERING", "PRICE", "Easley VPIN")
+                     "VPIN", "AVERAGE CLUSTERING", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_diameter, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "DIAMETER", "PRICE", "Easley VPIN")
+                     "VPIN", "DIAMETER", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_independence, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE", "Easley VPIN")
+                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_stars, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "NUMBER OF STARS", "PRICE", "Easley VPIN")
+                     "VPIN", "NUMBER OF STARS", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
 
         # SMALL
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_betweeness, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE", "Easley VPIN")
+                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_bipartivity, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "BIPARTIVITY", "PRICE", "Easley VPIN")
+                     "VPIN", "BIPARTIVITY", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_closeness, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "CLOSENESS CENTRALITY", "PRICE", "Easley VPIN")
+                     "VPIN", "CLOSENESS CENTRALITY", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_connected, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "CONNECTED COMPONENTS", "PRICE", "Easley VPIN")
+                     "VPIN", "CONNECTED COMPONENTS", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
 
 
         plot_metrics(x_axis_big, x_axis_VPIN_big, e_vpin_norm_big, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "EASLEY VPIN (Low Frequency)", "PRICE", "Easley VPIN")
+                     "VPIN", "EASLEY VPIN (Low Frequency)", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_small, x_axis_VPIN_small, e_vpin_norm_small, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "EASLEY VPIN (High Frequency)", "PRICE", "Easley VPIN")
+                     "VPIN", "EASLEY VPIN (High Frequency)", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
