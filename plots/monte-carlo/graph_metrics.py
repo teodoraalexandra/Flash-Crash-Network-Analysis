@@ -8,8 +8,14 @@ import sys
 
 
 def rolling_correlation(Y1, Y2, window_size):
+    if len(Y1) != len(Y2):
+        raise ValueError("Y1 and Y2 must be the same length")
+
     df = pd.DataFrame({'Y1': Y1, 'Y2': Y2})
-    return df['Y1'].rolling(window=window_size).corr(df['Y2'])
+    rolling_corr = df['Y1'].rolling(window=window_size).corr(df['Y2'])
+    rolling_corr = rolling_corr.dropna()
+    rolling_corr = rolling_corr[rolling_corr != 0]
+    return rolling_corr
 
 def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_size):
     # Y1 = VPIN
@@ -423,7 +429,7 @@ if __name__ == '__main__':
         e_vpin_norm_small = (e_vpin_small - np.min(e_vpin_small)) / (np.max(e_vpin_small) - np.min(e_vpin_small))
 
         WINDOW_SIZE_BIG = 40 # Low frequency
-        WINDOW_SIZE_SMALL = 10 # High frequency
+        WINDOW_SIZE_SMALL = 120 # High frequency
 
         # BIG
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_assortativity, y_axis_PRICE_big, e_vpin_norm_big,
