@@ -19,7 +19,7 @@ export PYTHONPATH=$ROOT_FOLDER
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=75
+n=50
 days=40
 aggressivity=10
 persons=$1 # This is the total number of the agents
@@ -89,7 +89,7 @@ echo "Running bash script with $persons agents and $informed percentage"
 callJava
 
 pythonGraphMetricsPart
-pythonAgentCashPart
+#pythonAgentCashPart
 #pythonLaplacianMetricsPart
 
 # Use this only for generating gml files
