@@ -19,7 +19,7 @@ export PYTHONPATH=$ROOT_FOLDER
 
 # For loop for our simulations
 # Set the number of times to repeat the commands (number of simulations)
-n=50
+n=5
 days=40
 aggressivity=10
 persons=$1 # This is the total number of the agents
@@ -46,8 +46,8 @@ callJava() {
 
 pythonGraphMetricsPart() {
   total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
-  big_granularity=$((total_rows / 50))
-  small_granularity=$((total_rows / 1000))
+  big_granularity=$((total_rows / 50)) # low frequency
+  small_granularity=$((total_rows / 700)) # high frequency
 
   echo "Start Python Computation (Network metrics part)..."
 

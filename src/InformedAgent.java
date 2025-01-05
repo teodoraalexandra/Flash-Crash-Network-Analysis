@@ -3,7 +3,6 @@ import fr.cristal.smac.atom.orders.*;
 
 // Informed agents have private information about the true value of the security
 class InformedAgent extends Agent {
-    public static int InformedTransactions;
     protected int aggressivity;
 
     protected InformationPair[] prices;
@@ -17,51 +16,24 @@ class InformedAgent extends Agent {
     }
 
     public Order decide(String obName, Day day) {
-        if (day.dayNumber >= 15 && day.dayNumber <= 17) {
+        if (day.dayNumber >= 15 && day.dayNumber <= 16) {
             int priceIndex = this.pricesByDay * (day.dayNumber - 1) + day.currentPeriod().currentTick() - 1;
             long realFundamentalValue = this.prices[priceIndex].fundamentalValue;
             double realValuationUncertainty = this.prices[priceIndex].valuationUncertainty;
 
-            double lowestValuationInterval = realFundamentalValue - realValuationUncertainty / 2;
             double highestValuationInterval = realFundamentalValue + realValuationUncertainty / 2;
 
-            long realPrice = this.market.orderBooks.get("lvmh").lastFixedPrice != null ?
-                    this.market.orderBooks.get("lvmh").lastFixedPrice.price :
-                    realFundamentalValue;
+            // Always decide to SELL
+            char direction = 'A';
 
-            if (realPrice >= highestValuationInterval) {
-                // CASE: Outside the upper interval
-                // (1) Decide the SELL
-                char direction = 'A';
+            // SELL all owned assets
+            int numberOfAssets = this.getInvest("lvmh");
 
-                // (2) SELL all the owned assets
-                int numberOfAssets = this.getInvest("lvmh");
+            // Target price for the order
+            long desiredPrice = (long) (highestValuationInterval - ((this.aggressivity * highestValuationInterval) / 100));
 
-                // (3) Desired price
-                long desiredPrice = (long) (highestValuationInterval - ((this.aggressivity * highestValuationInterval) / 100));
-
-                if (numberOfAssets > 0) {
-                    InformedTransactions += 1;
-                    return new LimitOrder(obName, "" + this.myId, direction, numberOfAssets, desiredPrice);
-                }
-            }
-
-            if (realPrice <= lowestValuationInterval) {
-                // CASE: Outside the lower interval
-                // (1) Decide the BUY
-                char direction = 'B';
-
-                // (2) BUY with available cash
-                long wealth = this.getWealth();
-                int quantityDesiredToBeInvested = (int) (wealth / realPrice);
-
-                // (3) Desired price
-                long desiredPrice = (long) (lowestValuationInterval + ((this.aggressivity * lowestValuationInterval) / 100));
-
-                if (quantityDesiredToBeInvested > 0 && wealth > 0) {
-                    InformedTransactions += 1;
-                    return new LimitOrder(obName, "" + this.myId, direction, quantityDesiredToBeInvested, desiredPrice);
-                }
+            if (numberOfAssets > 0) {
+                return new LimitOrder(obName, "" + this.myId, direction, numberOfAssets, desiredPrice);
             }
 
             return null;

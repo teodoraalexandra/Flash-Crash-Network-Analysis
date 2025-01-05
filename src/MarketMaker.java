@@ -3,7 +3,6 @@ import fr.cristal.smac.atom.*;
 import fr.cristal.smac.atom.orders.*;
 
 class MarketMaker extends Agent {
-    public static int MMTransactions;
     protected int INITIAL_PRICE;
 
     public MarketMaker(String name, long cash, int INITIAL_PRICE) {
@@ -80,7 +79,6 @@ class MarketMaker extends Agent {
             orderType = (new Random().nextBoolean() ? 'A' : 'B');
         }
 
-        MMTransactions += 1;
         if (orderType == 'A') {
             // Place a bid order
             return new LimitOrder(obName, "" + this.myId, 'A', calculateOrderQuantity(bidPrice), bidPrice);

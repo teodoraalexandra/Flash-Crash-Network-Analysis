@@ -37,10 +37,11 @@ public class Main {
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
         double VOLATILITY =  0.003;
+        double VOLATILITY_INFORMED =  0.03;
 
         // Value of alpha for power law distribution - the wealth disparity within the society.
         // The lower the alpha, the bigger the discrepancy between the cash
-        double alpha = 2.5;
+        double alpha = 3;
 
         // Crash length (24 = 8h ; 6-9: 2-3h crash)
         int PRICES_BY_DAY = 2;
@@ -58,7 +59,7 @@ public class Main {
         sim.addNewOrderBook(obName);
 
         InformationPair[] pricesUninformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_UNINFORMED, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
-        InformationPair[] pricesInformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_INFORMED, DAYS_OF_SIMULATION, VOLATILITY, PRICES_BY_DAY);
+        InformationPair[] pricesInformed = generateBrownianMotion(INITIAL_PRICE, INITIAL_UNCERTAINTY_INFORMED, DAYS_OF_SIMULATION, VOLATILITY_INFORMED, PRICES_BY_DAY);
 
         int totalTraders = UNINFORMED_TRADERS + INFORMED_TRADERS + MARKET_MAKERS;
         long[] cashEndowments = new long[totalTraders];
@@ -112,10 +113,5 @@ public class Main {
         }
 
         sim.run(Day.createSinglePeriod(MarketPlace.CONTINUOUS, PRICES_BY_DAY), DAYS_OF_SIMULATION);
-
-        int totalTransactions = MarketMaker.MMTransactions + InformedAgent.InformedTransactions + NoiseAgent.UninformedTransactions;
-//        System.out.println("MM: " + MarketMaker.MMTransactions + " / " + totalTransactions);
-//        System.out.println("Informed: " + InformedAgent.InformedTransactions + " / " + totalTransactions);
-//        System.out.println("Uninformed: " + NoiseAgent.UninformedTransactions + " / " + totalTransactions);
     }
 }
