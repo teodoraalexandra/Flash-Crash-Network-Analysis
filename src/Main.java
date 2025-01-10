@@ -36,15 +36,15 @@ public class Main {
         int DAYS_OF_SIMULATION = Integer.parseInt(args[3]);
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
 
-        double VOLATILITY =  0.003;
-        double VOLATILITY_INFORMED =  0.03;
+        double VOLATILITY =  0.001;
+        double VOLATILITY_INFORMED =  0.008;
 
         // Value of alpha for power law distribution - the wealth disparity within the society.
         // The lower the alpha, the bigger the discrepancy between the cash
         double alpha = 3;
 
         // Crash length (24 = 8h ; 6-9: 2-3h crash)
-        int PRICES_BY_DAY = 2;
+        int PRICES_BY_DAY = 4;
         int INITIAL_PRICE = 15000;
         double INITIAL_UNCERTAINTY_UNINFORMED = 0.1 * INITIAL_PRICE;
         double INITIAL_UNCERTAINTY_INFORMED = 0.01 * INITIAL_PRICE;
@@ -100,8 +100,19 @@ public class Main {
             sim.addNewAgent(noiseAgent);
         }
 
+        double[] diffusionCoefficients = { 0.2, 0.3, 0.5 };
+        double anomalousExponent = 1;
+        int groupSize = INFORMED_TRADERS / diffusionCoefficients.length;
+
         for (int index = UNINFORMED_TRADERS; index < UNINFORMED_TRADERS + INFORMED_TRADERS; index++) {
-            InformedAgent informedAgent = new InformedAgent("Overvalued" + index, cashEndowments[index], AGGRESSIVITY, pricesInformed, PRICES_BY_DAY);
+            int groupIndex = (index - UNINFORMED_TRADERS) / groupSize;
+            if (groupIndex >= diffusionCoefficients.length) {
+                groupIndex = diffusionCoefficients.length - 1;
+            }
+            double selectedCoefficient = diffusionCoefficients[groupIndex];
+            InformationDiffusion agentDiffusionModel = new InformationDiffusion(selectedCoefficient, anomalousExponent);
+
+            InformedAgent informedAgent = new InformedAgent("Overvalued" + index, cashEndowments[index], AGGRESSIVITY, agentDiffusionModel, pricesInformed, PRICES_BY_DAY);
             informedAgent.setInvest(obName, assetEndowments[index]);
             sim.addNewAgent(informedAgent);
         }
