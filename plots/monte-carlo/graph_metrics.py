@@ -93,7 +93,11 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     agents = sys.argv[2]
     percentage = sys.argv[3]
 
-    fig.legend((l1, l2, l3, l4), (metric1, metric2, metric3, metric4), fontsize="medium", loc='upper left')
+    first_crash_index = next((i for i, value in enumerate(Y1) if value > 0), None)
+    crash_day_x = X[first_crash_index] - 1
+    crash_day_line = plt.axvline(x=crash_day_x, color='m', linestyle='--')
+
+    fig.legend((l1, l2, l3, l4, crash_day_line), (metric1, metric2, metric3, metric4, 'CRASH DAY'), fontsize="medium", loc='upper left')
 
     # Adjust layout to make room for the legend
     plt.subplots_adjust(left=-0.5)
@@ -433,28 +437,28 @@ if __name__ == '__main__':
 
         # BIG
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_assortativity, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "ASSORTATIVITY", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
+                     "VPIN", "ASSORTATIVITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_average_clustering, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "AVERAGE CLUSTERING", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
+                     "VPIN", "AVERAGE CLUSTERING", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_diameter, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "DIAMETER", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
+                     "VPIN", "DIAMETER", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_independence, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
+                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_stars, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "NUMBER OF STARS", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
+                     "VPIN", "NUMBER OF STARS", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
 
         # SMALL
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_betweeness, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
+                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_bipartivity, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "BIPARTIVITY", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
+                     "VPIN", "BIPARTIVITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_closeness, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "CLOSENESS CENTRALITY", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
+                     "VPIN", "CLOSENESS CENTRALITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_connected, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "CONNECTED COMPONENTS", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
+                     "VPIN", "CONNECTED COMPONENTS", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
 
 
         plot_metrics(x_axis_big, x_axis_VPIN_big, e_vpin_norm_big, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "EASLEY VPIN (Low Frequency)", "PRICE", "Easley VPIN", WINDOW_SIZE_BIG)
+                     "VPIN", "EASLEY VPIN (Low Frequency)", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_small, x_axis_VPIN_small, e_vpin_norm_small, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "EASLEY VPIN (High Frequency)", "PRICE", "Easley VPIN", WINDOW_SIZE_SMALL)
+                     "VPIN", "EASLEY VPIN (High Frequency)", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
