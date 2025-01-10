@@ -17,7 +17,7 @@ def rolling_correlation(Y1, Y2, window_size):
     rolling_corr = rolling_corr[rolling_corr != 0]
     return rolling_corr
 
-def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_size, isBig):
+def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_size):
     # Y1 = VPIN
     # Y2 = Metric values
     # Y3 = PRICE
@@ -94,7 +94,7 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     percentage = sys.argv[3]
 
     first_crash_index = next((i for i, value in enumerate(Y1) if value > 0), None)
-    crash_day_x = X[first_crash_index] if isBig else X[first_crash_index] - 1
+    crash_day_x = X[first_crash_index] - 1
     crash_day_line = plt.axvline(x=crash_day_x, color='m', linestyle='--')
 
     fig.legend((l1, l2, l3, l4, crash_day_line), (metric1, metric2, metric3, metric4, 'CRASH DAY'), fontsize="medium", loc='upper left')
@@ -437,28 +437,28 @@ if __name__ == '__main__':
 
         # BIG
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_assortativity, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "ASSORTATIVITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG, True)
+                     "VPIN", "ASSORTATIVITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_average_clustering, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "AVERAGE CLUSTERING", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG, True)
+                     "VPIN", "AVERAGE CLUSTERING", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_diameter, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "DIAMETER", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG, True)
+                     "VPIN", "DIAMETER", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_independence, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG, True)
+                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_stars, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "NUMBER OF STARS", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG, True)
+                     "VPIN", "NUMBER OF STARS", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
 
         # SMALL
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_betweeness, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL, False)
+                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_bipartivity, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "BIPARTIVITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL, False)
+                     "VPIN", "BIPARTIVITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_closeness, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "CLOSENESS CENTRALITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL, False)
+                     "VPIN", "CLOSENESS CENTRALITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_connected, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "CONNECTED COMPONENTS", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL, False)
+                     "VPIN", "CONNECTED COMPONENTS", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
 
 
         plot_metrics(x_axis_big, x_axis_VPIN_big, e_vpin_norm_big, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "EASLEY VPIN (Low Frequency)", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG, True)
+                     "VPIN", "EASLEY VPIN (Low Frequency)", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_small, x_axis_VPIN_small, e_vpin_norm_small, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "EASLEY VPIN (High Frequency)", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL, False)
+                     "VPIN", "EASLEY VPIN (High Frequency)", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
