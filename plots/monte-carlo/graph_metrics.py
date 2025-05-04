@@ -97,7 +97,9 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     crash_day_x = X[first_crash_index] - 1
     crash_day_line = plt.axvline(x=crash_day_x, color='m', linestyle='--')
 
-    fig.legend((l1, l2, l3, l4, crash_day_line), (metric1, metric2, metric3, metric4, 'CRASH DAY'), fontsize="medium", loc='upper left')
+    fig.legend((l1, l2, l3, l4, crash_day_line),
+               (metric1, metric2, metric3, metric4, 'HFT Market Entry'),
+               fontsize="large", loc='center left', bbox_to_anchor=(1.00, 0.5))
 
     # Adjust layout to make room for the legend
     plt.subplots_adjust(left=-0.5)
@@ -132,12 +134,31 @@ def read_prices_in_chunk(chunk):
     return price_array
 
 
-def task(counter, mean_VPIN_list_small, mean_VPIN_list_big,
-         mean_EVPIN_list_small, mean_EVPIN_list_big,
-         mean_PRICE_list_small, mean_PRICE_list_big,
-         mean_assortativity_list, mean_bipartivity_list, mean_average_clustering_list,
-         mean_connected_list, mean_stars_list, mean_diameter_list,
-         mean_independence_list, mean_closeness_list, mean_betweenness_list,
+def task(counter,
+         mean_VPIN_list_small,
+         mean_VPIN_list_big,
+         mean_EVPIN_list_small,
+         mean_EVPIN_list_big,
+         mean_PRICE_list_small,
+         mean_PRICE_list_big,
+         mean_assortativity_list_small,
+         mean_assortativity_list_big,
+         mean_bipartivity_list_small,
+         mean_bipartivity_list_big,
+         mean_average_clustering_list_small,
+         mean_average_clustering_list_big,
+         mean_connected_list_small,
+         mean_connected_list_big,
+         mean_stars_list_small,
+         mean_stars_list_big,
+         mean_diameter_list_small,
+         mean_diameter_list_big,
+         mean_independence_list_small,
+         mean_independence_list_big,
+         mean_closeness_list_small,
+         mean_closeness_list_big,
+         mean_betweenness_list_small,
+         mean_betweenness_list_big,
          y_axis, informed, uninformed, marketMaker, list_lock, PRICE_ONLY):
     VPIN_results_small = []
     VPIN_results_big = []
@@ -148,15 +169,32 @@ def task(counter, mean_VPIN_list_small, mean_VPIN_list_big,
     PRICE_results_small = []
     PRICE_results_big = []
 
-    assortativity_results = []
-    bipartivity_results = []
-    average_clustering_results = []
-    connected_results = []
-    stars_results = []
-    diameter_results = []
-    independence_results = []
-    closeness_results = []
-    betweenness_results = []
+    assortativity_results_small = []
+    assortativity_results_big = []
+
+    bipartivity_results_small = []
+    bipartivity_results_big = []
+
+    average_clustering_results_small = []
+    average_clustering_results_big = []
+
+    connected_results_small = []
+    connected_results_big = []
+
+    stars_results_small = []
+    stars_results_big = []
+
+    diameter_results_small = []
+    diameter_results_big = []
+
+    independence_results_small = []
+    independence_results_big = []
+
+    closeness_results_small = []
+    closeness_results_big = []
+
+    betweenness_results_small = []
+    betweenness_results_big = []
 
     intermediate_y = []
     intermediate_informed = 0
@@ -175,35 +213,48 @@ def task(counter, mean_VPIN_list_small, mean_VPIN_list_big,
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
                 if len(price_array) == big_granularity:
-                    VPIN, EVPIN, PRICE, assortativity, averageClustering, diameter, independence, stars = \
+                    VPIN, EVPIN, PRICE, assortativity, bipartivity, \
+                        averageClustering, conn, stars, diameter, independence, \
+                        closeness, betweenness = \
                         compute_metrics(price_array, 0)
 
                     VPIN_results_big.append(VPIN)
                     EVPIN_results_big.append(EVPIN)
                     PRICE_results_big.append(PRICE)
 
-                    assortativity_results.append(assortativity)
-                    average_clustering_results.append(averageClustering)
-                    diameter_results.append(diameter)
-                    independence_results.append(independence)
-                    stars_results.append(stars)
+                    assortativity_results_big.append(assortativity)
+                    bipartivity_results_big.append(bipartivity)
+                    average_clustering_results_big.append(averageClustering)
+                    connected_results_big.append(conn)
+                    stars_results_big.append(stars)
+                    diameter_results_big.append(diameter)
+                    independence_results_big.append(independence)
+                    closeness_results_big.append(closeness)
+                    betweenness_results_big.append(betweenness)
 
         with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
                          chunksize=small_granularity, delimiter=";") as reader:
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
                 if len(price_array) == small_granularity:
-                    VPIN, EVPIN, PRICE, betweenness, bipartivity, closeness, conn = \
+                    VPIN, EVPIN, PRICE, assortativity, bipartivity, \
+                        averageClustering, conn, stars, diameter, independence, \
+                        closeness, betweenness = \
                         compute_metrics(price_array, 1)
 
                     VPIN_results_small.append(VPIN)
                     EVPIN_results_small.append(EVPIN)
                     PRICE_results_small.append(PRICE)
 
-                    betweenness_results.append(betweenness)
-                    bipartivity_results.append(bipartivity)
-                    closeness_results.append(closeness)
-                    connected_results.append(conn)
+                    assortativity_results_small.append(assortativity)
+                    bipartivity_results_small.append(bipartivity)
+                    average_clustering_results_small.append(averageClustering)
+                    connected_results_small.append(conn)
+                    stars_results_small.append(stars)
+                    diameter_results_small.append(diameter)
+                    independence_results_small.append(independence)
+                    closeness_results_small.append(closeness)
+                    betweenness_results_small.append(betweenness)
 
     if PRICE_ONLY:
         with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
@@ -229,15 +280,24 @@ def task(counter, mean_VPIN_list_small, mean_VPIN_list_big,
         mean_EVPIN_list_big.append(EVPIN_results_big)
         mean_PRICE_list_small.append(PRICE_results_small)
         mean_PRICE_list_big.append(PRICE_results_big)
-        mean_assortativity_list.append(assortativity_results)
-        mean_bipartivity_list.append(bipartivity_results)
-        mean_average_clustering_list.append(average_clustering_results)
-        mean_connected_list.append(connected_results)
-        mean_stars_list.append(stars_results)
-        mean_diameter_list.append(diameter_results)
-        mean_independence_list.append(independence_results)
-        mean_closeness_list.append(closeness_results)
-        mean_betweenness_list.append(betweenness_results)
+        mean_assortativity_list_big.append(assortativity_results_big)
+        mean_assortativity_list_small.append(assortativity_results_small)
+        mean_bipartivity_list_big.append(bipartivity_results_big)
+        mean_bipartivity_list_small.append(bipartivity_results_small)
+        mean_average_clustering_list_big.append(average_clustering_results_big)
+        mean_average_clustering_list_small.append(average_clustering_results_small)
+        mean_connected_list_big.append(connected_results_big)
+        mean_connected_list_small.append(connected_results_small)
+        mean_stars_list_big.append(stars_results_big)
+        mean_stars_list_small.append(stars_results_small)
+        mean_diameter_list_big.append(diameter_results_big)
+        mean_diameter_list_small.append(diameter_results_small)
+        mean_independence_list_big.append(independence_results_big)
+        mean_independence_list_small.append(independence_results_small)
+        mean_closeness_list_big.append(closeness_results_big)
+        mean_closeness_list_small.append(closeness_results_small)
+        mean_betweenness_list_big.append(betweenness_results_big)
+        mean_betweenness_list_small.append(betweenness_results_small)
 
 
 def mean_with_padding(a):
@@ -257,18 +317,45 @@ if __name__ == '__main__':
     mean_EVPIN_results_small = multiprocessing.Manager().list()
     mean_EVPIN_results_big = multiprocessing.Manager().list()
 
+    # Price
     mean_PRICE_results_small = multiprocessing.Manager().list()
     mean_PRICE_results_big = multiprocessing.Manager().list()
 
-    mean_assortativity_results = multiprocessing.Manager().list()
-    mean_bipartivity_results = multiprocessing.Manager().list()
-    mean_average_clustering_results = multiprocessing.Manager().list()
-    mean_connected_results = multiprocessing.Manager().list()
-    mean_stars_results = multiprocessing.Manager().list()
-    mean_diameter_results = multiprocessing.Manager().list()
-    mean_independence_results = multiprocessing.Manager().list()
-    mean_closeness_results = multiprocessing.Manager().list()
-    mean_betweenness_results = multiprocessing.Manager().list()
+    # Assortativity
+    mean_assortativity_results_small = multiprocessing.Manager().list()
+    mean_assortativity_results_big = multiprocessing.Manager().list()
+
+    # Bipartivity
+    mean_bipartivity_results_small = multiprocessing.Manager().list()
+    mean_bipartivity_results_big = multiprocessing.Manager().list()
+
+    # Average clustering
+    mean_average_clustering_results_small = multiprocessing.Manager().list()
+    mean_average_clustering_results_big = multiprocessing.Manager().list()
+
+    # Connected components
+    mean_connected_results_small = multiprocessing.Manager().list()
+    mean_connected_results_big = multiprocessing.Manager().list()
+
+    # Stars
+    mean_stars_results_small = multiprocessing.Manager().list()
+    mean_stars_results_big = multiprocessing.Manager().list()
+
+    # Diameter
+    mean_diameter_results_small = multiprocessing.Manager().list()
+    mean_diameter_results_big = multiprocessing.Manager().list()
+
+    # Max independent set size
+    mean_independence_results_small = multiprocessing.Manager().list()
+    mean_independence_results_big = multiprocessing.Manager().list()
+
+    # Closeness centrality
+    mean_closeness_results_small = multiprocessing.Manager().list()
+    mean_closeness_results_big = multiprocessing.Manager().list()
+
+    # Betweenness centrality
+    mean_betweenness_results_small = multiprocessing.Manager().list()
+    mean_betweenness_results_big = multiprocessing.Manager().list()
 
     y_price_axis = multiprocessing.Manager().list()
     informed_transactions = multiprocessing.Manager().list()
@@ -291,15 +378,24 @@ if __name__ == '__main__':
                                                              mean_EVPIN_results_big,
                                                              mean_PRICE_results_small,
                                                              mean_PRICE_results_big,
-                                                             mean_assortativity_results,
-                                                             mean_bipartivity_results,
-                                                             mean_average_clustering_results, 
-                                                             mean_connected_results,
-                                                             mean_stars_results,
-                                                             mean_diameter_results,
-                                                             mean_independence_results,
-                                                             mean_closeness_results,
-                                                             mean_betweenness_results,
+                                                             mean_assortativity_results_small,
+                                                             mean_assortativity_results_big,
+                                                             mean_bipartivity_results_small,
+                                                             mean_bipartivity_results_big,
+                                                             mean_average_clustering_results_small,
+                                                             mean_average_clustering_results_big,
+                                                             mean_connected_results_small,
+                                                             mean_connected_results_big,
+                                                             mean_stars_results_small,
+                                                             mean_stars_results_big,
+                                                             mean_diameter_results_small,
+                                                             mean_diameter_results_big,
+                                                             mean_independence_results_small,
+                                                             mean_independence_results_big,
+                                                             mean_closeness_results_small,
+                                                             mean_closeness_results_big,
+                                                             mean_betweenness_results_small,
+                                                             mean_betweenness_results_big,
                                                              y_price_axis,
                                                              informed_transactions,
                                                              uninformed_transactions,
@@ -365,32 +461,59 @@ if __name__ == '__main__':
         # Mean PRICE (big)
         mean_PRICE_results_big = mean_with_padding(mean_PRICE_results_big)
 
-        # Mean Assortativity
-        mean_assortativity_results = mean_with_padding(mean_assortativity_results)
+        # Mean Assortativity (small)
+        mean_assortativity_results_small = mean_with_padding(mean_assortativity_results_small)
 
-        # Mean Average Clustering
-        mean_average_clustering_results = mean_with_padding(mean_average_clustering_results)
+        # Mean Assortativity (big)
+        mean_assortativity_results_big = mean_with_padding(mean_assortativity_results_big)
 
-        # Mean Bipartivity
-        mean_bipartivity_results = mean_with_padding(mean_bipartivity_results)
+        # Mean Average Clustering (small)
+        mean_average_clustering_results_small = mean_with_padding(mean_average_clustering_results_small)
 
-        # Mean Connected Components
-        mean_connected_results = mean_with_padding(mean_connected_results)
+        # Mean Average Clustering (big)
+        mean_average_clustering_results_big = mean_with_padding(mean_average_clustering_results_big)
 
-        # Mean Stars
-        mean_stars_results = mean_with_padding(mean_stars_results)
+        # Mean Bipartivity (small)
+        mean_bipartivity_results_small = mean_with_padding(mean_bipartivity_results_small)
 
-        # Mean Diameter
-        mean_diameter_results = mean_with_padding(mean_diameter_results)
+        # Mean Bipartivity (big)
+        mean_bipartivity_results_big = mean_with_padding(mean_bipartivity_results_big)
 
-        # Mean Independence results
-        mean_independence_results = mean_with_padding(mean_independence_results)
+        # Mean Connected Components (small)
+        mean_connected_results_small = mean_with_padding(mean_connected_results_small)
 
-        # Mean Closeness results
-        mean_closeness_results = mean_with_padding(mean_closeness_results)
+        # Mean Connected Components (big)
+        mean_connected_results_big = mean_with_padding(mean_connected_results_big)
 
-        # Mean Betweeness results
-        mean_betweenness_results = mean_with_padding(mean_betweenness_results)
+        # Mean Stars (small)
+        mean_stars_results_small = mean_with_padding(mean_stars_results_small)
+
+        # Mean Stars (big)
+        mean_stars_results_big = mean_with_padding(mean_stars_results_big)
+
+        # Mean Diameter (small)
+        mean_diameter_results_small = mean_with_padding(mean_diameter_results_small)
+
+        # Mean Diameter (big)
+        mean_diameter_results_big = mean_with_padding(mean_diameter_results_big)
+
+        # Mean Independence results (small)
+        mean_independence_results_small = mean_with_padding(mean_independence_results_small)
+
+        # Mean Independence results (big)
+        mean_independence_results_big = mean_with_padding(mean_independence_results_big)
+
+        # Mean Closeness results (small)
+        mean_closeness_results_small = mean_with_padding(mean_closeness_results_small)
+
+        # Mean Closeness results (big)
+        mean_closeness_results_big = mean_with_padding(mean_closeness_results_big)
+
+        # Mean Betweenness results (small)
+        mean_betweenness_results_small = mean_with_padding(mean_betweenness_results_small)
+
+        # Mean Betweenness results (big)
+        mean_betweenness_results_big = mean_with_padding(mean_betweenness_results_big)
 
         big_granularity = int(0.1 * len(mean_PRICE_results_big))
         small_granularity = int(0.1 * len(mean_PRICE_results_small))
@@ -398,23 +521,39 @@ if __name__ == '__main__':
         # CORRELATION PLOTS
         x_axis_VPIN_small = np.array(mean_VPIN_results_small)[small_granularity : -small_granularity]
         x_axis_VPIN_big = np.array(mean_VPIN_results_big)[big_granularity : -big_granularity]
+
         x_axis_EVPIN_small = np.array(mean_EVPIN_results_small)[small_granularity : -small_granularity]
         x_axis_EVPIN_big = np.array(mean_EVPIN_results_big)[big_granularity : -big_granularity]
+
         y_axis_PRICE_small = np.array(mean_PRICE_results_small)[small_granularity : -small_granularity]
         y_axis_PRICE_big = np.array(mean_PRICE_results_big)[big_granularity : -big_granularity]
 
-        # BIG
-        y_axis_assortativity = np.array(mean_assortativity_results)[big_granularity : -big_granularity]
-        y_axis_average_clustering = np.array(mean_average_clustering_results)[big_granularity : -big_granularity]
-        y_axis_diameter = np.array(mean_diameter_results)[big_granularity : -big_granularity]
-        y_axis_independence = np.array(mean_independence_results)[big_granularity : -big_granularity]
-        y_axis_stars = np.array(mean_stars_results)[big_granularity : -big_granularity]
+        y_axis_assortativity_small = np.array(mean_assortativity_results_small)[small_granularity : -small_granularity]
+        y_axis_assortativity_big = np.array(mean_assortativity_results_big)[big_granularity : -big_granularity]
 
-        # SMALL
-        y_axis_betweeness = np.array(mean_betweenness_results)[small_granularity : -small_granularity]
-        y_axis_bipartivity = np.array(mean_bipartivity_results)[small_granularity : -small_granularity]
-        y_axis_closeness = np.array(mean_closeness_results)[small_granularity : -small_granularity]
-        y_axis_connected = np.array(mean_connected_results)[small_granularity : -small_granularity]
+        y_axis_average_clustering_small = np.array(mean_average_clustering_results_small)[small_granularity : -small_granularity]
+        y_axis_average_clustering_big = np.array(mean_average_clustering_results_big)[big_granularity : -big_granularity]
+
+        y_axis_diameter_small = np.array(mean_diameter_results_small)[small_granularity : -small_granularity]
+        y_axis_diameter_big = np.array(mean_diameter_results_big)[big_granularity : -big_granularity]
+
+        y_axis_independence_small = np.array(mean_independence_results_small)[small_granularity : -small_granularity]
+        y_axis_independence_big = np.array(mean_independence_results_big)[big_granularity : -big_granularity]
+
+        y_axis_stars_small = np.array(mean_stars_results_small)[small_granularity : -small_granularity]
+        y_axis_stars_big = np.array(mean_stars_results_big)[big_granularity : -big_granularity]
+
+        y_axis_betweenness_small = np.array(mean_betweenness_results_small)[small_granularity : -small_granularity]
+        y_axis_betweenness_big = np.array(mean_betweenness_results_big)[big_granularity : -big_granularity]
+
+        y_axis_bipartivity_small = np.array(mean_bipartivity_results_small)[small_granularity : -small_granularity]
+        y_axis_bipartivity_big = np.array(mean_bipartivity_results_big)[big_granularity : -big_granularity]
+
+        y_axis_closeness_small = np.array(mean_closeness_results_small)[small_granularity : -small_granularity]
+        y_axis_closeness_big = np.array(mean_closeness_results_big)[big_granularity : -big_granularity]
+
+        y_axis_connected_small = np.array(mean_connected_results_small)[small_granularity : -small_granularity]
+        y_axis_connected_big = np.array(mean_connected_results_big)[big_granularity : -big_granularity]
 
         x_axis_small = []
         for index in range(len(x_axis_VPIN_small)):
@@ -435,30 +574,52 @@ if __name__ == '__main__':
         WINDOW_SIZE_BIG = 40 # Low frequency
         WINDOW_SIZE_SMALL = 120 # High frequency
 
-        # BIG
-        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_assortativity, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "ASSORTATIVITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
-        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_average_clustering, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "AVERAGE CLUSTERING", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
-        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_diameter, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "DIAMETER", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
-        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_independence, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "MAXIMAL INDEPENDENT SET SIZE", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
-        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_stars, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "NUMBER OF STARS", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_assortativity_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Assortativity (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_assortativity_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Assortativity (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
 
-        # SMALL
-        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_betweeness, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "BETWEENNESS CENTRALITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
-        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_bipartivity, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "BIPARTIVITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
-        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_closeness, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "CLOSENESS CENTRALITY", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
-        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_connected, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "CONNECTED COMPONENTS", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_average_clustering_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Average clustering (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_average_clustering_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Average clustering (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
 
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_diameter_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Diameter (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_diameter_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Diameter (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
+
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_independence_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Maximal independent set size (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_independence_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Maximal independent set size (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
+
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_stars_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Number of stars (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_stars_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Number of stars (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
+
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_betweenness_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Betweenness centrality (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_betweenness_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Betweenness centrality (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
+
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_bipartivity_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Bipartivity (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_bipartivity_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Bipartivity (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
+
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_closeness_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Closeness centrality (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_closeness_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Closeness centrality (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
+
+        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_connected_big, y_axis_PRICE_big, e_vpin_norm_big,
+                     "VPIN", "Number of connected components (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
+        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_connected_small, y_axis_PRICE_small, e_vpin_norm_small,
+                     "VPIN", "Number of connected components (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
 
         plot_metrics(x_axis_big, x_axis_VPIN_big, e_vpin_norm_big, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "EASLEY VPIN (Low Frequency)", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_BIG)
+                     "VPIN", "Easley's VPIN (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_small, x_axis_VPIN_small, e_vpin_norm_small, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "EASLEY VPIN (High Frequency)", "PRICE", "EASLEY'S VPIN", WINDOW_SIZE_SMALL)
+                     "VPIN", "Easley's VPIN (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)

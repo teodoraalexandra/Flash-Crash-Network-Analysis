@@ -47,42 +47,47 @@ def compute_metrics(prices, granularity):
 
     vpin = informed_transactions / total_transactions
 
-    if granularity == 0:
-        if bipartite.is_bipartite(g):
-            isGraphBipartite = bipartite.average_clustering(g)
+    if bipartite.is_bipartite(g):
+        isGraphBipartite = bipartite.average_clustering(g)
+    else:
+        isGraphBipartite = 2
+
+    try:
+        if nx.is_connected(g):
+            diameter = nx.diameter(g)
         else:
-            isGraphBipartite = 2
+            diameters = []
+            for component in nx.connected_components(g):
+                subgraph = g.subgraph(component)
+                diameter = nx.diameter(subgraph)
+                diameters.append(diameter)
+            diameter = max(diameters)
+    except nx.NetworkXError:
+        diameter = 0
 
-        try:
-            if nx.is_connected(g):
-                diameter = nx.diameter(g)
-            else:
-                diameters = []
-                for component in nx.connected_components(g):
-                    subgraph = g.subgraph(component)
-                    diameter = nx.diameter(subgraph)
-                    diameters.append(diameter)
-                diameter = max(diameters)
-        except nx.NetworkXError:
-            diameter = 0
+    try:
+        independent_set = nx.maximal_independent_set(g)
+        maximal_independent_set_length = len(independent_set)
+    except nx.NetworkXUnfeasible:
+        maximal_independent_set_length = 0
 
-        try:
-            independent_set = nx.maximal_independent_set(g)
-            maximal_independent_set_length = len(independent_set)
-        except nx.NetworkXUnfeasible:
-            maximal_independent_set_length = 0
+    num_stars = sum(1 for node in g if g.degree(node) == 1)
 
-        num_stars = sum(1 for node in g if g.degree(node) == 1)
+    betweenness_dict = nx.betweenness_centrality(g)
+    closeness_dict = nx.closeness_centrality(g)
 
-        return vpin, easley_vpin, average / items, nx.degree_assortativity_coefficient(g), isGraphBipartite, \
-            diameter, maximal_independent_set_length, num_stars
+    assortativity = nx.degree_assortativity_coefficient(g)
+    average_clustering = isGraphBipartite
 
-    if granularity == 1:
-        betweenness_dict = nx.betweenness_centrality(g)
-        closeness_dict = nx.closeness_centrality(g)
+    betweenness = max(betweenness_dict.values())
+    closeness = max(closeness_dict.values())
+    bipartivity = nx.density(g)
+    connected_components = nx.number_connected_components(g)
 
-        return vpin, easley_vpin, average / items, max(betweenness_dict.values()), nx.density(g), \
-            max(closeness_dict.values()), nx.number_connected_components(g)
+    if granularity == 0 or granularity == 1:
+        return vpin, easley_vpin, average / items, assortativity, bipartivity, average_clustering, connected_components, num_stars, diameter, maximal_independent_set_length, closeness, betweenness
 
     if granularity == 2:
         return average / items, informed_transactions, uninformed_transactions, market_makers_transactions
+
+    return None
