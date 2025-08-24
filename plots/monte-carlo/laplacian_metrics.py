@@ -34,7 +34,7 @@ def concatenate_lists(a):
 def task(counter, mean_laplacian_noise_list, mean_laplacian_informed_list, list_lock):
     laplacian_noise = []
     laplacian_informed = []
-    laplacian_granularity = 300000
+    laplacian_granularity = 3000
 
     agents = sys.argv[2]
     percentage = sys.argv[3]
@@ -52,7 +52,12 @@ def task(counter, mean_laplacian_noise_list, mean_laplacian_informed_list, list_
 
     # Noise will always be bigger because informed agents are here only 2 days
     # Equilibrate the lists: choose N random values from noise
-    random_values_from_noise = random.sample(laplacian_noise, len(laplacian_informed))
+    sample_size = min(len(laplacian_informed), len(laplacian_noise))
+    if sample_size > 0:
+        random_values_from_noise = random.sample(laplacian_noise, sample_size)
+    else:
+        random_values_from_noise = []
+
     print("Number of graphs per population: ", len(laplacian_informed))
     with list_lock:
         mean_laplacian_noise_list.append(concatenate_lists(random_values_from_noise))
@@ -108,4 +113,4 @@ if __name__ == '__main__':
     no_agents = sys.argv[2]
     percentage_informed = sys.argv[3]
 
-    fig.savefig("laplacian" + "_" + simulations + "_" + no_agents + "_" + percentage_informed + ".png")
+    fig.savefig("results/laplacian" + "_" + simulations + "_" + no_agents + "_" + percentage_informed + ".png")

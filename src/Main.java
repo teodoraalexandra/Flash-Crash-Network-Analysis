@@ -46,8 +46,8 @@ public class Main {
         // Crash length (24 = 8h ; 6-9: 2-3h crash)
         int PRICES_BY_DAY = 4;
         int INITIAL_PRICE = 15000;
-        double INITIAL_UNCERTAINTY_UNINFORMED = 0.1 * INITIAL_PRICE;
-        double INITIAL_UNCERTAINTY_INFORMED = 0.01 * INITIAL_PRICE;
+        double INITIAL_UNCERTAINTY_UNINFORMED = 0.1 * INITIAL_PRICE; // 1500
+        double INITIAL_UNCERTAINTY_INFORMED = 0.01 * INITIAL_PRICE; // 150
 
         int INFORMED_TRADERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);
         int MARKET_MAKERS = (int) Math.round((PERCENTAGE_OF_INFORMED / 100) * NUMBER_OF_PERSONS);

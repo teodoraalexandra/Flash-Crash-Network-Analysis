@@ -23,7 +23,7 @@ class InformationDiffusion {
 // Informed agents have private information about the true value of the security
 class InformedAgent extends Agent {
     protected int aggressivity;
-    private final InformationDiffusion diffusionModel; // Diffusion model
+    private final InformationDiffusion diffusionModel;
 
     protected InformationPair[] prices;
     protected int pricesByDay;

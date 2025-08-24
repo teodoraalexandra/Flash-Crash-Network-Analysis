@@ -164,7 +164,7 @@ if __name__ == '__main__':
     # Naming the Y axis
     plt.ylabel('Cash')
 
-    plt.axvline(x=15, color='m', label='Crash Day')
+    plt.axvline(x=15, color='m', label='HFT Market Entry')
 
     # For a more detailed graph
     # for noise in axis_noise:
@@ -193,7 +193,7 @@ if __name__ == '__main__':
     initial_price_noise = int(axis_noise_average[0])  # First day
     final_price_noise = int(axis_noise_average[-1])  # Last day
     initial_price_informed = int(axis_informed_average[14])  # Day 15
-    final_price_informed = int(axis_informed_average[15])  # Day 16
+    final_price_informed = int(axis_informed_average[-1])  # Last day
 
     # Function to show the plot
     plt.savefig("results/agents_cash_evolution" + "_" + simulations + "_" + agents + "_" + percentage + ".png")
