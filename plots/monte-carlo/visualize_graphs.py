@@ -11,9 +11,49 @@ import numpy as np
 import os
 import dwave_networkx as dnx
 import dimod
+from networkx.algorithms import bipartite
 from scipy.spatial import ConvexHull
 
-def draw_random_chosen_graph_communities(g, agent_type):
+def draw_bipartite_graph(g, agent_type, frequency):
+    if nx.is_bipartite(g):
+        largest_cc = max(nx.connected_components(g))
+
+        subgraph = g.subgraph(largest_cc)
+        U, V = nx.bipartite.sets(subgraph)
+
+        # Visualize the graph
+        pos = nx.bipartite_layout(g, nodes=U)
+
+        nodelist = list(subgraph.nodes())
+        color_map = []
+        for node in nodelist:
+            if node.startswith("Overvalued"):
+                color_map.append('red')
+            elif node.startswith("Noise"):
+                color_map.append('green')
+            elif node.startswith("MM"):
+                color_map.append('blue')
+            else:
+                color_map.append('orange')
+
+        plt.figure(figsize=(28, 35))
+        plt.title(f"Random Network with {agent_type} Agents using Bipartite Layout ({frequency} Frequency)", fontsize=40)
+
+        nx.draw(subgraph, pos=pos, node_color=color_map)
+        legend_elements = [
+            Line2D([0], [0], marker='o', color='w', markerfacecolor='red', markersize=30, label='Informed agent'),
+            Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=30, label='Market Maker'),
+            Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=30, label='Uninformed agent'),
+        ]
+        plt.legend(handles=legend_elements, fontsize=40, loc='lower center')
+
+        plt.axis("off")
+        plt.savefig(f"results/bipartivity_{agent_type}_{frequency}.png")
+        plt.close()
+    else:
+        print("Graph " + agent_type + " " + frequency + " is not bipartite")
+
+def draw_random_chosen_graph_communities(g, agent_type, frequency):
     partition = community.best_partition(g)
     number_of_communities = nx.community.louvain_communities(g)
 
@@ -33,8 +73,8 @@ def draw_random_chosen_graph_communities(g, agent_type):
         else:
             color_map.append('orange')
 
-    plt.figure(figsize=(28, 26))
-    plt.title(f"Random Network with {agent_type} Agents using Community Detection (Louvain Algorithm)", fontsize=40)
+    plt.figure(figsize=(35, 26))
+    plt.title(f"Random Network with {agent_type} Agents using Community Detection (Louvain Algorithm) ({frequency} Frequency)", fontsize=40)
     plt.suptitle(f"Number of communities: {len(number_of_communities)}", fontsize=30)
     nx.draw(g, pos, node_color=color_map, node_size=[200 * g.degree(node) for node in g.nodes])
     legend_elements = [
@@ -44,105 +84,7 @@ def draw_random_chosen_graph_communities(g, agent_type):
     ]
     plt.legend(handles=legend_elements, fontsize=40, loc='lower center')
     plt.axis("off")
-    plt.savefig(f"results/community_{agent_type}_network.png")
-    plt.close()
-
-def compute_concentric_degree_layout(g, max_radius=10, num_rings=5):
-    degrees = dict(g.degree())
-    min_deg = min(degrees.values())
-    max_deg = max(degrees.values())
-
-    def degree_to_ring(degree):
-        if max_deg == min_deg:
-            return 0
-        norm = (degree - min_deg) / (max_deg - min_deg)
-        return int(norm * (num_rings - 1))
-
-    ring_nodes = [[] for _ in range(num_rings)]
-    for node, degree in degrees.items():
-        ring = degree_to_ring(degree)
-        ring_nodes[ring].append(node)
-
-    pos = {}
-    for ring_index, nodes_in_ring in enumerate(ring_nodes):
-        radius = (ring_index + 1) * (max_radius / num_rings)
-        for i, node in enumerate(nodes_in_ring):
-            angle = 2 * np.pi * i / len(nodes_in_ring)
-            x = radius * np.cos(angle)
-            y = radius * np.sin(angle)
-            pos[node] = (x, y)
-    return pos
-
-def draw_sun_layout_graph(g, agent_type):
-    degrees = dict(g.degree())
-    sorted_nodes = sorted(degrees.items(), key=lambda x: x[1])
-    max_radius = 10
-
-    pos = compute_concentric_degree_layout(g)
-
-    color_map = []
-    for node in g:
-        if node.startswith("Overvalued"):
-            color_map.append('red')
-        elif node.startswith("Noise"):
-            color_map.append('green')
-        elif node.startswith("MM"):
-            color_map.append('blue')
-        else:
-            color_map.append('orange')
-
-    plt.figure(figsize=(28, 26))
-    nx.draw(g, pos, node_color=color_map, node_size=[50 * g.degree(node) for node in g.nodes])
-
-    legend_elements = [
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='red', markersize=30, label='Informed agent'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=30, label='Market Maker'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=30, label='Uninformed agent'),
-    ]
-    plt.legend(handles=legend_elements, fontsize=40, loc='lower center')
-
-    plt.axis("off")
-    plt.savefig(f"results/layout_{agent_type}_network.png")
-    plt.close()
-
-def draw_bipartite_graph(g, agent_type):
-    color_map = []
-    for node in g:
-        if node.startswith("Overvalued"):
-            color_map.append('red')
-        elif node.startswith("Noise"):
-            color_map.append('green')
-        elif node.startswith("MM"):
-            color_map.append('blue')
-        else:
-            color_map.append('orange')
-
-    degrees = [g.degree(n) for n in g.nodes()]
-    degree_threshold = np.percentile(degrees, 95)
-
-    pos = {}
-    for node in g.nodes():
-        if g.degree(node) > degree_threshold:
-            x = random.uniform(-10, -2)
-        else:
-            x = random.uniform(2, 10)
-        y = random.uniform(-5, 5)
-        pos[node] = (x, y)
-
-    plt.figure(figsize=(28, 26))
-    nx.draw(g, pos, node_color=color_map, node_size=[50 * g.degree(node) for node in g.nodes])
-
-    plt.axvline(x=0, color='orange', linestyle='-', linewidth=3)
-
-    legend_elements = [
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='red', markersize=30, label='Informed agent'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=30, label='Market Maker'),
-        Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=30, label='Uninformed agent'),
-    ]
-    plt.legend(handles=legend_elements, fontsize=40, loc='lower center')
-
-    plt.axis("off")
-    plt.savefig(f"results/degree_{agent_type}_network.png")
+    plt.savefig(f"results/community_{agent_type}_{frequency}.png")
     plt.close()
 
 # --- MAIN SCRIPT ---
@@ -163,7 +105,7 @@ if __name__ == '__main__':
         print(f"File not found: {file_path}")
         sys.exit(1)
 
-    with pd.read_csv(file_path, chunksize=500, delimiter=";") as reader:
+    with pd.read_csv(file_path, chunksize=small_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array, noise_only, informed_length = read_prices_in_chunk(chunk)
             g = create_graph(price_array)
@@ -175,10 +117,15 @@ if __name__ == '__main__':
     random_chosen_noise = random.choice(random_noise_graphs)
     random_chosen_informed = random.choice(random_informed_graphs)
 
-    draw_random_chosen_graph_communities(random_chosen_noise, "Uninformed and MM")
-    draw_random_chosen_graph_communities(random_chosen_informed, "Informed")
+    draw_random_chosen_graph_communities(random_chosen_noise, "Uninformed and MM", "High")
+    draw_random_chosen_graph_communities(random_chosen_informed, "Informed", "High")
+    draw_bipartite_graph(random_chosen_noise, "Uninformed and MM", "High")
+    draw_bipartite_graph(random_chosen_informed, "Informed", "High")
 
-    with pd.read_csv(file_path, chunksize=3000, delimiter=";") as reader:
+    random_noise_graphs = []
+    random_informed_graphs = []
+
+    with pd.read_csv(file_path, chunksize=big_granularity, delimiter=";") as reader:
         for chunk in reader:
             price_array, noise_only, informed_length = read_prices_in_chunk(chunk)
             g = create_graph(price_array)
@@ -190,5 +137,7 @@ if __name__ == '__main__':
     random_chosen_noise = random.choice(random_noise_graphs)
     random_chosen_informed = random.choice(random_informed_graphs)
 
-    draw_sun_layout_graph(random_chosen_informed, "Informed")
-    draw_bipartite_graph(random_chosen_informed, "Informed")
+    draw_random_chosen_graph_communities(random_chosen_noise, "Uninformed and MM", "Low")
+    draw_random_chosen_graph_communities(random_chosen_informed, "Informed", "Low")
+    draw_bipartite_graph(random_chosen_noise, "Uninformed and MM", "Low")
+    draw_bipartite_graph(random_chosen_informed, "Informed", "Low")

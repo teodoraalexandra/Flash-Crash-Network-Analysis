@@ -13,6 +13,8 @@ COPY requirements.txt .
 
 # Define a volume for the results
 VOLUME /app/results
+VOLUME /app/csvs
+VOLUME /app/plots/csvs
 
 # Upgrade pip and install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt --verbose
