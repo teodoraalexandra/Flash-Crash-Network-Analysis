@@ -571,7 +571,7 @@ if __name__ == '__main__':
         e_vpin_norm_big= (e_vpin_big - np.min(e_vpin_big)) / (np.max(e_vpin_big) - np.min(e_vpin_big))
         e_vpin_norm_small = (e_vpin_small - np.min(e_vpin_small)) / (np.max(e_vpin_small) - np.min(e_vpin_small))
 
-        WINDOW_SIZE_BIG = 120 # Low frequency
+        WINDOW_SIZE_BIG = 40 # Low frequency
         WINDOW_SIZE_SMALL = 40 # High frequency
 
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_assortativity_big, y_axis_PRICE_big, e_vpin_norm_big,
