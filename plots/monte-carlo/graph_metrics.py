@@ -47,19 +47,46 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     l3, = ax2.plot(X, Y3_norm, color=COLOR_PRICE)
     l4, = ax2.plot(X, Y4, color=COLOR_EASLEY_VPIN)
 
+    def detect_spikes(data, threshold=3):
+        mean = np.mean(data)
+        std = np.std(data)
+        z_scores = (data - mean) / std
+        return np.where(np.abs(z_scores) > threshold)[0]
+
+    def split_data(data, spike_indices, window=3):
+        spike_region = []
+        non_spike_region = []
+        for i in range(len(data)):
+            if any(abs(i - idx) <= window for idx in spike_indices):
+                spike_region.append(data[i])
+            else:
+                non_spike_region.append(data[i])
+        return np.array(non_spike_region), np.array(spike_region)
+
+    def compute_stats(data):
+        mean = np.mean(data)
+        std = np.std(data)
+        lower = mean - 2 * std
+        upper = mean + 2 * std
+        return mean, std, lower, upper
+
     # Standard deviation and confidence interval
-    standard_deviation_metric1 = np.std(Y1) # VPIN
-    standard_deviation_metric2 = np.std(Y2) # Metric value
-    standard_deviation_metric4 = np.std(Y4) # Easley VPIN
-    average_metric1 = np.mean(Y1)
-    average_metric2 = np.mean(Y2)
-    average_metric4 = np.mean(Y4)
-    lower_bound_1 = average_metric1 - 2 * standard_deviation_metric1
-    upper_bound_1 = average_metric1 + 2 * standard_deviation_metric1
-    lower_bound_2 = average_metric2 - 2 * standard_deviation_metric2
-    upper_bound_2 = average_metric2 + 2 * standard_deviation_metric2
-    lower_bound_4 = average_metric4 - 2 * standard_deviation_metric4
-    upper_bound_4 = average_metric4 + 2 * standard_deviation_metric4
+    spike_indices_Y1 = detect_spikes(Y1)
+    non_spike_Y1, spike_Y1 = split_data(Y1, spike_indices_Y1)
+    non_spike_Y2, spike_Y2 = split_data(Y2, spike_indices_Y1)
+    non_spike_Y4, spike_Y4 = split_data(Y4, spike_indices_Y1)
+
+    # VPIN (Y1)
+    mean_ns_1, std_ns_1, lb_ns_1, ub_ns_1 = compute_stats(non_spike_Y1)
+    mean_sp_1, std_sp_1, lb_sp_1, ub_sp_1 = compute_stats(spike_Y1)
+
+    # Metric (Y2)
+    mean_ns_2, std_ns_2, lb_ns_2, ub_ns_2 = compute_stats(non_spike_Y2)
+    mean_sp_2, std_sp_2, lb_sp_2, ub_sp_2 = compute_stats(spike_Y2)
+
+    # Easley VPIN (Y4)
+    mean_ns_4, std_ns_4, lb_ns_4, ub_ns_4 = compute_stats(non_spike_Y4)
+    mean_sp_4, std_sp_4, lb_sp_4, ub_sp_4 = compute_stats(spike_Y4)
 
     # Correlation
     correlation_vpin_metric = rolling_correlation(Y1, Y2, window_size=window_size)
@@ -67,20 +94,25 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     correlation_vpin_easley_vpin = rolling_correlation(Y1, Y4, window_size=window_size)
     correlation_vpin_easley_vpin = correlation_vpin_easley_vpin.mean()
 
-    # Plot statistics
-    number_of_rounded_decimals = 6
-    ci1 = metric1 + " CI: [" + str(round(lower_bound_1, number_of_rounded_decimals)) + ", " + \
-        str(round(upper_bound_1, number_of_rounded_decimals)) + "]"
-    ci2 = metric2 + " CI: [" + str(round(lower_bound_2, number_of_rounded_decimals)) + ", " + \
-        str(round(upper_bound_2, number_of_rounded_decimals)) + "]"
-    ci3 = metric4 + " CI: [" + str(round(lower_bound_4, number_of_rounded_decimals)) + ", " + \
-          str(round(upper_bound_4, number_of_rounded_decimals)) + "]"
-    subtitle_vpin_metric = round(correlation_vpin_metric, 4)
-    subtitle_vpin_easley_vpin = round(correlation_vpin_easley_vpin, 4)
+    # Print stats
+    with open("results/stats.txt", "a") as file:
+        file.write("\n=== VPIN Analysis ===\n")
+        file.write(f"{'Metric':<40}{'Mean (NS)':>12}{'Std (NS)':>12}{'LB (NS)':>12}{'UB (NS)':>12} | {'Mean (SP)':>12}{'Std (SP)':>12}{'LB (SP)':>12}{'UB (SP)':>12}\n")
+        file.write("-" * 148 + "\n")  # Adjusted line length to match new width
 
-    fig.text(0.2, 0.93, "Correlation VPIN - metric: " + str(subtitle_vpin_metric) + "; Correlation VPIN - Easley's VPIN: " + str(subtitle_vpin_easley_vpin), ha='center', fontsize=18)
+        # VPIN (Y1)
+        file.write(f"{metric1:<40}{mean_ns_1:>12.4f}{std_ns_1:>12.4f}{lb_ns_1:>12.4f}{ub_ns_1:>12.4f} | {mean_sp_1:>12.4f}{std_sp_1:>12.4f}{lb_sp_1:>12.4f}{ub_sp_1:>12.4f}\n")
 
-    ax1.set_xlabel(ci1 + " - " + ci2 + " - " + ci3)
+        # Metric (Y2)
+        file.write(f"{metric2:<40}{mean_ns_2:>12.4f}{std_ns_2:>12.4f}{lb_ns_2:>12.4f}{ub_ns_2:>12.4f} | {mean_sp_2:>12.4f}{std_sp_2:>12.4f}{lb_sp_2:>12.4f}{ub_sp_2:>12.4f}\n")
+
+        # Easley VPIN (Y4)
+        file.write(f"{metric4:<40}{mean_ns_4:>12.4f}{std_ns_4:>12.4f}{lb_ns_4:>12.4f}{ub_ns_4:>12.4f} | {mean_sp_4:>12.4f}{std_sp_4:>12.4f}{lb_sp_4:>12.4f}{ub_sp_4:>12.4f}\n")
+
+        file.write("\n=== Correlation Analysis ===\n")
+        file.write(f"Correlation between {metric1} and {metric2}: {correlation_vpin_metric:.4f}\n")
+        file.write(f"Correlation between {metric1} and {metric4}: {correlation_vpin_easley_vpin:.4f}\n")
+
     ax1.set_xticks([])
 
     ax2.set_ylabel(metric1, color=COLOR_VPIN, fontsize=14)
@@ -99,7 +131,7 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
 
     fig.legend((l1, l2, l3, l4, crash_day_line),
                (metric1, metric2, metric3, metric4, 'HFT Market Entry'),
-               fontsize="large", loc='center left', bbox_to_anchor=(1.00, 0.5))
+               fontsize="x-large", loc='center left', bbox_to_anchor=(1.00, 0.5))
 
     # Adjust layout to make room for the legend
     plt.subplots_adjust(left=-0.5)

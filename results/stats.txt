@@ -1,0 +1,220 @@
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Assortativity (low frequency)                -0.1081      0.0031     -0.1144     -0.1018 |      -0.1372      0.0669     -0.2710     -0.0033
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Assortativity (low frequency): -0.9911
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Assortativity (high frequency)               -0.2551      0.0093     -0.2736     -0.2366 |      -0.4490      0.1118     -0.6726     -0.2255
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Assortativity (high frequency): -0.8406
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Average clustering (low frequency)            2.0000      0.0000      2.0000      2.0000 |       2.0000      0.0000      2.0000      2.0000
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Average clustering (low frequency): nan
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Average clustering (high frequency)           0.5290      0.0443      0.4405      0.6176 |       0.7832      0.1175      0.5482      1.0182
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Average clustering (high frequency): 0.7384
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Diameter (low frequency)                     10.2965      0.1040     10.0885     10.5044 |       9.9800      0.4213      9.1374     10.8226
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Diameter (low frequency): -0.8861
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Diameter (high frequency)                     9.6713      0.5728      8.5257     10.8170 |       8.3190      1.1640      5.9910     10.6470
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Diameter (high frequency): -0.5838
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Maximal independent set size (low frequency)    418.2324      4.0850    410.0623    426.4024 |     446.0743     48.8350    348.4043    543.7443
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Maximal independent set size (low frequency): 0.9866
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Maximal independent set size (high frequency)     98.3845      1.6839     95.0168    101.7523 |     112.0060      7.2765     97.4530    126.5590
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Maximal independent set size (high frequency): 0.8259
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Number of stars (low frequency)              73.7024      1.5443     70.6138     76.7909 |      86.8400     27.1011     32.6377    141.0423
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Number of stars (low frequency): 0.9918
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Number of stars (high frequency)            112.4580      3.4014    105.6553    119.2608 |     120.5340      4.7017    111.1306    129.9374
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Number of stars (high frequency): 0.6729
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Betweenness centrality (low frequency)        0.1564      0.0223      0.1118      0.2010 |       0.1831      0.0185      0.1461      0.2201
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Betweenness centrality (low frequency): 0.4317
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Betweenness centrality (high frequency)       0.0191      0.0047      0.0096      0.0285 |       0.2012      0.0991      0.0031      0.3993
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Betweenness centrality (high frequency): 0.8872
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Bipartivity (low frequency)                   0.0042      0.0000      0.0041      0.0042 |       0.0042      0.0000      0.0041      0.0042
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Bipartivity (low frequency): 0.8553
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Bipartivity (high frequency)                  0.0092      0.0002      0.0089      0.0095 |       0.0113      0.0011      0.0090      0.0136
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Bipartivity (high frequency): 0.8553
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Closeness centrality (low frequency)          0.3063      0.0086      0.2891      0.3236 |       0.3238      0.0197      0.2844      0.3632
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Closeness centrality (low frequency): 0.7798
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Closeness centrality (high frequency)         0.0644      0.0063      0.0518      0.0770 |       0.2362      0.0880      0.0603      0.4121
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Closeness centrality (high frequency): 0.8862
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Number of connected components (low frequency)      1.4524      0.1100      1.2324      1.6723 |       1.5000      0.1714      1.1572      1.8428
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Number of connected components (low frequency): 0.2105
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Number of connected components (high frequency)     36.3289      1.4430     33.4428     39.2149 |      21.0760      8.1423      4.7914     37.3606
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Number of connected components (high frequency): -0.8382
+Correlation between VPIN and Easley's VPIN: 0.8523
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0758      0.1512     -0.2267      0.3782
+Easley's VPIN (low frequency)                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+Easley's VPIN                                 0.0167      0.0081      0.0005      0.0328 |       0.2205      0.3474     -0.4742      0.9152
+
+=== Correlation Analysis ===
+Correlation between VPIN and Easley's VPIN (low frequency): 0.9785
+Correlation between VPIN and Easley's VPIN: 0.9785
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0003      0.0027     -0.0052      0.0057 |       0.3655      0.1970     -0.0285      0.7595
+Easley's VPIN (high frequency)                0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+Easley's VPIN                                 0.0677      0.0249      0.0180      0.1175 |       0.6951      0.2735      0.1481      1.2420
+
+=== Correlation Analysis ===
+Correlation between VPIN and Easley's VPIN (high frequency): 0.8523
+Correlation between VPIN and Easley's VPIN: 0.8523
