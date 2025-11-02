@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import multiprocessing
 import sys
+import warnings
+from statsmodels.tsa.stattools import adfuller
 
 
 def rolling_correlation(Y1, Y2, window_size):
@@ -93,6 +95,18 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     correlation_vpin_metric = correlation_vpin_metric.mean()
     correlation_vpin_easley_vpin = rolling_correlation(Y1, Y4, window_size=window_size)
     correlation_vpin_easley_vpin = correlation_vpin_easley_vpin.mean()
+
+    def safe_adf(series, name=""):
+        try:
+            result = adfuller(series, autolag="AIC")
+            if result[1] > 0.05:
+                print(f"ADF {name} p-value={result[1]:.6f} => Non Stationary")
+        except ValueError as e:
+            print(f"ADF {name}: Error - {e}")
+
+    safe_adf(Y1, metric1)
+    safe_adf(Y2, metric2)
+    safe_adf(Y4, metric4)
 
     # Print stats
     with open("results/stats.txt", "a") as file:
@@ -610,11 +624,6 @@ if __name__ == '__main__':
                      "VPIN", "Assortativity (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_assortativity_small, y_axis_PRICE_small, e_vpin_norm_small,
                      "VPIN", "Assortativity (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
-
-        plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_average_clustering_big, y_axis_PRICE_big, e_vpin_norm_big,
-                     "VPIN", "Average clustering (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
-        plot_metrics(x_axis_small, x_axis_VPIN_small, y_axis_average_clustering_small, y_axis_PRICE_small, e_vpin_norm_small,
-                     "VPIN", "Average clustering (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
 
         plot_metrics(x_axis_big, x_axis_VPIN_big, y_axis_diameter_big, y_axis_PRICE_big, e_vpin_norm_big,
                      "VPIN", "Diameter (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)

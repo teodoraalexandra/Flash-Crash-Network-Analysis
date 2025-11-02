@@ -6,3 +6,4 @@ seaborn==0.13.2
 python-louvain==0.16
 scipy==1.9.3
 dwave-networkx==0.8.18
+statsmodels==0.14.4

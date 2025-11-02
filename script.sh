@@ -50,6 +50,7 @@ pythonGraphMetricsPart() {
   big_granularity=$((total_rows / 50)) # low frequency
   small_granularity=$((total_rows / 700)) # high frequency
 
+  echo "Total rows: $total_rows, Big Granularity: $big_granularity, Small Granularity: $small_granularity"
   echo "Start Python Computation (Network metrics part)..."
 
   # Run the Python program for creation
