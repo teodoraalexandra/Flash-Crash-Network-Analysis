@@ -1,23 +1,33 @@
-# Use Python image built for ARM architecture
-FROM python:3.9-slim-buster
-# Install OpenJDK 11 and bash
-RUN apt-get update && apt-get install -y openjdk-11-jdk bash
+FROM python:3.11-slim-bullseye
 
-# Set working directory
+# Install OpenJDK 11 (JDK includes javac) and bash
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openjdk-11-jdk \
+    bash \
+ && rm -rf /var/lib/apt/lists/*
+
+# Detect JAVA_HOME dynamically
+ENV JAVA_HOME=/usr/lib/jvm/default-java
+RUN if command -v javac >/dev/null 2>&1; then \
+      export JBIN="$(readlink -f $(command -v javac))"; \
+      export JHOME="$(dirname "$(dirname "$JBIN" )")"; \
+      echo "Detected JAVA_HOME: $JHOME"; \
+      ln -sfn "$JHOME" "$JAVA_HOME"; \
+    else \
+      echo "javac not found after install!" && exit 1; \
+    fi
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential python3-dev bash \
+ && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
+COPY requirements.txt /app/
 
-# Copy the script and required files
-COPY script.sh .
-COPY . .
-COPY requirements.txt .
+RUN python -m pip install --upgrade pip setuptools wheel \
+ && python -m pip install --no-cache-dir "numpy==1.23.4" cython \
+ && pip install --no-cache-dir -r requirements.txt --verbose
 
-# Define a volume for the results
-VOLUME /app/results
-VOLUME /app/csvs
-VOLUME /app/plots/csvs
-
-# Upgrade pip and install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt --verbose
-
-# Set execute permissions for the script
+COPY . /app/
 RUN chmod +x script.sh

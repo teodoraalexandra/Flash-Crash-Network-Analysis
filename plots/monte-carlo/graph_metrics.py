@@ -1,5 +1,7 @@
 from plots.independent.processFile import Price
 from plots.independent.computeMetrics import compute_metrics
+from plots.independent.detection import cusum_change, pettitt_test, bai_perron_single_break, interpret
+from plots.independent.stationarity import hampel_filter, run_stationarity_tests, interpret_stationarity
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -7,6 +9,7 @@ import multiprocessing
 import sys
 import warnings
 from statsmodels.tsa.stattools import adfuller
+import scipy.stats as stats
 
 
 def rolling_correlation(Y1, Y2, window_size):
@@ -68,8 +71,13 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     def compute_stats(data):
         mean = np.mean(data)
         std = np.std(data)
-        lower = mean - 2 * std
-        upper = mean + 2 * std
+
+        t = stats.t.ppf(0.975, df=len(data)-1)  # t-value
+        e = t * (std / np.sqrt(len(data)))  # Margin
+
+        lower = mean - e
+        upper = mean + e
+
         return mean, std, lower, upper
 
     # Standard deviation and confidence interval
@@ -96,20 +104,9 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     correlation_vpin_easley_vpin = rolling_correlation(Y1, Y4, window_size=window_size)
     correlation_vpin_easley_vpin = correlation_vpin_easley_vpin.mean()
 
-    def safe_adf(series, name=""):
-        try:
-            result = adfuller(series, autolag="AIC")
-            if result[1] > 0.05:
-                print(f"ADF {name} p-value={result[1]:.6f} => Non Stationary")
-        except ValueError as e:
-            print(f"ADF {name}: Error - {e}")
-
-    safe_adf(Y1, metric1)
-    safe_adf(Y2, metric2)
-    safe_adf(Y4, metric4)
-
     # Print stats
     with open("results/stats.txt", "a") as file:
+        file.write("\n")
         file.write("\n=== VPIN Analysis ===\n")
         file.write(f"{'Metric':<40}{'Mean (NS)':>12}{'Std (NS)':>12}{'LB (NS)':>12}{'UB (NS)':>12} | {'Mean (SP)':>12}{'Std (SP)':>12}{'LB (SP)':>12}{'UB (SP)':>12}\n")
         file.write("-" * 148 + "\n")  # Adjusted line length to match new width
@@ -153,6 +150,33 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     plt.savefig("results/plot_" + metric1 + "_" + metric2 + "_" + simulations + "_" + agents + "_" + percentage + ".png",
                 bbox_inches='tight')
 
+    ######################## Stationarity ########################
+    res_Y2 = run_stationarity_tests(hampel_filter(Y2))
+    res_Y4 = run_stationarity_tests(hampel_filter(Y4))
+
+    with open("results/stats.txt", "a") as file:
+        file.write("\n=== Stationarity Analysis ===\n")
+        file.write(f"Stationarity (metric) ===> {interpret_stationarity(res_Y2, alpha=0.05)}\n")
+        file.write(f"Stationarity (Easley's VPIN) ===> {interpret_stationarity(res_Y4, alpha=0.05)}\n")
+
+    ######################## Detection Algorithms ########################
+    # CUSUM
+    res_cusum_Y2 = cusum_change(Y2)
+    res_cusum_Y4 = cusum_change(Y4)
+
+    # Pettitt
+    res_pettitt_Y2 = pettitt_test(Y2)
+    res_pettitt_Y4 = pettitt_test(Y4)
+
+    # Bai–Perron single break
+    res_bp_Y2 = bai_perron_single_break(Y2, trim=0.15)
+    res_bp_Y4 = bai_perron_single_break(Y4, trim=0.15)
+
+    with open("results/stats.txt", "a") as file:
+        file.write("\n=== Change point Analysis ===\n")
+        file.write("\n" + interpret("CUSUM", res_cusum_Y2, res_cusum_Y4))
+        file.write("\n" + interpret("Pettitt", res_pettitt_Y2, res_pettitt_Y4))
+        file.write("\n" + interpret("Bai–Perron", res_bp_Y2, res_bp_Y4))
 
 def create_price_object(row):
     # Create price object
@@ -411,6 +435,7 @@ if __name__ == '__main__':
     lock = multiprocessing.Lock()
 
     number_of_simulations = int(sys.argv[1])
+    big_granularity = int(sys.argv[4])
     small_granularity = int(sys.argv[5])
     days = int(sys.argv[6])
 
