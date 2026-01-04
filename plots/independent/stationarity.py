@@ -39,15 +39,18 @@ def interpret_stationarity(results, alpha):
     kpssL_p = results['KPSS_L']['pvalue']
     za_p = results['ZA']['pvalue']
 
-    # Primary rule
+    # Primary rule: ADF rejects unit root AND KPSS does not reject level-stationarity
     if (adf_p < alpha) and (kpssL_p >= alpha):
         return "Treat as stationary"
-    elif (adf_p >= alpha) and (kpssL_p < alpha):
-        return "Treat at non-stationary"
 
-    # Tie-break using ZA
+    # Prioritize ZA: rejection suggests piecewise/trend-stationary with a break
     if za_p < alpha:
-        # ZA rejection suggests trend-stationary with an endogenous break;
-        return "Treat as stationary (Trend-stationary with break)"
-    else:
-        return "Treat at non-stationary"
+        return "Treat as stationary (Piecewise/trend-stationary with break)"
+
+    # Otherwise, classic contradictory case: ADF fails and KPSS rejects
+    if (adf_p >= alpha) and (kpssL_p < alpha):
+        return "Treat as non-stationary"
+
+    # Fallback
+    return "Treat as non-stationary"
+
