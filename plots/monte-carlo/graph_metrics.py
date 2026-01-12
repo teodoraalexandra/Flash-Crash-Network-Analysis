@@ -156,6 +156,20 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
 
     with open("results/stats.txt", "a") as file:
         file.write("\n=== Stationarity Analysis ===\n")
+
+        row = (
+            f"{'ADF stat':<12} {'ADF p':<10} "
+            f"{'KPSS stat':<12} {'KPSS p':<10} "
+            f"{'ZA stat':<12} {'ZA p':<10} {'Break idx':<10}\n"
+        )
+
+        row += (
+            f"{res_Y2['ADF']['stat']:<12.4f} {res_Y2['ADF']['pvalue']:<10.5f} "
+            f"{res_Y2['KPSS_L']['stat']:<12.4f} {res_Y2['KPSS_L']['pvalue']:<10.5f} "
+            f"{res_Y2['ZA']['stat']:<12.4f} {res_Y2['ZA']['pvalue']:<10.5f} {res_Y2['ZA']['break_index']:<10}\n"
+        )
+
+        file.write(row)
         file.write(f"Stationarity (metric) ===> {interpret_stationarity(res_Y2, alpha=0.05)}\n")
         file.write(f"Stationarity (Easley's VPIN) ===> {interpret_stationarity(res_Y4, alpha=0.05)}\n")
 
