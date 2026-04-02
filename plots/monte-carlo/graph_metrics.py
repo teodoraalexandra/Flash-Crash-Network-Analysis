@@ -12,6 +12,80 @@ from statsmodels.tsa.stattools import adfuller
 import scipy.stats as stats
 
 
+def robustness_test(metrics_big_small, tolerance=0.05):
+    """
+    For each metric, runs CUSUM / Pettitt / Bai-Perron on both the big-granularity
+    and small-granularity series.  Converts each detected index to a relative position
+    (idx / len(series)) and checks whether the two granularities agree within `tolerance`.
+
+    Parameters
+    ----------
+    metrics_big_small : list of (name, big_array, small_array)
+    tolerance         : float, max allowed |rel_big - rel_small| (default 0.05 = 5 %)
+    """
+    algos = {
+        'CUSUM':      lambda y: cusum_change(y),
+        'Pettitt':    lambda y: pettitt_test(y),
+        'Bai-Perron': lambda y: bai_perron_single_break(y, trim=0.15),
+    }
+
+    col_w = (45, 12, 12, 14, 8, 6)
+    header = (f"{'Metric':<{col_w[0]}} {'Algorithm':<{col_w[1]}} "
+              f"{'Rel.(big)':>{col_w[2]}} {'Rel.(small)':>{col_w[3]}} "
+              f"{'Delta':>{col_w[4]}} {'Pass':>{col_w[5]}}\n")
+    sep = "-" * (sum(col_w) + 5) + "\n"
+
+    pass_count = 0
+    fail_count = 0
+    rows = []
+
+    for metric_name, big_arr, small_arr in metrics_big_small:
+        big_arr   = np.array(big_arr,   dtype=float)
+        small_arr = np.array(small_arr, dtype=float)
+
+        for algo_name, algo_fn in algos.items():
+            try:
+                idx_big   = algo_fn(big_arr)
+                idx_small = algo_fn(small_arr)
+
+                rel_big   = idx_big   / len(big_arr)
+                rel_small = idx_small / len(small_arr)
+                delta     = abs(rel_big - rel_small)
+                passed    = delta <= tolerance
+
+                if passed:
+                    pass_count += 1
+                else:
+                    fail_count += 1
+
+                rows.append(
+                    f"{metric_name:<{col_w[0]}} {algo_name:<{col_w[1]}} "
+                    f"{rel_big:>{col_w[2]}.4f} {rel_small:>{col_w[3]}.4f} "
+                    f"{delta:>{col_w[4]}.4f} {'PASS' if passed else 'FAIL':>{col_w[5]}}\n"
+                )
+            except Exception as e:
+                fail_count += 1
+                rows.append(
+                    f"{metric_name:<{col_w[0]}} {algo_name:<{col_w[1]}} "
+                    f"  ERROR: {e}\n"
+                )
+
+    total = pass_count + fail_count
+    with open("results/robustness.txt", "a") as f:
+        f.write("=" * (sum(col_w) + 5) + "\n")
+        f.write("=== Granularity Robustness Test ===\n")
+        f.write(f"Tolerance: {tolerance * 100:.0f}%  |  "
+                f"Big-granularity n={len(metrics_big_small[0][1])}  "
+                f"Small-granularity n={len(metrics_big_small[0][2])}\n")
+        f.write(f"Result: {pass_count}/{total} passed\n\n")
+        f.write(header)
+        f.write(sep)
+        f.writelines(rows)
+        f.write(sep)
+        f.write(f"Summary: {pass_count} PASS  /  {fail_count} FAIL  "
+                f"(tolerance = {tolerance * 100:.0f} %)\n\n")
+
+
 def rolling_correlation(Y1, Y2, window_size):
     if len(Y1) != len(Y2):
         raise ValueError("Y1 and Y2 must be the same length")
@@ -703,3 +777,17 @@ if __name__ == '__main__':
                      "VPIN", "Easley's VPIN (low frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_BIG)
         plot_metrics(x_axis_small, x_axis_VPIN_small, e_vpin_norm_small, y_axis_PRICE_small, e_vpin_norm_small,
                      "VPIN", "Easley's VPIN (high frequency)", "Price", "Easley's VPIN", WINDOW_SIZE_SMALL)
+
+        ######################## Robustness Test ########################
+        robustness_test([
+            ("VPIN",                     x_axis_VPIN_big,           x_axis_VPIN_small),
+            ("Easley VPIN",              e_vpin_norm_big,           e_vpin_norm_small),
+            ("Assortativity",            y_axis_assortativity_big,  y_axis_assortativity_small),
+            ("Bipartivity",              y_axis_bipartivity_big,    y_axis_bipartivity_small),
+            ("Connected components",     y_axis_connected_big,      y_axis_connected_small),
+            ("Stars",                    y_axis_stars_big,          y_axis_stars_small),
+            ("Diameter",                 y_axis_diameter_big,       y_axis_diameter_small),
+            ("Maximal independent set",  y_axis_independence_big,   y_axis_independence_small),
+            ("Closeness centrality",     y_axis_closeness_big,      y_axis_closeness_small),
+            ("Betweenness centrality",   y_axis_betweenness_big,    y_axis_betweenness_small),
+        ])

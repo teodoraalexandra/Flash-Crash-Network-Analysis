@@ -38,11 +38,21 @@ class NoiseAgent extends Agent {
         // (3) Select a random price in the valuation interval
         long price = (long) (lowestValuationInterval + (Math.random() * (highestValuationInterval - lowestValuationInterval)));
 
-        if (quantityDesiredToBeInvested > 0) {
-            double n = Math.random();
-            char dir = (n > 0.5 ? 'B' : 'A');
-            return new LimitOrder(obName, "" + this.myId, dir, quantityDesiredToBeInvested, price);
+        if (quantityDesiredToBeInvested <= 0) {
+            return null;
         }
-        return null;
+
+        boolean marketPriceIsRisky = realPrice < lowestValuationInterval || realPrice > highestValuationInterval;
+
+        if (marketPriceIsRisky) {
+            double draw = Math.random();
+            if (draw > toleranceLevel) {
+                // Agent refuses to trade under current risky market conditions
+                return null;
+            }
+        }
+
+        char dir = (Math.random() > 0.5 ? 'B' : 'A');
+        return new LimitOrder(obName, "" + this.myId, dir, quantityDesiredToBeInvested, price);
     }
 }

@@ -28,16 +28,20 @@ def run_stationarity_tests(series):
     kpss_L_stat, kpss_L_p, kpss_L_lags, kpss_L_crit = kpss(x, regression="c", nlags='auto')
     kpss_L_res = {'stat': kpss_L_stat, 'pvalue': kpss_L_p, 'lags': kpss_L_lags, 'crit': kpss_L_crit}
 
-    # Zivot-Andrews (null: unit root with single endogenous break)
-    za_stat, za_p, za_crit, za_lags, za_bpidx = zivot_andrews(x, regression="ct", trim=0.15, autolag="AIC")
-    za_res = {'stat': za_stat, 'pvalue': za_p, 'crit': za_crit, 'lags': za_lags, 'break_index': int(za_bpidx)}
+    try:
+        # Zivot-Andrews (null: unit root with single endogenous break)
+        za_stat, za_p, za_crit, za_lags, za_bpidx = zivot_andrews(x, regression="ct", trim=0.15, autolag="AIC")
+        za_res = {'stat': za_stat, 'pvalue': za_p, 'crit': za_crit, 'lags': za_lags, 'break_index': int(za_bpidx)}
+    except ValueError:
+        za_res = {'stat': np.nan, 'pvalue': None, 'crit': {}, 'lags': 0, 'break_index': -1}
 
     return {'ADF': adf_res, 'KPSS_L': kpss_L_res, 'ZA': za_res}
 
 def interpret_stationarity(results, alpha):
     adf_p = results['ADF']['pvalue']
     kpssL_p = results['KPSS_L']['pvalue']
-    za_p = results['ZA']['pvalue']
+    za_p_raw = results['ZA']['pvalue']
+    za_p = za_p_raw if za_p_raw is not None else 1.0
 
     # Primary rule: ADF rejects unit root AND KPSS does not reject level-stationarity
     if (adf_p < alpha) and (kpssL_p >= alpha):
