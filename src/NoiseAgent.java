@@ -28,6 +28,8 @@ class NoiseAgent extends Agent {
         double highestValuationInterval = realFundamentalValue + realValuationUncertainty / 2;
 
         long wealth = this.getWealth();
+        if (wealth <= 0) return null;
+
         double randomPercentage = (50 + (Math.random() * 75)) / 100;
 
         // (2) Given its actual cash or stock, randomly decide about the volume of the order,

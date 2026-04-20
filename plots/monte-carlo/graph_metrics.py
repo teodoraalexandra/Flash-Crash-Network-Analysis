@@ -207,8 +207,7 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     ax1.tick_params(axis="y", labelcolor=COLOR_METRIC)
 
     simulations = sys.argv[1]
-    agents = sys.argv[2]
-    percentage = sys.argv[3]
+    tag = sys.argv[2]
 
     first_crash_index = next((i for i, value in enumerate(Y1) if value > 0), None)
     crash_day_x = X[first_crash_index] - 1
@@ -221,50 +220,71 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     # Adjust layout to make room for the legend
     plt.subplots_adjust(left=-0.5)
 
-    plt.savefig("results/plot_" + metric1 + "_" + metric2 + "_" + simulations + "_" + agents + "_" + percentage + ".png",
+    plt.savefig("results/plot_" + metric1 + "_" + metric2 + "_" + simulations + "_" + tag + ".png",
                 bbox_inches='tight')
 
     ######################## Stationarity ########################
-    res_Y2 = run_stationarity_tests(hampel_filter(Y2))
-    res_Y4 = run_stationarity_tests(hampel_filter(Y4))
+    try:
+        res_Y2 = run_stationarity_tests(hampel_filter(Y2))
+    except Exception:
+        res_Y2 = None
+    try:
+        res_Y4 = run_stationarity_tests(hampel_filter(Y4))
+    except Exception:
+        res_Y4 = None
 
     with open("results/stats.txt", "a") as file:
         file.write("\n=== Stationarity Analysis ===\n")
 
-        row = (
-            f"{'ADF stat':<12} {'ADF p':<10} "
-            f"{'KPSS stat':<12} {'KPSS p':<10} "
-            f"{'ZA stat':<12} {'ZA p':<10} {'Break idx':<10}\n"
-        )
+        def stationarity_values_valid(res):
+            if res is None:
+                return False
+            try:
+                return all(res[k][v] is not None
+                    for k, v in [('ADF', 'stat'), ('ADF', 'pvalue'),
+                                ('KPSS_L', 'stat'), ('KPSS_L', 'pvalue'),
+                                ('ZA', 'stat'), ('ZA', 'pvalue'),
+                                ('ZA', 'break_index')])
+            except Exception:
+                return False
 
-        row += (
-            f"{res_Y2['ADF']['stat']:<12.4f} {res_Y2['ADF']['pvalue']:<10.5f} "
-            f"{res_Y2['KPSS_L']['stat']:<12.4f} {res_Y2['KPSS_L']['pvalue']:<10.5f} "
-            f"{res_Y2['ZA']['stat']:<12.4f} {res_Y2['ZA']['pvalue']:<10.5f} {res_Y2['ZA']['break_index']:<10}\n"
-        )
+        if stationarity_values_valid(res_Y2):
+            row = (f"{'ADF stat':<12} {'ADF p':<10} "
+                   f"{'KPSS stat':<12} {'KPSS p':<10} "
+                   f"{'ZA stat':<12} {'ZA p':<10} {'Break idx':<10}\n")
+            row += (f"{res_Y2['ADF']['stat']:<12.4f} {res_Y2['ADF']['pvalue']:<10.5f} "
+                    f"{res_Y2['KPSS_L']['stat']:<12.4f} {res_Y2['KPSS_L']['pvalue']:<10.5f} "
+                    f"{res_Y2['ZA']['stat']:<12.4f} {res_Y2['ZA']['pvalue']:<10.5f} "
+                    f"{res_Y2['ZA']['break_index']:<10}\n")
+            file.write(row)
+            file.write(f"Stationarity (metric) ===> {interpret_stationarity(res_Y2, alpha=0.05)}\n")
+        else:
+            file.write("Stationarity (metric) ===> insufficient data\n")
 
-        file.write(row)
-        file.write(f"Stationarity (metric) ===> {interpret_stationarity(res_Y2, alpha=0.05)}\n")
-        file.write(f"Stationarity (Easley's VPIN) ===> {interpret_stationarity(res_Y4, alpha=0.05)}\n")
+        if stationarity_values_valid(res_Y4):
+            file.write(f"Stationarity (Easley's VPIN) ===> {interpret_stationarity(res_Y4, alpha=0.05)}\n")
+        else:
+            file.write("Stationarity (Easley's VPIN) ===> insufficient data\n")
 
     ######################## Detection Algorithms ########################
     # CUSUM
-    res_cusum_Y2 = cusum_change(Y2)
-    res_cusum_Y4 = cusum_change(Y4)
+    try:
+        res_cusum_Y2   = cusum_change(Y2)
+        res_cusum_Y4   = cusum_change(Y4)
+        res_pettitt_Y2 = pettitt_test(Y2)
+        res_pettitt_Y4 = pettitt_test(Y4)
+        res_bp_Y2      = bai_perron_single_break(Y2, trim=0.15)
+        res_bp_Y4      = bai_perron_single_break(Y4, trim=0.15)
 
-    # Pettitt
-    res_pettitt_Y2 = pettitt_test(Y2)
-    res_pettitt_Y4 = pettitt_test(Y4)
-
-    # Bai–Perron single break
-    res_bp_Y2 = bai_perron_single_break(Y2, trim=0.15)
-    res_bp_Y4 = bai_perron_single_break(Y4, trim=0.15)
-
-    with open("results/stats.txt", "a") as file:
-        file.write("\n=== Change point Analysis ===\n")
-        file.write("\n" + interpret("CUSUM", res_cusum_Y2, res_cusum_Y4))
-        file.write("\n" + interpret("Pettitt", res_pettitt_Y2, res_pettitt_Y4))
-        file.write("\n" + interpret("Bai–Perron", res_bp_Y2, res_bp_Y4))
+        with open("results/stats.txt", "a") as file:
+            file.write("\n=== Change point Analysis ===\n")
+            file.write("\n" + interpret("CUSUM",      res_cusum_Y2,   res_cusum_Y4))
+            file.write("\n" + interpret("Pettitt",    res_pettitt_Y2, res_pettitt_Y4))
+            file.write("\n" + interpret("Bai–Perron", res_bp_Y2,      res_bp_Y4))
+    except Exception as e:
+        with open("results/stats.txt", "a") as file:
+            file.write(f"\n=== Change point Analysis ===\n")
+            file.write(f"Change point analysis failed: {e}\n")
 
 def create_price_object(row):
     # Create price object
@@ -359,14 +379,13 @@ def task(counter,
     intermediate_uninformed = 0
     intermediate_market_maker = 0
 
-    agents = sys.argv[2]
-    percentage = sys.argv[3]
+    tag = sys.argv[2]
 
-    big_granularity = int(sys.argv[4])
-    small_granularity = int(sys.argv[5])
+    big_granularity = int(sys.argv[3])
+    small_granularity = int(sys.argv[4])
 
     if not PRICE_ONLY:
-        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
+        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + tag + ".csv",
                          chunksize=big_granularity, delimiter=";") as reader:
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
@@ -390,7 +409,7 @@ def task(counter,
                     closeness_results_big.append(closeness)
                     betweenness_results_big.append(betweenness)
 
-        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
+        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + tag + ".csv",
                          chunksize=small_granularity, delimiter=";") as reader:
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
@@ -415,7 +434,7 @@ def task(counter,
                     betweenness_results_small.append(betweenness)
 
     if PRICE_ONLY:
-        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + agents + percentage + ".csv",
+        with pd.read_csv("plots/csvs/prices" + str(counter + 1) + tag + ".csv",
                          chunksize=small_granularity * 2, delimiter=";") as reader:
             for chunk in reader:
                 price_array = read_prices_in_chunk(chunk)
@@ -523,9 +542,9 @@ if __name__ == '__main__':
     lock = multiprocessing.Lock()
 
     number_of_simulations = int(sys.argv[1])
-    big_granularity = int(sys.argv[4])
-    small_granularity = int(sys.argv[5])
-    days = int(sys.argv[6])
+    big_granularity = int(sys.argv[3])
+    small_granularity = int(sys.argv[4])
+    days = int(sys.argv[5])
 
     # Create processes for each simulation using a for loop
     processes = []
@@ -576,6 +595,9 @@ if __name__ == '__main__':
     number_of_days = 1
     plt.figure().set_figheight(5)
     plt.figure().set_figwidth(20)
+
+    tag = sys.argv[2]
+    days = int(sys.argv[5])
 
     if ONLY_PRICE:
         for simulationIndex in range(int(sys.argv[1])):

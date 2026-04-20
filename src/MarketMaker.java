@@ -4,10 +4,12 @@ import fr.cristal.smac.atom.orders.*;
 
 class MarketMaker extends Agent {
     protected int INITIAL_PRICE;
+    private double riskLimit;
 
-    public MarketMaker(String name, long cash, int INITIAL_PRICE) {
+    public MarketMaker(String name, long cash, int INITIAL_PRICE, double riskLimit) {
         super(name, cash);
         this.INITIAL_PRICE = INITIAL_PRICE;
+        this.riskLimit = riskLimit;
     }
 
     private int calculateOrderQuantity(double price) {
@@ -62,7 +64,7 @@ class MarketMaker extends Agent {
 
         // Evaluate potential risk before placing orders
         double potentialLoss = calculatePotentialLoss(bidPrice, askPrice);
-        double maxAcceptableLoss = 0.02 * this.getWealth();
+        double maxAcceptableLoss = this.riskLimit * this.getWealth();
 
         // Check if placing orders exceeds the maximum acceptable loss threshold
         if (potentialLoss > maxAcceptableLoss) {

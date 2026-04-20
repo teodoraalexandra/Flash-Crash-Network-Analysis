@@ -91,16 +91,15 @@ def draw_random_chosen_graph_communities(g, agent_type, frequency):
 if __name__ == '__main__':
     plt.close()
 
-    agents = sys.argv[2]
-    percentage = sys.argv[3]
+    tag = sys.argv[2]
 
-    big_granularity = int(sys.argv[4])
-    small_granularity = int(sys.argv[5])
+    big_granularity = int(sys.argv[3])
+    small_granularity = int(sys.argv[4])
 
     random_noise_graphs = []
     random_informed_graphs = []
 
-    file_path = f"plots/csvs/prices1{agents}{percentage}.csv"
+    file_path = f"plots/csvs/prices1{tag}.csv"
     if not os.path.exists(file_path):
         print(f"File not found: {file_path}")
         sys.exit(1)

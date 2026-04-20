@@ -22,19 +22,31 @@ export PYTHONPATH=$ROOT_FOLDER
 # Set the number of times to repeat the commands (number of simulations)
 n=50
 days=40
-aggressivity=10
-persons=$1 # This is the total number of the agents
-informed=$2 # This is percentage of informed
+
+persons=${1:-1000}
+informed=${2:-2}
+aggressivity=${3:-10}
+threshold=${4:-0.5}
+risk_limit=${5:-0.02}
+
+# Single tag used consistently across all filenames and Python calls
+tag="${persons}_${informed}_g${aggressivity}_t${threshold}_r${risk_limit}"
+
+echo "Running bash script with:"
+echo "  persons=$persons, informed=$informed%, aggressivity=$aggressivity"
+echo "  threshold=$threshold, risk_limit=$risk_limit"
+echo "  tag=$tag"
 
 javaPart() {
   local i=$1
 
-  # Run the program and print the output to prices.csv
-  # Require 4 arguments: NUMBER_OF_PERSONS, PERCENTAGE_OF_INFORMED, AGGRESSIVITY, DAYS_OF_SIMULATION
-  java -classpath "src:atom-1.14.jar" Main "$persons" "$informed" "$aggressivity" "$days" "$i"
-  cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices$i$persons$informed.csv"
+  java -classpath "src:atom-1.14.jar" Main \
+    "$persons" "$informed" "$aggressivity" "$days" "$i" \
+    "$threshold" "$risk_limit"
+
+  cat "csvs/data$i.csv" | grep "^Price" > "plots/csvs/prices${i}${tag}.csv"
   cat "csvs/data$i.csv" | grep "^\(Agent\|Day\).*" > "plots/csvs/agents$i.csv"
-  sed -i '/noname/d' "plots/csvs/prices$i$persons$informed.csv"
+  sed -i '/noname/d' "plots/csvs/prices${i}${tag}.csv"
 }
 
 callJava() {
@@ -46,16 +58,16 @@ callJava() {
 }
 
 pythonGraphMetricsPart() {
-  total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
+  total_rows=$(cat "plots/csvs/prices1${tag}.csv" | wc -l)
   big_granularity=$((total_rows / 50)) # low frequency
   small_granularity=$((total_rows / 700)) # high frequency
 
   echo "Total rows: $total_rows, Big Granularity: $big_granularity, Small Granularity: $small_granularity"
   echo "Start Python Computation (Network metrics part)..."
 
-  # Run the Python program for creation
-  python "$ROOT_FOLDER"/plots/monte-carlo/graph_metrics.py $n "$persons" "$informed" $big_granularity $small_granularity $days
-  echo -e "Metrics graphs was generated. \n"
+  python "$ROOT_FOLDER"/plots/monte-carlo/graph_metrics.py \
+    $n "$tag" $big_granularity $small_granularity $days
+  echo -e "Metrics graphs were generated.\n"
 }
 
 pythonAgentCashPart() {
@@ -75,17 +87,15 @@ pythonLaplacianMetricsPart() {
 }
 
 pythonVisualGraphs() {
-  total_rows=$(cat plots/csvs/prices1"$persons""$informed".csv | wc -l)
+  total_rows=$(cat "plots/csvs/prices1${tag}.csv" | wc -l)
   big_granularity=$((total_rows / 50)) # low frequency
   small_granularity=$((total_rows / 700)) # high frequency
 
   echo "Start Python Computation (Graph Visuals)..."
-
-  python plots/monte-carlo/visualize_graphs.py $n "$persons" "$informed" $big_granularity $small_granularity
-  echo -e "Graph visuals was generated. \n"
+  python plots/monte-carlo/visualize_graphs.py \
+    $n "$tag" $big_granularity $small_granularity
+  echo -e "Graph visuals were generated. \n"
 }
-
-echo "Running bash script with $persons agents and $informed percentage"
 
 callJava
 

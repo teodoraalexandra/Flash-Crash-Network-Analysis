@@ -35,6 +35,8 @@ public class Main {
         int AGGRESSIVITY = Integer.parseInt(args[2]);
         int DAYS_OF_SIMULATION = Integer.parseInt(args[3]);
         int SIMULATION_INDEX = Integer.parseInt(args[4]);
+        double activationThreshold = Double.parseDouble(args[5]);
+        double riskLimit = Double.parseDouble(args[6]);
 
         double VOLATILITY =  0.001;
         double VOLATILITY_INFORMED =  0.008;
@@ -112,13 +114,13 @@ public class Main {
             double selectedCoefficient = diffusionCoefficients[groupIndex];
             InformationDiffusion agentDiffusionModel = new InformationDiffusion(selectedCoefficient, anomalousExponent);
 
-            InformedAgent informedAgent = new InformedAgent("Overvalued" + index, cashEndowments[index], AGGRESSIVITY, agentDiffusionModel, pricesInformed, PRICES_BY_DAY);
+            InformedAgent informedAgent = new InformedAgent("Overvalued" + index, cashEndowments[index], AGGRESSIVITY, agentDiffusionModel, pricesInformed, PRICES_BY_DAY, activationThreshold);
             informedAgent.setInvest(obName, assetEndowments[index]);
             sim.addNewAgent(informedAgent);
         }
 
         for (int index = UNINFORMED_TRADERS + INFORMED_TRADERS; index < totalTraders; index++) {
-            MarketMaker marketMaker = new MarketMaker("MM" + index, cashEndowments[index], INITIAL_PRICE);
+            MarketMaker marketMaker = new MarketMaker("MM" + index, cashEndowments[index], INITIAL_PRICE, riskLimit);
             marketMaker.setInvest(obName, assetEndowments[index]);
             sim.addNewAgent(marketMaker);
         }

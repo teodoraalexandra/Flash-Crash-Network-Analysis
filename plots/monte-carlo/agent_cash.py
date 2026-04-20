@@ -164,7 +164,7 @@ if __name__ == '__main__':
     # Naming the Y axis
     plt.ylabel('Cash')
 
-    plt.axvline(x=15, color='m', label='HFT Market Entry')
+    plt.axvline(x=15, color='m', label='Informed Traders Entry')
 
     # For a more detailed graph
     # for noise in axis_noise:

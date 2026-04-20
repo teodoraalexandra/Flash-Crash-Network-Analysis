@@ -24,16 +24,18 @@ class InformationDiffusion {
 class InformedAgent extends Agent {
     protected int aggressivity;
     private final InformationDiffusion diffusionModel;
+    private final double activationThreshold;
 
     protected InformationPair[] prices;
     protected int pricesByDay;
 
-    public InformedAgent(String name, long cash, int aggressivity, InformationDiffusion diffusionModel, InformationPair[] prices, int pricesByDay) {
+    public InformedAgent(String name, long cash, int aggressivity, InformationDiffusion diffusionModel, InformationPair[] prices, int pricesByDay, double activationThreshold) {
         super(name, cash);
         this.aggressivity = aggressivity;
         this.diffusionModel = diffusionModel;
         this.prices = prices;
         this.pricesByDay = pricesByDay;
+        this.activationThreshold = activationThreshold;
     }
 
     public Order decide(String obName, Day day) {
@@ -46,7 +48,7 @@ class InformedAgent extends Agent {
             // Calculate information level using anomalous diffusion
             double informationLevel = diffusionModel.calculateInformationLevel(day.currentPeriod().currentTick());
 
-            if (informationLevel >= 0.5) {
+            if (informationLevel >= this.activationThreshold) {
                 // Always decide to SELL
                 char direction = 'A';
 
