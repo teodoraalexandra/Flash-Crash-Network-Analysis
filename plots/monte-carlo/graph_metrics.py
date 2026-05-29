@@ -214,7 +214,7 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     crash_day_line = plt.axvline(x=crash_day_x, color='m', linestyle='--')
 
     fig.legend((l1, l2, l3, l4, crash_day_line),
-               (metric1, metric2, metric3, metric4, 'HFT Market Entry'),
+               (metric1, metric2, metric3, metric4, "Informed traders' entry"),
                fontsize="x-large", loc='center left', bbox_to_anchor=(1.00, 0.5))
 
     # Adjust layout to make room for the legend

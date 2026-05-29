@@ -235,11 +235,6 @@ def write_text_table(corr_table, bucket_sizes, total_rows, divisors, out_path):
     lines.append(SEP2)
     lines.append("Notes:")
     lines.append("  - k = divisor, bucket_size = total_rows / k")
-    lines.append(f"  - Paper uses k=150 (low freq) and k=500 (high freq)")
-    lines.append(f"  - First/last {int(TRIM_FRACTION*100)}% of buckets trimmed")
-    lines.append(f"  - Rolling correlation window = {WINDOW_SIZE}")
-    lines.append(f"  - N/A = bucket count after trim < window, rolling")
-    lines.append(f"    correlation undefined at that granularity")
     lines.append(SEP)
 
     text = "\n".join(lines)
