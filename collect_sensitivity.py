@@ -1,21 +1,9 @@
-"""
-collect_sensitivity.py
-
-Reads the stats.txt file from each sensitivity configuration folder,
-extracts the rolling correlation values already computed by graph_metrics.py,
-and produces a clean comparison table saved to sensitivity_results.txt.
-
-Usage
------
-    python3 collect_sensitivity.py
-"""
-
 import os
 import re
 
-# Map of label -> results folder
 CONFIGS = {
     "Baseline (γ=10, τ=0.5, risk=2%, inf=2%)": "results_baseline",
+    "Alt: log diffusion":                        "results_alt_log",
     "γ=5%":                                      "results_g5",
     "γ=20%":                                     "results_g20",
     "1% informed":                               "results_inf1",
@@ -26,7 +14,6 @@ CONFIGS = {
     "risk=5%":                                   "results_risk5",
 }
 
-# Metrics as they appear in stats.txt correlation lines
 METRIC_PAIRS = [
     ("VPIN", "Assortativity (low frequency)"),
     ("VPIN", "Assortativity (high frequency)"),
@@ -50,24 +37,16 @@ METRIC_PAIRS = [
 
 
 def extract_correlations(stats_path):
-    """
-    Parse a stats.txt file and return a dict of
-    metric_name -> list of correlation values found.
-    Multiple entries exist because graph_metrics.py appends
-    one block per plot call.
-    """
     if not os.path.exists(stats_path):
         return None
 
     with open(stats_path, "r") as f:
         content = f.read()
 
-    # Pattern: "Correlation between VPIN and <metric>: <value>"
     pattern = re.compile(
         r"Correlation between VPIN and (.+?):\s*([-\d.]+)"
     )
 
-    # Collect all matches — there will be one per plot_metrics() call
     results = {}
     for match in pattern.finditer(content):
         metric = match.group(1).strip()
@@ -76,13 +55,11 @@ def extract_correlations(stats_path):
             results[metric] = []
         results[metric].append(value)
 
-    # Average across multiple occurrences (one per simulation block)
     averaged = {k: sum(v) / len(v) for k, v in results.items()}
     return averaged
 
 
 def rank_metrics(corr_dict):
-    """Return metrics sorted by absolute correlation descending."""
     return sorted(corr_dict.keys(),
                   key=lambda k: abs(corr_dict[k]),
                   reverse=True)
@@ -102,12 +79,10 @@ def main():
         print("No results found. Check that all results folders exist.")
         return
 
-    # Collect all metric names seen across all configs
     all_metrics = sorted(set(
         m for corrs in all_results.values() for m in corrs.keys()
     ))
 
-    # --- Build output ---
     lines = []
     SEP  = "=" * 120
     SEP2 = "-" * 120

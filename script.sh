@@ -97,6 +97,13 @@ pythonVisualGraphs() {
   echo -e "Graph visuals were generated. \n"
 }
 
+pythonBucketSensitivity() {
+  echo "Start Python Computation (Bucket-size Sensitivity)..."
+  python "$ROOT_FOLDER"/plots/monte-carlo/bucket_sensitivity.py \
+    $n "$tag" $days
+  echo -e "Bucket-size sensitivity analysis was generated.\n"
+}
+
 callJava
 
 # ~ 15 minutes
@@ -107,6 +114,9 @@ pythonAgentCashPart
 
 # ~ 1 minute
 pythonVisualGraphs
+
+# HEATMAP Generation
+pythonBucketSensitivity
 
 end=$(date +%s.%N)
 runtime=$(python -c "print(${end} - ${start})")

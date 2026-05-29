@@ -17,6 +17,9 @@ class InformationDiffusion {
      */
     public double calculateInformationLevel(double time) {
         return diffusionCoefficient * Math.pow(time, anomalousExponent);
+
+        // Alternative — logarithmic diffusion
+        //return diffusionCoefficient * Math.log(time + 1);
     }
 }
 
