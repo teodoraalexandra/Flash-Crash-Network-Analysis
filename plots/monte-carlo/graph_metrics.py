@@ -118,7 +118,7 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     Y3_norm = (x - np.min(x)) / (np.max(x) - np.min(x))
 
     plt.close()
-    fig, ax1 = plt.subplots(figsize=(12, 8))
+    fig, ax1 = plt.subplots(figsize=(22, 8))
     ax2 = ax1.twinx()
 
     l1, = ax2.plot(X, Y1, color=COLOR_VPIN)
@@ -213,12 +213,10 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     crash_day_x = X[first_crash_index] - 1
     crash_day_line = plt.axvline(x=crash_day_x, color='m', linestyle='--')
 
-    fig.legend((l1, l2, l3, l4, crash_day_line),
+    plt.subplots_adjust(left=0.05, right=0.97, top=0.95, bottom=0.08)
+    ax2.legend((l1, l2, l3, l4, crash_day_line),
                (metric1, metric2, metric3, metric4, "Informed traders' entry"),
-               fontsize="x-large", loc='center left', bbox_to_anchor=(1.00, 0.5))
-
-    # Adjust layout to make room for the legend
-    plt.subplots_adjust(left=-0.5)
+               fontsize="xx-large", loc='center right')
 
     plt.savefig("results/plot_" + metric1 + "_" + metric2 + "_" + simulations + "_" + tag + ".png",
                 bbox_inches='tight')
