@@ -99,12 +99,8 @@ def compute_metrics(prices, granularity):
         if nx.is_connected(g):
             diameter = nx.diameter(g)
         else:
-            diameters = []
-            for component in nx.connected_components(g):
-                subgraph = g.subgraph(component)
-                diameter = nx.diameter(subgraph)
-                diameters.append(diameter)
-            diameter = max(diameters)
+            largest_cc = max(nx.connected_components(g), key=len)
+            diameter = nx.diameter(g.subgraph(largest_cc))
     except nx.NetworkXError:
         diameter = 0
 

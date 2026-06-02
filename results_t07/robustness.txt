@@ -1,40 +1,40 @@
 ======================================================================================================
 === Granularity Robustness Test ===
-Tolerance: 5%  |  Big-granularity n=40  Small-granularity n=569
-Result: 15/30 passed
+Tolerance: 5%  |  Big-granularity n=40  Small-granularity n=570
+Result: 13/30 passed
 
 Metric                                        Algorithm       Rel.(big)    Rel.(small)    Delta   Pass
 ------------------------------------------------------------------------------------------------------
-VPIN                                          CUSUM              0.3500         0.3656   0.0156   PASS
-VPIN                                          Pettitt            0.4500         0.4974   0.0474   PASS
-VPIN                                          Bai-Perron         0.3500         0.3656   0.0156   PASS
-Easley VPIN                                   CUSUM              0.3500         0.3638   0.0138   PASS
-Easley VPIN                                   Pettitt            0.4250         0.4569   0.0319   PASS
-Easley VPIN                                   Bai-Perron         0.3500         0.3638   0.0138   PASS
-Assortativity                                 CUSUM              0.3500         0.2988   0.0512   FAIL
-Assortativity                                 Pettitt            0.2500         0.2970   0.0470   PASS
-Assortativity                                 Bai-Perron         0.3500         0.2988   0.0512   FAIL
-Bipartivity                                   CUSUM              0.3750         0.3831   0.0081   PASS
-Bipartivity                                   Pettitt            0.6000         0.5097   0.0903   FAIL
-Bipartivity                                   Bai-Perron         0.3750         0.3656   0.0094   PASS
-Connected components                          CUSUM              0.3750         0.2970   0.0780   FAIL
-Connected components                          Pettitt            0.6000         0.2970   0.3030   FAIL
-Connected components                          Bai-Perron         0.3750         0.2970   0.0780   FAIL
-Stars                                         CUSUM              0.3500         0.3814   0.0314   PASS
-Stars                                         Pettitt            0.5250         0.4728   0.0522   FAIL
-Stars                                         Bai-Perron         0.3500         0.3814   0.0314   PASS
-Diameter                                      CUSUM              0.5250         0.4007   0.1243   FAIL
-Diameter                                      Pettitt            0.5250         0.4007   0.1243   FAIL
-Diameter                                      Bai-Perron         0.1750         0.3339   0.1589   FAIL
-Maximal independent set                       CUSUM              0.3500         0.3849   0.0349   PASS
-Maximal independent set                       Pettitt            0.5250         0.4359   0.0891   FAIL
-Maximal independent set                       Bai-Perron         0.3500         0.3691   0.0191   PASS
-Closeness centrality                          CUSUM              0.5250         0.3656   0.1594   FAIL
-Closeness centrality                          Pettitt            0.5250         0.5360   0.0110   PASS
-Closeness centrality                          Bai-Perron         0.5250         0.3656   0.1594   FAIL
-Betweenness centrality                        CUSUM              0.5250         0.3656   0.1594   FAIL
-Betweenness centrality                        Pettitt            0.5250         0.5395   0.0145   PASS
-Betweenness centrality                        Bai-Perron         0.5250         0.3638   0.1612   FAIL
+VPIN                                          CUSUM              0.3500         0.3596   0.0096   PASS
+VPIN                                          Pettitt            0.4500         0.4965   0.0465   PASS
+VPIN                                          Bai-Perron         0.3500         0.3561   0.0061   PASS
+Easley VPIN                                   CUSUM              0.3500         0.3596   0.0096   PASS
+Easley VPIN                                   Pettitt            0.6250         0.4140   0.2110   FAIL
+Easley VPIN                                   Bai-Perron         0.3500         0.3561   0.0061   PASS
+Assortativity                                 CUSUM              0.3250         0.3579   0.0329   PASS
+Assortativity                                 Pettitt            0.5250         0.2877   0.2373   FAIL
+Assortativity                                 Bai-Perron         0.3250         0.3579   0.0329   PASS
+Bipartivity                                   CUSUM              0.6750         0.3544   0.3206   FAIL
+Bipartivity                                   Pettitt            0.5500         0.4404   0.1096   FAIL
+Bipartivity                                   Bai-Perron         0.2000         0.3544   0.1544   FAIL
+Connected components                          CUSUM              0.3250         0.2947   0.0303   PASS
+Connected components                          Pettitt            0.4250         0.2947   0.1303   FAIL
+Connected components                          Bai-Perron         0.3250         0.2930   0.0320   PASS
+Stars                                         CUSUM              0.3500         0.3579   0.0079   PASS
+Stars                                         Pettitt            0.5750         0.4526   0.1224   FAIL
+Stars                                         Bai-Perron         0.3500         0.3544   0.0044   PASS
+Diameter                                      CUSUM              0.5250         0.3895   0.1355   FAIL
+Diameter                                      Pettitt            0.5250         0.3895   0.1355   FAIL
+Diameter                                      Bai-Perron         0.5250         0.3281   0.1969   FAIL
+Maximal independent set                       CUSUM              0.3500         0.3544   0.0044   PASS
+Maximal independent set                       Pettitt            0.4750         0.4193   0.0557   FAIL
+Maximal independent set                       Bai-Perron         0.3500         0.3544   0.0044   PASS
+Closeness centrality                          CUSUM              0.5250         0.3596   0.1654   FAIL
+Closeness centrality                          Pettitt            0.5250         0.4579   0.0671   FAIL
+Closeness centrality                          Bai-Perron         0.5250         0.3544   0.1706   FAIL
+Betweenness centrality                        CUSUM              0.5250         0.3596   0.1654   FAIL
+Betweenness centrality                        Pettitt            0.5250         0.4456   0.0794   FAIL
+Betweenness centrality                        Bai-Perron         0.5250         0.3544   0.1706   FAIL
 ------------------------------------------------------------------------------------------------------
-Summary: 15 PASS  /  15 FAIL  (tolerance = 5 %)
+Summary: 13 PASS  /  17 FAIL  (tolerance = 5 %)
 

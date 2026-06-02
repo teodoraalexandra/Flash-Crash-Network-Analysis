@@ -3,413 +3,413 @@
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Assortativity (low frequency)                -0.1091      0.0033     -0.1102     -0.1080 |      -0.1349      0.0507     -0.1819     -0.0880
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Assortativity (low frequency)                -0.1098      0.0032     -0.1109     -0.1087 |      -0.1326      0.0396     -0.1657     -0.0994
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
 
 === Correlation Analysis ===
-Correlation between VPIN and Assortativity (low frequency): -0.9804
-Correlation between VPIN and Easley's VPIN: 0.9931
+Correlation between VPIN and Assortativity (low frequency): -0.9874
+Correlation between VPIN and Easley's VPIN: 0.9958
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--5.3969      0.00000    0.2140       0.10000    -6.9552      0.00098    14        
+-4.3418      0.00038    0.1525       0.10000    -7.0136      0.00098    15        
 Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: Metric detects earlier (index 13 vs 14).
-Pettitt: EASLEY detects earlier (index 25 vs 26).
+CUSUM: Both detect at the same index (13).
+Pettitt: Metric detects earlier (index 6 vs 24).
 Bai–Perron: Both detect at the same index (13).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Assortativity (high frequency)               -0.2586      0.0101     -0.2594     -0.2578 |      -0.4912      0.1297     -0.5578     -0.4245
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Assortativity (high frequency)               -0.2558      0.0088     -0.2565     -0.2551 |      -0.4584      0.1376     -0.5247     -0.3921
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
 
 === Correlation Analysis ===
-Correlation between VPIN and Assortativity (high frequency): -0.8265
-Correlation between VPIN and Easley's VPIN: 0.8751
+Correlation between VPIN and Assortativity (high frequency): -0.7437
+Correlation between VPIN and Easley's VPIN: 0.8075
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--6.4030      0.00000    0.1647       0.10000    -7.5072      0.00097    194       
+-5.3811      0.00000    0.1036       0.10000    -6.4759      0.00100    195       
 Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: Metric detects earlier (index 195 vs 196).
-Pettitt: Metric detects earlier (index 169 vs 350).
-Bai–Perron: Metric detects earlier (index 195 vs 196).
+CUSUM: Metric detects earlier (index 190 vs 199).
+Pettitt: Metric detects earlier (index 171 vs 200).
+Bai–Perron: Metric detects earlier (index 171 vs 199).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Diameter (low frequency)                     10.6411      0.0987     10.6082     10.6740 |      10.5429      0.2030     10.3552     10.7306
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Diameter (low frequency)                     10.5764      0.0842     10.5465     10.6062 |      10.5700      0.1015     10.4852     10.6548
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
 
 === Correlation Analysis ===
-Correlation between VPIN and Diameter (low frequency): -0.6546
-Correlation between VPIN and Easley's VPIN: 0.9931
+Correlation between VPIN and Diameter (low frequency): -0.1624
+Correlation between VPIN and Easley's VPIN: 0.9958
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--3.7556      0.00340    0.5727       0.02529    -5.5972      0.00924    11        
-Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
+-5.7573      0.00000    0.3933       0.08005    -7.5247      0.00097    25        
+Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: EASLEY detects earlier (index 14 vs 24).
-Pettitt: Metric detects earlier (index 24 vs 25).
+CUSUM: EASLEY detects earlier (index 13 vs 24).
+Pettitt: Both detect at the same index (24).
 Bai–Perron: EASLEY detects earlier (index 13 vs 24).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Diameter (high frequency)                     9.5246      0.5608      9.4793      9.5699 |       7.7706      1.0222      7.2450      8.2961
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Diameter (high frequency)                     8.7044      0.6019      8.6543      8.7544 |       7.3695      0.9783      6.8980      7.8410
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
 
 === Correlation Analysis ===
-Correlation between VPIN and Diameter (high frequency): -0.6322
-Correlation between VPIN and Easley's VPIN: 0.8751
+Correlation between VPIN and Diameter (high frequency): -0.5495
+Correlation between VPIN and Easley's VPIN: 0.8075
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--2.0498      0.26518    2.9311       0.01000    -10.2159     0.00088    186       
+-1.9910      0.29054    2.9293       0.01000    -9.3935      0.00091    185       
 Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: EASLEY detects earlier (index 196 vs 211).
-Pettitt: Metric detects earlier (index 211 vs 350).
-Bai–Perron: EASLEY detects earlier (index 196 vs 208).
+CUSUM: EASLEY detects earlier (index 199 vs 214).
+Pettitt: EASLEY detects earlier (index 200 vs 261).
+Bai–Perron: Metric detects earlier (index 192 vs 199).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Maximal independent set size (low frequency)    423.6611      4.8636    422.0395    425.2827 |     441.2486     26.6276    416.6222    465.8750
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Maximal independent set size (low frequency)    421.0818      4.2530    419.5738    422.5899 |     436.8925     21.0060    419.3310    454.4540
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
 
 === Correlation Analysis ===
-Correlation between VPIN and Maximal independent set size (low frequency): 0.9521
-Correlation between VPIN and Easley's VPIN: 0.9931
+Correlation between VPIN and Maximal independent set size (low frequency): 0.9417
+Correlation between VPIN and Easley's VPIN: 0.9958
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--4.1106      0.00093    0.6546       0.01768    -6.3954      0.00110    14        
-Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
+-3.5368      0.00709    0.4608       0.05096    -6.2147      0.00160    15        
+Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: EASLEY detects earlier (index 14 vs 15).
-Pettitt: Metric detects earlier (index 21 vs 25).
+CUSUM: EASLEY detects earlier (index 13 vs 14).
+Pettitt: Metric detects earlier (index 20 vs 24).
 Bai–Perron: EASLEY detects earlier (index 13 vs 14).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Maximal independent set size (high frequency)     94.8846      1.6206     94.7536     95.0155 |     108.4447      7.1367    104.7754    112.1140
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Maximal independent set size (high frequency)     96.3829      1.5353     96.2552     96.5105 |     108.4400      7.3758    104.8850    111.9950
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
 
 === Correlation Analysis ===
-Correlation between VPIN and Maximal independent set size (high frequency): 0.7885
-Correlation between VPIN and Easley's VPIN: 0.8751
+Correlation between VPIN and Maximal independent set size (high frequency): 0.8227
+Correlation between VPIN and Easley's VPIN: 0.8075
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--3.6663      0.00461    1.6862       0.01000    -6.6241      0.00099    190       
+-4.3382      0.00038    1.5092       0.01000    -6.7971      0.00099    192       
 Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: EASLEY detects earlier (index 196 vs 212).
-Pettitt: Metric detects earlier (index 258 vs 350).
-Bai–Perron: Metric detects earlier (index 195 vs 196).
+CUSUM: EASLEY detects earlier (index 199 vs 204).
+Pettitt: EASLEY detects earlier (index 200 vs 228).
+Bai–Perron: Metric detects earlier (index 194 vs 199).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Number of stars (low frequency)              16.0789      1.5627     15.5579     16.5999 |      24.2029     15.9690      9.4340     38.9717
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Number of stars (low frequency)              13.1521      1.0802     12.7691     13.5352 |      20.5575     11.7643     10.7223     30.3927
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
 
 === Correlation Analysis ===
-Correlation between VPIN and Number of stars (low frequency): 0.9759
-Correlation between VPIN and Easley's VPIN: 0.9931
+Correlation between VPIN and Number of stars (low frequency): 0.9843
+Correlation between VPIN and Easley's VPIN: 0.9958
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--4.9059      0.00003    0.3302       0.10000    -6.5938      0.00099    14        
+-4.0713      0.00108    0.2450       0.10000    -6.2043      0.00163    17        
 Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: Metric detects earlier (index 13 vs 14).
-Pettitt: Metric detects earlier (index 24 vs 25).
-Bai–Perron: Both detect at the same index (13).
-
-=== VPIN Analysis ===
-Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
-----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Number of stars (high frequency)             57.9230      3.0116     57.6797     58.1663 |      88.2859     15.9284     80.0962     96.4755
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
-
-=== Correlation Analysis ===
-Correlation between VPIN and Number of stars (high frequency): 0.8542
-Correlation between VPIN and Easley's VPIN: 0.8751
-
-=== Stationarity Analysis ===
-ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--3.9535      0.00167    1.4853       0.01000    -6.3632      0.00119    194       
-Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
-Stationarity (Easley's VPIN) ===> Treat as stationary
-
-=== Change point Analysis ===
-
-CUSUM: EASLEY detects earlier (index 196 vs 217).
-Pettitt: Metric detects earlier (index 275 vs 350).
-Bai–Perron: EASLEY detects earlier (index 196 vs 202).
-
-=== VPIN Analysis ===
-Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
-----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Betweenness centrality (low frequency)        0.1727      0.0228      0.1651      0.1803 |       0.1839      0.0148      0.1703      0.1976
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
-
-=== Correlation Analysis ===
-Correlation between VPIN and Betweenness centrality (low frequency): 0.0648
-Correlation between VPIN and Easley's VPIN: 0.9931
-
-=== Stationarity Analysis ===
-ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--2.1176      0.23750    0.8881       0.01000    -6.6333      0.00099    30        
-Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
-Stationarity (Easley's VPIN) ===> Treat as stationary
-
-=== Change point Analysis ===
-
-CUSUM: EASLEY detects earlier (index 14 vs 24).
-Pettitt: Metric detects earlier (index 19 vs 25).
-Bai–Perron: EASLEY detects earlier (index 13 vs 24).
-
-=== VPIN Analysis ===
-Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
-----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Betweenness centrality (high frequency)       0.0228      0.0079      0.0222      0.0234 |       0.2317      0.1161      0.1720      0.2914
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
-
-=== Correlation Analysis ===
-Correlation between VPIN and Betweenness centrality (high frequency): 0.8960
-Correlation between VPIN and Easley's VPIN: 0.8751
-
-=== Stationarity Analysis ===
-ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--5.3956      0.00000    0.2527       0.10000    -6.8115      0.00099    192       
-Stationarity (metric) ===> Treat as stationary
-Stationarity (Easley's VPIN) ===> Treat as stationary
-
-=== Change point Analysis ===
-
-CUSUM: Both detect at the same index (196).
-Pettitt: EASLEY detects earlier (index 350 vs 353).
-Bai–Perron: Both detect at the same index (196).
-
-=== VPIN Analysis ===
-Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
-----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Bipartivity (low frequency)                   0.0139      0.0092      0.0108      0.0169 |       0.0146      0.0166     -0.0007      0.0299
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
-
-=== Correlation Analysis ===
-Correlation between VPIN and Bipartivity (low frequency): 0.5382
-Correlation between VPIN and Easley's VPIN: 0.9931
-
-=== Stationarity Analysis ===
-ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--5.8516      0.00000    0.1180       0.10000    -6.6201      0.00099    26        
-Stationarity (metric) ===> Treat as stationary
-Stationarity (Easley's VPIN) ===> Treat as stationary
-
-=== Change point Analysis ===
-
-CUSUM: EASLEY detects earlier (index 14 vs 26).
-Pettitt: EASLEY detects earlier (index 25 vs 26).
-Bai–Perron: EASLEY detects earlier (index 13 vs 26).
-
-=== VPIN Analysis ===
-Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
-----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Bipartivity (high frequency)                  0.2210      0.0139      0.2198      0.2221 |       0.5230      0.1645      0.4385      0.6076
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
-
-=== Correlation Analysis ===
-Correlation between VPIN and Bipartivity (high frequency): 0.9007
-Correlation between VPIN and Easley's VPIN: 0.8751
-
-=== Stationarity Analysis ===
-ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--5.1397      0.00001    0.5448       0.03158    -6.6962      0.00099    188       
-Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
-Stationarity (Easley's VPIN) ===> Treat as stationary
-
-=== Change point Analysis ===
-
-CUSUM: EASLEY detects earlier (index 196 vs 200).
-Pettitt: Metric detects earlier (index 295 vs 350).
-Bai–Perron: Both detect at the same index (196).
-
-=== VPIN Analysis ===
-Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
-----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Closeness centrality (low frequency)          0.3042      0.0092      0.3011      0.3072 |       0.3171      0.0132      0.3049      0.3294
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
-
-=== Correlation Analysis ===
-Correlation between VPIN and Closeness centrality (low frequency): 0.6334
-Correlation between VPIN and Easley's VPIN: 0.9931
-
-=== Stationarity Analysis ===
-ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--1.9168      0.32418    0.8354       0.01000    -5.4510      0.01671    13        
-Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
-Stationarity (Easley's VPIN) ===> Treat as stationary
-
-=== Change point Analysis ===
-
-CUSUM: EASLEY detects earlier (index 14 vs 19).
-Pettitt: Metric detects earlier (index 19 vs 25).
+CUSUM: EASLEY detects earlier (index 13 vs 14).
+Pettitt: Metric detects earlier (index 15 vs 24).
 Bai–Perron: EASLEY detects earlier (index 13 vs 14).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Closeness centrality (high frequency)         0.0688      0.0095      0.0681      0.0696 |       0.2253      0.0842      0.1820      0.2686
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Number of stars (high frequency)             58.6740      2.8592     58.4363     58.9118 |      85.8674     15.9677     78.1712     93.5636
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
 
 === Correlation Analysis ===
-Correlation between VPIN and Closeness centrality (high frequency): 0.8899
-Correlation between VPIN and Easley's VPIN: 0.8751
+Correlation between VPIN and Number of stars (high frequency): 0.8425
+Correlation between VPIN and Easley's VPIN: 0.8075
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--5.6594      0.00000    0.5312       0.03465    -7.3239      0.00097    194       
+-3.8732      0.00224    1.3220       0.01000    -6.2035      0.00164    192       
 Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: EASLEY detects earlier (index 196 vs 201).
-Pettitt: EASLEY detects earlier (index 350 vs 352).
-Bai–Perron: Both detect at the same index (196).
+CUSUM: EASLEY detects earlier (index 199 vs 203).
+Pettitt: EASLEY detects earlier (index 200 vs 267).
+Bai–Perron: Metric detects earlier (index 196 vs 199).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Number of connected components (low frequency)      1.6076      0.1069      1.5719      1.6432 |       2.0143      0.7975      1.2767      2.7519
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Betweenness centrality (low frequency)        0.1471      0.0205      0.1398      0.1544 |       0.1588      0.0091      0.1512      0.1664
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
 
 === Correlation Analysis ===
-Correlation between VPIN and Number of connected components (low frequency): 0.9553
-Correlation between VPIN and Easley's VPIN: 0.9931
+Correlation between VPIN and Betweenness centrality (low frequency): 0.1642
+Correlation between VPIN and Easley's VPIN: 0.9958
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--4.9287      0.00003    0.1189       0.10000    -6.2629      0.00147    14        
+-2.3534      0.15534    0.8329       0.01000    -7.6344      0.00096    25        
+Stationarity (metric) ===> Treat as stationary (Piecewise/trend-stationary with break)
+Stationarity (Easley's VPIN) ===> Treat as stationary
+
+=== Change point Analysis ===
+
+CUSUM: EASLEY detects earlier (index 13 vs 15).
+Pettitt: Metric detects earlier (index 18 vs 24).
+Bai–Perron: EASLEY detects earlier (index 13 vs 14).
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Betweenness centrality (high frequency)       0.0178      0.0046      0.0174      0.0182 |       0.2077      0.1161      0.1518      0.2637
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
+
+=== Correlation Analysis ===
+Correlation between VPIN and Betweenness centrality (high frequency): 0.8898
+Correlation between VPIN and Easley's VPIN: 0.8075
+
+=== Stationarity Analysis ===
+ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
+-4.8845      0.00004    0.2035       0.10000    -6.2487      0.00151    193       
 Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: EASLEY detects earlier (index 14 vs 15).
-Pettitt: Metric detects earlier (index 11 vs 25).
-Bai–Perron: EASLEY detects earlier (index 13 vs 15).
+CUSUM: Both detect at the same index (199).
+Pettitt: EASLEY detects earlier (index 200 vs 204).
+Bai–Perron: Both detect at the same index (199).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Number of connected components (high frequency)     35.1012      1.3538     34.9918     35.2106 |      21.0153      7.8567     16.9758     25.0548
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Bipartivity (low frequency)                   0.0123      0.0085      0.0093      0.0153 |       0.0189      0.0132      0.0079      0.0299
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
 
 === Correlation Analysis ===
-Correlation between VPIN and Number of connected components (high frequency): -0.8875
-Correlation between VPIN and Easley's VPIN: 0.8751
+Correlation between VPIN and Bipartivity (low frequency): 0.4773
+Correlation between VPIN and Easley's VPIN: 0.9958
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--6.2563      0.00000    0.2489       0.10000    -7.3394      0.00097    164       
+-3.5178      0.00754    0.1301       0.10000    -4.1879      0.38139    15        
 Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: Metric detects earlier (index 170 vs 196).
-Pettitt: Metric detects earlier (index 170 vs 350).
-Bai–Perron: Metric detects earlier (index 170 vs 196).
+CUSUM: Metric detects earlier (index 9 vs 13).
+Pettitt: Metric detects earlier (index 9 vs 24).
+Bai–Perron: Metric detects earlier (index 9 vs 13).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0782      0.1317     -0.0436      0.1999
-Easley's VPIN (low frequency)                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
-Easley's VPIN                                 0.0337      0.0206      0.0268      0.0406 |       0.2268      0.3379     -0.0857      0.5393
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Bipartivity (high frequency)                  0.2177      0.0110      0.2168      0.2186 |       0.4861      0.1655      0.4063      0.5658
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
 
 === Correlation Analysis ===
-Correlation between VPIN and Easley's VPIN (low frequency): 0.9931
-Correlation between VPIN and Easley's VPIN: 0.9931
+Correlation between VPIN and Bipartivity (high frequency): 0.8737
+Correlation between VPIN and Easley's VPIN: 0.8075
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--4.5014      0.00020    0.1822       0.10000    -5.8406      0.00424    14        
+-4.4461      0.00025    0.4366       0.06140    -6.1172      0.00188    193       
 Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: Both detect at the same index (14).
-Pettitt: Both detect at the same index (25).
+CUSUM: Metric detects earlier (index 196 vs 199).
+Pettitt: EASLEY detects earlier (index 200 vs 259).
+Bai–Perron: Metric detects earlier (index 196 vs 199).
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Closeness centrality (low frequency)          0.2976      0.0079      0.2949      0.3004 |       0.3098      0.0125      0.2993      0.3202
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
+
+=== Correlation Analysis ===
+Correlation between VPIN and Closeness centrality (low frequency): 0.6988
+Correlation between VPIN and Easley's VPIN: 0.9958
+
+=== Stationarity Analysis ===
+ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
+-2.1043      0.24280    0.7644       0.01000    -4.9281      0.07547    15        
+Stationarity (metric) ===> Treat as non-stationary
+Stationarity (Easley's VPIN) ===> Treat as stationary
+
+=== Change point Analysis ===
+
+CUSUM: EASLEY detects earlier (index 13 vs 14).
+Pettitt: Metric detects earlier (index 19 vs 24).
+Bai–Perron: EASLEY detects earlier (index 13 vs 14).
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Closeness centrality (high frequency)         0.0631      0.0065      0.0626      0.0637 |       0.2039      0.0816      0.1646      0.2432
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
+
+=== Correlation Analysis ===
+Correlation between VPIN and Closeness centrality (high frequency): 0.8972
+Correlation between VPIN and Easley's VPIN: 0.8075
+
+=== Stationarity Analysis ===
+ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
+-4.3304      0.00039    0.4132       0.07145    -5.9190      0.00339    194       
+Stationarity (metric) ===> Treat as stationary
+Stationarity (Easley's VPIN) ===> Treat as stationary
+
+=== Change point Analysis ===
+
+CUSUM: EASLEY detects earlier (index 199 vs 203).
+Pettitt: EASLEY detects earlier (index 200 vs 288).
+Bai–Perron: Both detect at the same index (199).
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Number of connected components (low frequency)      1.5358      0.0933      1.5027      1.5688 |       1.9650      0.6044      1.4597      2.4703
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
+
+=== Correlation Analysis ===
+Correlation between VPIN and Number of connected components (low frequency): 0.9590
+Correlation between VPIN and Easley's VPIN: 0.9958
+
+=== Stationarity Analysis ===
+ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
+-3.9720      0.00156    0.1289       0.10000    -5.4678      0.01580    15        
+Stationarity (metric) ===> Treat as stationary
+Stationarity (Easley's VPIN) ===> Treat as stationary
+
+=== Change point Analysis ===
+
+CUSUM: EASLEY detects earlier (index 13 vs 14).
+Pettitt: Metric detects earlier (index 8 vs 24).
+Bai–Perron: EASLEY detects earlier (index 13 vs 14).
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Number of connected components (high frequency)     36.1663      1.2959     36.0585     36.2740 |      23.1579      8.0997     19.2540     27.0618
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
+
+=== Correlation Analysis ===
+Correlation between VPIN and Number of connected components (high frequency): -0.7967
+Correlation between VPIN and Easley's VPIN: 0.8075
+
+=== Stationarity Analysis ===
+ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
+-4.7162      0.00008    0.2823       0.10000    -5.8054      0.00462    193       
+Stationarity (metric) ===> Treat as stationary
+Stationarity (Easley's VPIN) ===> Treat as stationary
+
+=== Change point Analysis ===
+
+CUSUM: Metric detects earlier (index 171 vs 199).
+Pettitt: Metric detects earlier (index 171 vs 200).
+Bai–Perron: Metric detects earlier (index 171 vs 199).
+
+=== VPIN Analysis ===
+Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
+----------------------------------------------------------------------------------------------------------------------------------------------------
+VPIN                                          0.0000      0.0000      0.0000      0.0000 |       0.0668      0.1123     -0.0271      0.1607
+Easley's VPIN (low frequency)                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
+Easley's VPIN                                 0.0210      0.0124      0.0166      0.0254 |       0.2591      0.4099     -0.0836      0.6018
+
+=== Correlation Analysis ===
+Correlation between VPIN and Easley's VPIN (low frequency): 0.9958
+Correlation between VPIN and Easley's VPIN: 0.9958
+
+=== Stationarity Analysis ===
+ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
+-4.5067      0.00019    0.1677       0.10000    -5.9912      0.00269    17        
+Stationarity (metric) ===> Treat as stationary
+Stationarity (Easley's VPIN) ===> Treat as stationary
+
+=== Change point Analysis ===
+
+CUSUM: Both detect at the same index (13).
+Pettitt: Both detect at the same index (24).
 Bai–Perron: Both detect at the same index (13).
 
 === VPIN Analysis ===
 Metric                                     Mean (NS)    Std (NS)     LB (NS)     UB (NS) |    Mean (SP)    Std (SP)     LB (SP)     UB (SP)
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-VPIN                                          0.0013      0.0105      0.0004      0.0021 |       0.4090      0.2119      0.3001      0.5179
-Easley's VPIN (high frequency)                0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
-Easley's VPIN                                 0.0746      0.0282      0.0723      0.0768 |       0.6013      0.2852      0.4547      0.7479
+VPIN                                          0.0007      0.0059      0.0002      0.0012 |       0.3727      0.2228      0.2653      0.4800
+Easley's VPIN (high frequency)                0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
+Easley's VPIN                                 0.0661      0.0261      0.0639      0.0683 |       0.5647      0.2973      0.4215      0.7080
 
 === Correlation Analysis ===
-Correlation between VPIN and Easley's VPIN (high frequency): 0.8751
-Correlation between VPIN and Easley's VPIN: 0.8751
+Correlation between VPIN and Easley's VPIN (high frequency): 0.8075
+Correlation between VPIN and Easley's VPIN: 0.8075
 
 === Stationarity Analysis ===
 ADF stat     ADF p      KPSS stat    KPSS p     ZA stat      ZA p       Break idx 
--4.7583      0.00007    0.3273       0.10000    -6.2826      0.00141    196       
+-4.9576      0.00003    0.2275       0.10000    -6.3219      0.00130    196       
 Stationarity (metric) ===> Treat as stationary
 Stationarity (Easley's VPIN) ===> Treat as stationary
 
 === Change point Analysis ===
 
-CUSUM: Both detect at the same index (196).
-Pettitt: Both detect at the same index (350).
-Bai–Perron: Both detect at the same index (196).
+CUSUM: Both detect at the same index (199).
+Pettitt: Both detect at the same index (200).
+Bai–Perron: Both detect at the same index (199).
