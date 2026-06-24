@@ -45,10 +45,11 @@ def draw_bipartite_graph(g, agent_type, frequency):
             Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=30, label='Market Maker'),
             Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=30, label='Uninformed agent'),
         ]
-        plt.legend(handles=legend_elements, fontsize=40, loc='lower center')
+        plt.legend(handles=legend_elements, fontsize=80, loc='lower center',
+                   bbox_to_anchor=(0.5, 0.0), bbox_transform=plt.gcf().transFigure)
 
         plt.axis("off")
-        plt.savefig(f"results/bipartivity_{agent_type}_{frequency}.png")
+        plt.savefig(f"results/bipartivity_{agent_type}_{frequency}.png", bbox_inches='tight')
         plt.close()
     else:
         print("Graph " + agent_type + " " + frequency + " is not bipartite")
@@ -82,9 +83,10 @@ def draw_random_chosen_graph_communities(g, agent_type, frequency):
         Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=30, label='Market Maker'),
         Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=30, label='Uninformed agent'),
     ]
-    plt.legend(handles=legend_elements, fontsize=40, loc='lower center')
+    plt.legend(handles=legend_elements, fontsize=80, loc='lower center',
+               bbox_to_anchor=(0.5, 0.0), bbox_transform=plt.gcf().transFigure)
     plt.axis("off")
-    plt.savefig(f"results/community_{agent_type}_{frequency}.png")
+    plt.savefig(f"results/community_{agent_type}_{frequency}.png", bbox_inches='tight')
     plt.close()
 
 # --- MAIN SCRIPT ---

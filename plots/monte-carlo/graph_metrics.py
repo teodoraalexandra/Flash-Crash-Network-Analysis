@@ -216,7 +216,7 @@ def plot_metrics(X, Y1, Y2, Y3, Y4, metric1, metric2, metric3, metric4, window_s
     plt.subplots_adjust(left=0.05, right=0.97, top=0.95, bottom=0.08)
     ax2.legend((l1, l2, l3, l4, crash_day_line),
                (metric1, metric2, metric3, metric4, "Informed traders' entry"),
-               fontsize="xx-large", loc='center right')
+               fontsize=28, loc='center right')
 
     plt.savefig("results/plot_" + metric1 + "_" + metric2 + "_" + simulations + "_" + tag + ".png",
                 bbox_inches='tight')
