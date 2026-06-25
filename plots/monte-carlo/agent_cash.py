@@ -11,7 +11,7 @@ from plots.independent.processFile import Agent
 def legend_without_duplicate_labels(figure):
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
-    figure.legend(by_label.values(), by_label.keys(), loc='upper right')
+    figure.legend(by_label.values(), by_label.keys(), loc='upper right', fontsize=13)
 
 
 def task(counter, y_noise_all, y_informed_all, y_mm_all,
