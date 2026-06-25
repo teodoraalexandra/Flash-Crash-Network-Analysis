@@ -125,25 +125,6 @@ def main():
             lines.append(f"    {i+1}. {m:<50} {corrs[m]:.4f}")
 
     lines.append("\n" + SEP)
-
-    # Stability check vs baseline
-    baseline_label = "Baseline (γ=10, τ=0.5, risk=2%, inf=2%)"
-    if baseline_label in all_results:
-        baseline_corrs = all_results[baseline_label]
-        baseline_top3  = set(rank_metrics(baseline_corrs)[:3])
-
-        lines.append("\nSTABILITY CHECK vs BASELINE (top-3 metrics match):")
-        lines.append(SEP2)
-        for label, corrs in all_results.items():
-            if label == baseline_label:
-                continue
-            top3  = set(rank_metrics(corrs)[:3])
-            match = top3 == baseline_top3
-            lines.append(f"  {label:<50} Top-3 match: {'YES' if match else 'NO'}"
-                         f"   cfg top-3: {top3}")
-
-    lines.append("\n" + SEP)
-
     output = "\n".join(lines)
     print(output)
 

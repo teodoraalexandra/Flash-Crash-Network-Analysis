@@ -99,17 +99,3 @@ METRIC RANKING PER CONFIGURATION (by |correlation|, top 5):
     5. Maximal independent set size (low frequency)       0.9610
 
 ========================================================================================================================
-
-STABILITY CHECK vs BASELINE (top-3 metrics match):
-------------------------------------------------------------------------------------------------------------------------
-  Alt: log diffusion                                 Top-3 match: YES   cfg top-3: {'Number of stars (low frequency)', 'Assortativity (low frequency)', "Easley's VPIN (low frequency)"}
-  γ=5%                                               Top-3 match: YES   cfg top-3: {'Number of stars (low frequency)', 'Assortativity (low frequency)', "Easley's VPIN (low frequency)"}
-  γ=20%                                              Top-3 match: NO   cfg top-3: {'Number of stars (low frequency)', 'Maximal independent set size (low frequency)', "Easley's VPIN (low frequency)"}
-  1% informed                                        Top-3 match: YES   cfg top-3: {'Number of stars (low frequency)', 'Assortativity (low frequency)', "Easley's VPIN (low frequency)"}
-  8% informed                                        Top-3 match: NO   cfg top-3: {'Number of stars (low frequency)', 'Assortativity (low frequency)', 'Maximal independent set size (low frequency)'}
-  τ=0.30                                             Top-3 match: YES   cfg top-3: {'Number of stars (low frequency)', 'Assortativity (low frequency)', "Easley's VPIN (low frequency)"}
-  τ=0.70                                             Top-3 match: YES   cfg top-3: {'Number of stars (low frequency)', 'Assortativity (low frequency)', "Easley's VPIN (low frequency)"}
-  risk=1%                                            Top-3 match: YES   cfg top-3: {'Number of stars (low frequency)', 'Assortativity (low frequency)', "Easley's VPIN (low frequency)"}
-  risk=5%                                            Top-3 match: NO   cfg top-3: {'Number of stars (low frequency)', 'Number of connected components (low frequency)', "Easley's VPIN (low frequency)"}
-
-========================================================================================================================
