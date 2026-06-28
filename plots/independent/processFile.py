@@ -1,5 +1,5 @@
 class Price:
-    def __int__(self, price, quantity, direction, first_agent, second_agent, best_ask, best_bid):
+    def __init__(self, price, quantity, direction, first_agent, second_agent, best_ask, best_bid):
         self.price = price
         self.quantity = quantity
         self.direction = direction
@@ -14,7 +14,7 @@ class Price:
 
 
 class Day:
-    def __int__(self, day_number, first_price, last_price, lowest_price, highest_price, fixed_prices):
+    def __init__(self, day_number, first_price, last_price, lowest_price, highest_price, fixed_prices):
         self.day_number = day_number
         self.first_price = first_price
         self.last_price = last_price
@@ -28,7 +28,7 @@ class Day:
 
 
 class Agent:
-    def __int__(self, name, cash, obName, invests, LastFixedPrice):
+    def __init__(self, name, cash, obName, invests, LastFixedPrice):
         self.name = name
         self.cash = cash
         self.obName = obName
