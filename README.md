@@ -91,9 +91,3 @@ Finally, aggregate all runs into the sensitivity comparison table:
 ```bash
 python3 collect_sensitivity.py
 ```
-
----
-
-## 🙏 Acknowledgement
-
-We want to express our gratitude to the participants of the Annual Scientific Conference of Romanian Academic Economists from Abroad, 11th edition (July 2025, Iasi, Romania) and the 27th INFER Annual conference (September 2025, Rome, Italy) for their valuable insights and feedback. We are also deeply grateful to the anonymous reviewers whose thoughtful suggestions and observations substantially improved the final version of the paper.
