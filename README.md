@@ -1,4 +1,6 @@
-# ⚡ Flash-Crash-Network-Analysis
+# Network Indicators of Information Asymmetry in Fast Trading Markets
+
+📄 This repository contains the code for the paper **"Network Indicators of Information Asymmetry in Fast Trading Markets"**, submitted to the *International Journal of Finance and Economics*.
 
 ## 🚀 Steps to Run the Simulation
 
