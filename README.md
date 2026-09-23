@@ -6,7 +6,7 @@
 
 1. 🧬 **Clone the repository**
    ```bash
-   git clone https://github.com/teodoraalexandra/Flash-Crash-Network-Analysis.git
+   git clone https://github.com/teodoraalexandra/information-asymmetry-networks.git
    ```
 
 2. 🐳 **Install Docker**  
@@ -15,7 +15,7 @@
 
 3. 🏗️ **Build the Docker image**
    ```bash
-   docker build -t flash-crash-ntw-anls:latest .
+   docker build -t information-asymmetry-networks:latest .
    ```
 
 4. 🛡️ **Set permissions (Linux only)**
@@ -152,7 +152,7 @@ The `results_*` folders are produced in three stages. The arguments to `exec.sh`
 
 ⚠️ After **every** change to `script.sh` or the Java code, rebuild the Docker image before running:
 ```bash
-docker build -t flash-crash-ntw-anls:latest .
+docker build -t information-asymmetry-networks:latest .
 ```
 
 1. 🎯 **Baseline** — enable `pythonBucketSensitivity` in `script.sh` (uncomment the call), rebuild, then run:
