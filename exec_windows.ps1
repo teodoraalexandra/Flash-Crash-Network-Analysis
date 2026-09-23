@@ -1,8 +1,7 @@
-# Used for custom runs
-# $persons = $args[0]
-# $informed = $args[1]
+$persons= $args[0]
+$informed= $args[1]
+$aggressivity= $args[2]
+$threshold= $args[3]
+$risk_limit= $args[4]
 
-$persons = 1000
-$informed = 2
-
-docker run -it -v ${PWD}\results:/app/results flash-crash-ntw-anls:latest ./script.sh "$persons" "$informed"
+docker run -it -v ${PWD}\results:/app/results flash-crash-ntw-anls:latest ./script.sh "$persons" "$informed" "$aggressivity" "$threshold" "$risk_limit"
