@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Used for custom runs
-#   ./exec.sh 1000 2 10 0.5 0.02     # explicit baseline
-#   ./exec.sh 1000 2 5  0.5 0.02     # vary aggressiveness
-#   ./exec.sh 1000 1 10 0.5 0.02     # vary population share
-#   ./exec.sh 1000 2 10 0.3 0.02     # vary activation threshold
-#   ./exec.sh 1000 2 10 0.5 0.01     # vary risk limit
 persons=${1:-1000}
 informed=${2:-2}
 aggressivity=${3:-10}
